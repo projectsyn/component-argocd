@@ -1,0 +1,16 @@
+parameters:
+  argocd:
+    namespace: syn-argocd
+    git_tag: v1.2.5
+
+  kapitan:
+    dependencies:
+    - type: https
+      source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/install.yaml
+      output_path: dependencies/argocd/manifests/install.yaml
+
+    compile:
+      - output_path: argocd/manifests
+        input_type: jinja2
+        input_paths:
+          - argocd/manifests
