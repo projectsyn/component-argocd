@@ -1,0 +1,7 @@
+filters:
+  - path: argocd/manifests
+    type: builtin
+    filter: helm_namespace
+    filterargs:
+      namespace: ${argocd:namespace}
+      create_namespace: "true"
