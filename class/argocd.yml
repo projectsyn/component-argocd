@@ -86,6 +86,10 @@ parameters:
       output_path: dependencies/argocd/manifests/${argocd:git_tag}/rbac/argocd-server-clusterrolebinding.yaml
 
     compile:
+      - input_paths:
+          - argocd/component/app.jsonnet
+        input_type: jsonnet
+        output_path: apps/
       - output_path: argocd/00_crds/
         input_type: copy
         input_paths:

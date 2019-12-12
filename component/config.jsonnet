@@ -3,10 +3,6 @@ local kube = import 'lib/kube.libjsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.argocd;
 
-local argocd = import 'lib/argocd.libjsonnet';
-
-local app = argocd.App('argocd', params.namespace);
-
 local namespace = kube.Namespace(params.namespace) {
   metadata+: {
     labels+: {
@@ -47,10 +43,9 @@ local config = [
 ];
 
 {
-  namespace: namespace,
-  app: app,
+  '00_namespace': namespace,
 } + {
-  ['%s' % [obj.metadata.name]]: obj {
+  ['10_%s' % [obj.metadata.name]]: obj {
     metadata+: {
       namespace: params.namespace,
       labels+: {
