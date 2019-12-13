@@ -1,0 +1,95 @@
+/**
+ * \file argocd.libjsonnet
+ * \brief methods to create Argo CD Applications and Projects
+ */
+
+
+local com = import 'lib/commodore.libjsonnet';
+local kap = import 'lib/kapitan.libjsonnet';
+local kube = import 'lib/kube.libjsonnet';
+local inv = kap.inventory();
+local params = inv.parameters.argocd;
+
+/**
+ * \brief `ArgoApp` creates an Argo CD Application
+ *
+ * \arg `component` (required) the name of the app
+ * \arg `namespace` (required) the namespace where to deploy the app
+ * \arg `project` the Argo CD project for this app. Default: 'syn'
+ *
+ * \returns an Argo CD Application object
+ *
+ * See the documentation https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#applications
+ */
+local ArgoApp(component, namespace, project='syn') = {
+  apiVersion: 'argoproj.io/v1alpha1',
+  kind: 'Application',
+  metadata: {
+    name: component,
+    namespace: params.namespace,
+    finalizers: [
+      'resources-finalizer.argocd.argoproj.io',
+    ],
+  },
+  spec: {
+    project: project,
+    source: {
+      repoURL: params.catalog_repo_url,
+      targetRevision: 'HEAD',
+      path: 'manifests/' + component,
+      directory: {
+        recurse: true,
+      },
+    },
+    syncPolicy: {
+      automated: {
+        prune: true,
+        selfHeal: true,
+      },
+    },
+    destination: {
+      server: 'https://kubernetes.default.svc',
+      namespace: namespace,
+    },
+  },
+};
+
+
+/**
+ * \brief `ArgoProject` creates an Argo CD AppProject
+ *
+ * \arg `name` (required) the name of the project
+ *
+ * \returns an Argo CD AppProject object
+ *
+ * See the documentation https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#projects
+ */
+local ArgoProject(name) = {
+  apiVersion: 'argoproj.io/v1alpha1',
+  kind: 'AppProject',
+  metadata: {
+    name: name,
+    namespace: params.namespace,
+  },
+  spec: {
+    sourceRepos: [
+      'ssh://git@git.vshn.net/syn/cluster-catalogs/' + inv.parameters.customer.name + '-' + inv.parameters.cluster.name + '.git',
+    ],
+    destinations: [{
+      server: 'https://kubernetes.default.svc',
+      namespace: '*',
+    }],
+    orphanedResources: {
+      warn: true,
+    },
+    clusterResourceWhitelist: [{
+      group: '*',
+      kind: '*',
+    }],
+  },
+};
+
+{
+  App: ArgoApp,
+  Project: ArgoProject,
+}
