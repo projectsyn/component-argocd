@@ -20,6 +20,12 @@ local config = [
           generate:
             command: [kapitan, refs, --reveal, -f, manifests/]
       |||,
+      repositories: |||
+        - url: %s
+          sshPrivateKeySecret:
+            name: argo-ssh-key
+            key: sshPrivateKey
+      ||| % params.catalog_repo_url,
     },
   },
   kube.ConfigMap('argocd-rbac-cm'),

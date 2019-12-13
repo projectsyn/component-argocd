@@ -2,6 +2,7 @@ parameters:
   argocd:
     namespace: syn
     git_tag: v1.3.5
+    catalog_repo_url: 'ssh://git@git.vshn.net/syn/cluster-catalogs/${customer:name}-${cluster:name}.git'
     images:
       argocd:
         image: docker.io/argoproj/argocd

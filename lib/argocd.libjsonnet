@@ -34,7 +34,7 @@ local ArgoApp(component, namespace, project='syn') = {
   spec: {
     project: project,
     source: {
-      repoURL: 'ssh://git@git.vshn.net/syn/cluster-catalogs/' + inv.parameters.customer.name + '-' + inv.parameters.cluster.name + '.git',
+      repoURL: params.catalog_repo_url,
       targetRevision: 'HEAD',
       path: 'manifests/' + component,
       directory: {
