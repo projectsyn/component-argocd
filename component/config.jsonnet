@@ -25,7 +25,7 @@ local config = [
           sshPrivateKeySecret:
             name: argo-ssh-key
             key: sshPrivateKey
-      ||| % params.catalog_repo_url,
+      ||| % inv.parameters.cluster.catalog_url,
     },
   },
   kube.ConfigMap('argocd-rbac-cm'),
