@@ -14,6 +14,21 @@ local objects = [
           containers: [deployment.spec.template.spec.containers[0] {
             image: image,
             imagePullPolicy: 'IfNotPresent',
+            env+: [
+              {
+                name: 'VAULT_USERNAME',
+                value: inv.parameters.customer.name + '-' + inv.parameters.cluster.name,
+              },
+              {
+                name: 'VAULT_PASSWORD',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: 'steward',
+                    key: 'token',
+                  },
+                },
+              },
+            ],
           }],
         },
       },
