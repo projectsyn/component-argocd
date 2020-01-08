@@ -27,6 +27,21 @@ local objects = [
               '--app-resync',
               '180',
             ],
+            env+: [
+              {
+                name: 'VAULT_USERNAME',
+                value: inv.parameters.customer.name + '-' + inv.parameters.cluster.name,
+              },
+              {
+                name: 'VAULT_PASSWORD',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: 'steward',
+                    key: 'token',
+                  },
+                },
+              },
+            ],
           }],
         },
       },
