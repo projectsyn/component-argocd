@@ -21,7 +21,7 @@ local params = inv.parameters.argocd;
  *
  * See the documentation https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#applications
  */
-local ArgoApp(component, namespace, project='syn') = {
+local ArgoApp(component, namespace, project='syn', secrets=false) = {
   apiVersion: 'argoproj.io/v1alpha1',
   kind: 'Application',
   metadata: {
@@ -37,9 +37,6 @@ local ArgoApp(component, namespace, project='syn') = {
       repoURL: inv.parameters.cluster.catalog_url,
       targetRevision: 'HEAD',
       path: 'manifests/' + component,
-      directory: {
-        recurse: true,
-      },
     },
     syncPolicy: {
       automated: {
@@ -50,6 +47,18 @@ local ArgoApp(component, namespace, project='syn') = {
     destination: {
       server: 'https://kubernetes.default.svc',
       namespace: namespace,
+    },
+  },
+} + {
+  spec+: {
+    source+: if secrets then {
+      plugin: {
+        name: 'kapitan',
+      },
+    } else {
+      directory: {
+        recurse: true,
+      },
     },
   },
 };

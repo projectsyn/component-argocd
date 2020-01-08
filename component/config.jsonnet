@@ -18,7 +18,7 @@ local config = [
       configManagementPlugins: |||
         - name: kapitan
           generate:
-            command: [kapitan, refs, --reveal, -f, manifests/]
+            command: [kapitan, refs, --reveal, --refs-path, ../../refs/, --file, ./]
       |||,
       repositories: |||
         - url: %s
