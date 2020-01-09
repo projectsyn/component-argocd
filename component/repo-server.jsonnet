@@ -11,6 +11,21 @@ local objects = [
     spec+: {
       template+: {
         spec+: {
+          initContainers+: [{
+            name: 'install-kapitan',
+            image: params.images.kapitan.image + ':' + params.images.kapitan.tag,
+            imagePullPolicy: 'Always',
+            command: [
+              'cp',
+              '-v',
+              '/usr/local/bin/kapitan',
+              '/custom-tools/',
+            ],
+            volumeMounts: [{
+              name: 'kapitan-bin',
+              mountPath: '/custom-tools',
+            }],
+          }],
           containers: [deployment.spec.template.spec.containers[0] {
             image: image,
             imagePullPolicy: 'IfNotPresent',
@@ -29,6 +44,15 @@ local objects = [
                 },
               },
             ],
+            volumeMounts+: [{
+              name: 'kapitan-bin',
+              mountPath: '/usr/local/bin/kapitan',
+              subPath: 'kapitan',
+            }],
+          }],
+          volumes+: [{
+            name: 'kapitan-bin',
+            emptyDir: {},
           }],
         },
       },
