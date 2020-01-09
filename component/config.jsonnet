@@ -53,6 +53,9 @@ local config = [
   kube._Object('v1', 'Secret', 'argocd-secret') {
     type: 'Opaque',
   },
+  kube._Object('v1', 'Secret', 'argo-ssh-key') {
+    type: 'Opaque',
+  },
 ];
 
 {
