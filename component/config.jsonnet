@@ -31,6 +31,7 @@ local config = [
           ignoreDifferences: |
             jsonPointers:
               - /status
+              - /spec/scope
       |||,
     },
   },
