@@ -26,6 +26,12 @@ local config = [
             name: argo-ssh-key
             key: sshPrivateKey
       ||| % inv.parameters.cluster.catalog_url,
+      'resource.customizations': |||
+        apiextensions.k8s.io/CustomResourceDefinition:
+          ignoreDifferences: |
+            jsonPointers:
+              - /status
+      |||,
     },
   },
   kube.ConfigMap('argocd-rbac-cm'),
