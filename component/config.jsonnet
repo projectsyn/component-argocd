@@ -18,7 +18,7 @@ local config = [
       configManagementPlugins: |||
         - name: kapitan
           generate:
-            command: [kapitan, refs, --reveal, -f, manifests/]
+            command: [kapitan, refs, --reveal, --refs-path, ../../refs/, --file, ./]
       |||,
       repositories: |||
         - url: %s
@@ -26,6 +26,13 @@ local config = [
             name: argo-ssh-key
             key: sshPrivateKey
       ||| % inv.parameters.cluster.catalog_url,
+      'resource.customizations': |||
+        apiextensions.k8s.io/CustomResourceDefinition:
+          ignoreDifferences: |
+            jsonPointers:
+              - /status
+              - /spec/scope
+      |||,
     },
   },
   kube.ConfigMap('argocd-rbac-cm'),
@@ -44,6 +51,9 @@ local config = [
   },
   kube.ConfigMap('argocd-tls-certs-cm'),
   kube._Object('v1', 'Secret', 'argocd-secret') {
+    type: 'Opaque',
+  },
+  kube._Object('v1', 'Secret', 'argo-ssh-key') {
     type: 'Opaque',
   },
 ];

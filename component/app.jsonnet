@@ -4,7 +4,20 @@ local inv = kap.inventory();
 local params = inv.parameters.argocd;
 local argocd = import 'lib/argocd.libjsonnet';
 
-local project = argocd.Project('syn');
+local syn_project = argocd.Project('syn');
+local default_project = argocd.Project('default') {
+  spec: {
+    destinations: [{
+      namespace: '*',
+      server: '*',
+    }],
+    clusterResourceWhitelist: [{
+      group: '*',
+      kind: '*',
+    }],
+    sourceRepos: ['*'],
+  },
+};
 local root_app = argocd.App('root', params.namespace) {
   spec+: {
     source+: {
@@ -16,7 +29,8 @@ local root_app = argocd.App('root', params.namespace) {
 local app = argocd.App('argocd', params.namespace);
 
 {
-  '00_syn-project': project,
+  '00_syn-project': syn_project,
+  '00_default-project': default_project,
   '01_rootapp': root_app,
-  'argocd': app,
+  '10_argocd': app,
 }
