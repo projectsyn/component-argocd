@@ -25,7 +25,7 @@ local objects = [
               '--operation-processors',
               '10',
               '--app-resync',
-              '180',
+              '10',
             ],
           }],
         },
