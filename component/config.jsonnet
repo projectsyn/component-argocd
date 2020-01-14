@@ -33,6 +33,7 @@ local config = [
               - /status
               - /spec/scope
       |||,
+      'application.instanceLabelKey': 'argocd.argoproj.io/instance',
     },
   },
   kube.ConfigMap('argocd-rbac-cm'),
