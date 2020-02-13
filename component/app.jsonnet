@@ -19,6 +19,9 @@ local default_project = argocd.Project('default') {
   },
 };
 local root_app = argocd.App('root', params.namespace) {
+  metadata+: {
+    finalizers: [],
+  },
   spec+: {
     source+: {
       path: 'manifests/apps/',
