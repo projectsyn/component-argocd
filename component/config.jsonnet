@@ -20,12 +20,13 @@ local config = [
           generate:
             command: [kapitan, refs, --reveal, --refs-path, ../../refs/, --file, ./]
       |||,
-      repositories: |||
-        - url: %s
+      repositories: '- url: ' + inv.parameters.cluster.catalog_url,
+      'repository.credentials': |||
+        - url: ssh://git@
           sshPrivateKeySecret:
             name: argo-ssh-key
             key: sshPrivateKey
-      ||| % inv.parameters.cluster.catalog_url,
+      |||,
       'resource.customizations': |||
         apiextensions.k8s.io/CustomResourceDefinition:
           ignoreDifferences: |
