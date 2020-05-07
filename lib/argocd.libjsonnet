@@ -21,7 +21,7 @@ local params = inv.parameters.argocd;
  *
  * See the documentation https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#applications
  */
-local ArgoApp(component, namespace, project='syn', secrets=false) = {
+local ArgoApp(component, namespace, project='syn', secrets=true) = {
   apiVersion: 'argoproj.io/v1alpha1',
   kind: 'Application',
   metadata: {
