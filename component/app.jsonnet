@@ -18,7 +18,7 @@ local default_project = argocd.Project('default') {
     sourceRepos: ['*'],
   },
 };
-local root_app = argocd.App('root', params.namespace) {
+local root_app = argocd.App('root', params.namespace, secrets=false) {
   metadata+: {
     finalizers: [],
   },
@@ -29,7 +29,7 @@ local root_app = argocd.App('root', params.namespace) {
   },
 };
 
-local app = argocd.App('argocd', params.namespace);
+local app = argocd.App('argocd', params.namespace, secrets=false);
 
 {
   '00_syn-project': syn_project,
