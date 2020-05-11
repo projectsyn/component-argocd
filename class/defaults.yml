@@ -5,7 +5,7 @@ parameters:
     images:
       argocd:
         image: docker.io/argoproj/argocd
-        tag: 'v1.5.0@sha256:5b6565ae91589530aee3a3ffa512db468a6dd5f7db2b22f1facde641d9d822ce'
+        tag: 'v1.5.4@sha256:9b55703f06eff3b30320109f372fc15092fb07b9e0c1e2ee5c71fd7ff7a14b66'
       redis:
         image: docker.io/redis
         tag: '5.0.9@sha256:43dbbe6f633572d66e84e7162245d8d70a18f00b819d6c0bf98ca02109f4788c'
