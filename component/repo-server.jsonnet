@@ -22,8 +22,6 @@ local vault_agent_config = kube.ConfigMap('vault-agent-config') {
           sink "file" {
               config = {
                   path = "/home/vault/.vault-token"
-                  # Write by user read by others
-                  mode = 00204
               }
           }
       }
