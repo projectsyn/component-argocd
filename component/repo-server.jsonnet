@@ -9,8 +9,7 @@ local service = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag
 local vault_agent_config = kube.ConfigMap('vault-agent-config') {
   data: {
     'vault-agent-config.hcl': |||
-      # exit_after_auth = false
-      # pid_file = "/home/vault/pidfile"
+      exit_after_auth = false
 
       auto_auth {
           method "kubernetes" {
@@ -22,6 +21,7 @@ local vault_agent_config = kube.ConfigMap('vault-agent-config') {
           sink "file" {
               config = {
                   path = "/home/vault/.vault-token"
+                  mode = 0644
               }
           }
       }
