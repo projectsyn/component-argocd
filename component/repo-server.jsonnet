@@ -52,6 +52,10 @@ local objects = [
           containers: [deployment.spec.template.spec.containers[0] {
             image: image,
             imagePullPolicy: 'IfNotPresent',
+            env+: [{
+              name: 'HOME',
+              value: '/home/argocd',
+            }],
             volumeMounts+: [{
               name: 'kapitan-bin',
               mountPath: '/usr/local/bin/kapitan',
