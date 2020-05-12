@@ -52,6 +52,12 @@ local objects = [
           containers: [deployment.spec.template.spec.containers[0] {
             image: image,
             imagePullPolicy: 'IfNotPresent',
+            command: [
+              'uid_entrypoint.sh',
+              'argocd-repo-server',
+              '--redis',
+              'argocd-redis:6379',
+            ],
             env+: [{
               name: 'HOME',
               value: '/home/argocd',
