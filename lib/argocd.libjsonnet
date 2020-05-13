@@ -16,6 +16,7 @@ local params = inv.parameters.argocd;
  * \arg `component` (required) the name of the app
  * \arg `namespace` (required) the namespace where to deploy the app
  * \arg `project` the Argo CD project for this app. Default: 'syn'
+ * \arg `secrets` if the Kapitan plugin should be used to reveal secrets from Vault. Default: 'true'
  *
  * \returns an Argo CD Application object
  *
@@ -37,6 +38,14 @@ local ArgoApp(component, namespace, project='syn', secrets=true) = {
       repoURL: inv.parameters.cluster.catalog_url,
       targetRevision: 'HEAD',
       path: 'manifests/' + component,
+    } + if secrets then {
+      plugin: {
+        name: 'kapitan',
+      },
+    } else {
+      directory: {
+        recurse: true,
+      },
     },
     syncPolicy: {
       automated: {
@@ -49,20 +58,7 @@ local ArgoApp(component, namespace, project='syn', secrets=true) = {
       namespace: namespace,
     },
   },
-} + {
-  spec+: {
-    source+: if secrets then {
-      plugin: {
-        name: 'kapitan',
-      },
-    } else {
-      directory: {
-        recurse: true,
-      },
-    },
-  },
 };
-
 
 /**
  * \brief `ArgoProject` creates an Argo CD AppProject
@@ -89,7 +85,7 @@ local ArgoProject(name) = {
       namespace: '*',
     }],
     orphanedResources: {
-      warn: true,
+      warn: false,
     },
     clusterResourceWhitelist: [{
       group: '*',
