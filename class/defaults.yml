@@ -11,7 +11,7 @@ parameters:
         tag: '5.0.9@sha256:43dbbe6f633572d66e84e7162245d8d70a18f00b819d6c0bf98ca02109f4788c'
       kapitan:
         image: docker.io/vshn/kapitan
-        tag: 'v0.27.0@sha256:8570fb884edfea529e9ca52cb296bdf05217e43e681c8e37a499c70a559fcb17'
+        tag: 'v0.27.2@sha256:3d9a3f980b4ddaa78cf02f01dedaf564848a6bb6bebdeeb686ef22abcfb8cdb2'
       vault_agent:
         image: docker.io/vault
         tag: '1.4.1@sha256:a26845ac976fa471f1a373eba30d2e7b42ddd344c9aef094fddfad091bbd9941'
