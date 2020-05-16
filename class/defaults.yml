@@ -8,7 +8,7 @@ parameters:
         tag: 'v1.5.4@sha256:9b55703f06eff3b30320109f372fc15092fb07b9e0c1e2ee5c71fd7ff7a14b66'
       redis:
         image: docker.io/redis
-        tag: '5.0.9@sha256:43dbbe6f633572d66e84e7162245d8d70a18f00b819d6c0bf98ca02109f4788c'
+        tag: '5.0.9@sha256:ae4b7c01640a2688e9ef5dd630e2135df7a9e711e712e3d9eab05608d34e2b84'
       kapitan:
         image: docker.io/vshn/kapitan
         tag: 'v0.27.3@sha256:3d6a8853e43b1aae482a983daf7c31ad928128999873de21510f947a34e71867'
