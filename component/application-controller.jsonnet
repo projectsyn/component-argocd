@@ -25,7 +25,7 @@ local objects = [
               '--operation-processors',
               '10',
               '--app-resync',
-              '10',
+              std.format('%d', params.resync_seconds),
             ],
           }],
         },
