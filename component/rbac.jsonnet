@@ -8,21 +8,6 @@ local controller_clusterrolebinding = std.parseJson(kap.yaml_load('argocd/manife
 local server_clusterrole = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/rbac/argocd-server-clusterrole.yaml'));
 local server_clusterrolebinding = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/rbac/argocd-server-clusterrolebinding.yaml'));
 
-local legacy_objects = [
-  controller_clusterrole,
-  controller_clusterrolebinding {
-    subjects: [controller_clusterrolebinding.subjects[0] {
-      namespace: params.namespace,
-    }],
-  },
-  server_clusterrole,
-  server_clusterrolebinding {
-    subjects: [server_clusterrolebinding.subjects[0] {
-      namespace: params.namespace,
-    }],
-  },
-];
-
 local patch_name(obj) =
   obj {
     metadata+: {
@@ -54,5 +39,5 @@ local objects = [
 
 {
   ['%s-%s' % [obj.metadata.name, std.asciiLower(obj.kind)]]: obj
-  for obj in (legacy_objects + objects)
+  for obj in objects
 }
