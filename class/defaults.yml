@@ -2,6 +2,7 @@ parameters:
   argocd:
     namespace: syn
     git_tag: v1.5.4
+    resync_seconds: 180
     images:
       argocd:
         image: docker.io/argoproj/argocd
