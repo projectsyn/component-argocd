@@ -1,4 +1,3 @@
-local com = import 'lib/commodore.libjsonnet';
 local kap = import 'lib/kapitan.libjsonnet';
 local kube = import 'lib/kube.libjsonnet';
 local inv = kap.inventory();
@@ -41,14 +40,36 @@ local alert_rules =
           name: 'argocd.rules',
           rules: [
             {
-              alert: 'ArgoCDSyncFailed',
-              expr: 'rate(k8up_jobs_failed_counter[1d]) > 0',
-              'for': '1m',
+              alert: 'ArgoCDAppUnsynced',
+              expr: 'argocd_app_info{exported_namespace="' + params.namespace + '", sync_status!="Synced"} > 0',
+              'for': '10m',
+              labels: {
+                severity: 'warning',
+              },
+              annotations: {
+                description: 'Argo CD app {{ $labels.name }} is not synced',
+              },
+            },
+            {
+              alert: 'ArgoCDAppUnhealthy',
+              expr: 'argocd_app_info{exported_namespace="' + params.namespace + '", health_status!="Healthy"} > 0',
+              'for': '10m',
               labels: {
                 severity: 'critical',
               },
               annotations: {
-                description: 'Job in {{ $labels.namespace }} of type {{ $labels.jobType }} failed',
+                description: 'Argo CD app {{ $labels.name }} is not healthy',
+              },
+            },
+            {
+              alert: 'ArgoCDDown',
+              expr: 'up{namespace="' + params.namespace + '", job=~"^argocd-.+$"} != 1',
+              'for': '5m',
+              labels: {
+                severity: 'critical',
+              },
+              annotations: {
+                description: 'Argo CD job {{ $labels.job }} is down',
               },
             },
           ],
@@ -61,5 +82,5 @@ local alert_rules =
   serviceMonitor('argocd-metrics'),
   serviceMonitor('argocd-server-metrics'),
   serviceMonitor('argocd-repo-server'),
-  //alert_rules,
+  alert_rules,
 ]
