@@ -82,10 +82,10 @@ local config = [
   },
 ];
 
-local monitoring = import 'monitoring.libsonnet';
-
 {
   '00_namespace': namespace,
+  [if std.member(inv.classes, 'components.synsights-metrics') then
+    '20_monitoring']: import 'monitoring.libsonnet',
 } + {
   ['10_%s' % [obj.metadata.name]]: obj {
     metadata+: {
@@ -96,6 +96,4 @@ local monitoring = import 'monitoring.libsonnet';
     },
   }
   for obj in config
-} + if std.member(inv.classes, 'components.synsights-metrics') then {
-  '20_monitoring': monitoring,
-} else {}
+}

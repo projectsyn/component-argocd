@@ -47,7 +47,9 @@ local alert_rules =
                 severity: 'warning',
               },
               annotations: {
-                description: 'Argo CD app {{ $labels.name }} is not synced',
+                message: 'Argo CD app {{ $labels.name }} is not synced',
+                description: 'kubectl -n ' + params.namespace + ' describe app {{ $labels.name }}',
+                dashboard: 'argocd',
               },
             },
             {
@@ -58,7 +60,9 @@ local alert_rules =
                 severity: 'critical',
               },
               annotations: {
-                description: 'Argo CD app {{ $labels.name }} is not healthy',
+                message: 'Argo CD app {{ $labels.name }} is not healthy',
+                description: 'kubectl -n ' + params.namespace + ' describe app {{ $labels.name }}',
+                dashboard: 'argocd',
               },
             },
             {
@@ -69,7 +73,8 @@ local alert_rules =
                 severity: 'critical',
               },
               annotations: {
-                description: 'Argo CD job {{ $labels.job }} is down',
+                message: 'Argo CD job {{ $labels.job }} is down',
+                dashboard: 'argocd',
               },
             },
           ],
@@ -78,9 +83,24 @@ local alert_rules =
     },
   };
 
+local grafana_dashboard =
+  kube._Object('integreatly.org/v1alpha1', 'GrafanaDashboard', 'argocd') {
+    metadata+: {
+      namespace: inv.parameters.synsights.namespace,
+      labels+: {
+        app: inv.parameters.synsights.grafana_name,
+      },
+    },
+    spec: {
+      name: 'argocd',
+      url: 'https://raw.githubusercontent.com/argoproj/argo-cd/' + params.git_tag + '/examples/dashboard.json',
+    },
+  };
+
 [
   serviceMonitor('argocd-metrics'),
   serviceMonitor('argocd-server-metrics'),
   serviceMonitor('argocd-repo-server'),
   alert_rules,
+  if std.member(inv.classes, 'components.synsights-analytics') then grafana_dashboard,
 ]
