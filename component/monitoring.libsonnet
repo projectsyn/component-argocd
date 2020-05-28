@@ -1,0 +1,106 @@
+local kap = import 'lib/kapitan.libjsonnet';
+local kube = import 'lib/kube.libjsonnet';
+local inv = kap.inventory();
+local params = inv.parameters.argocd;
+
+local serviceMonitor(name) =
+  kube._Object('monitoring.coreos.com/v1', 'ServiceMonitor', name) {
+    metadata+: {
+      namespace: params.namespace,
+      labels+: {
+        'app.kubernetes.io/name': name,
+        'app.kubernetes.io/part-of': 'argocd',
+      },
+    },
+    spec: {
+      endpoints: [{
+        port: 'metrics',
+      }],
+      selector: {
+        matchLabels: {
+          'app.kubernetes.io/name': name,
+          'app.kubernetes.io/part-of': 'argocd',
+        },
+      },
+    },
+  };
+
+local alert_rules =
+  kube._Object('monitoring.coreos.com/v1', 'PrometheusRule', 'argocd') {
+    metadata+: {
+      namespace: params.namespace,
+      labels+: {
+        prometheus: inv.parameters.synsights.prometheus.name,
+        role: 'alert-rules',
+      },
+    },
+    spec: {
+      groups: [
+        {
+          name: 'argocd.rules',
+          rules: [
+            {
+              alert: 'ArgoCDAppUnsynced',
+              expr: 'argocd_app_info{exported_namespace="' + params.namespace + '", sync_status!="Synced"} > 0',
+              'for': '10m',
+              labels: {
+                severity: 'warning',
+              },
+              annotations: {
+                message: 'Argo CD app {{ $labels.name }} is not synced',
+                description: 'kubectl -n ' + params.namespace + ' describe app {{ $labels.name }}',
+                dashboard: 'argocd',
+              },
+            },
+            {
+              alert: 'ArgoCDAppUnhealthy',
+              expr: 'argocd_app_info{exported_namespace="' + params.namespace + '", health_status!="Healthy"} > 0',
+              'for': '10m',
+              labels: {
+                severity: 'critical',
+              },
+              annotations: {
+                message: 'Argo CD app {{ $labels.name }} is not healthy',
+                description: 'kubectl -n ' + params.namespace + ' describe app {{ $labels.name }}',
+                dashboard: 'argocd',
+              },
+            },
+            {
+              alert: 'ArgoCDDown',
+              expr: 'up{namespace="' + params.namespace + '", job=~"^argocd-.+$"} != 1',
+              'for': '5m',
+              labels: {
+                severity: 'critical',
+              },
+              annotations: {
+                message: 'Argo CD job {{ $labels.job }} is down',
+                dashboard: 'argocd',
+              },
+            },
+          ],
+        },
+      ],
+    },
+  };
+
+local grafana_dashboard =
+  kube._Object('integreatly.org/v1alpha1', 'GrafanaDashboard', 'argocd') {
+    metadata+: {
+      namespace: inv.parameters.synsights.namespace,
+      labels+: {
+        app: inv.parameters.synsights.grafana_name,
+      },
+    },
+    spec: {
+      name: 'argocd',
+      url: 'https://raw.githubusercontent.com/argoproj/argo-cd/' + params.git_tag + '/examples/dashboard.json',
+    },
+  };
+
+[
+  serviceMonitor('argocd-metrics'),
+  serviceMonitor('argocd-server-metrics'),
+  serviceMonitor('argocd-repo-server'),
+  alert_rules,
+  if std.member(inv.classes, 'components.synsights-analytics') then grafana_dashboard,
+]
