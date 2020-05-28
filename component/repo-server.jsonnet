@@ -1,3 +1,4 @@
+local com = import 'lib/commodore.libjsonnet';
 local kap = import 'lib/kapitan.libjsonnet';
 local kube = import 'lib/kube.libjsonnet';
 local inv = kap.inventory();
@@ -58,10 +59,9 @@ local objects = [
               '--redis',
               'argocd-redis:6379',
             ],
-            env+: [{
-              name: 'HOME',
-              value: '/home/argocd',
-            }],
+            env+: com.envList(com.proxyVars {
+              HOME: '/home/argocd',
+            }),
             volumeMounts+: [{
               name: 'kapitan-bin',
               mountPath: '/usr/local/bin/kapitan',
@@ -78,7 +78,7 @@ local objects = [
               '-config',
               '/etc/vault/vault-agent-config.hcl',
             ],
-            env_: {
+            env_: com.proxyVars {
               VAULT_ADDR: inv.parameters.secret_management.vault_addr,
               SKIP_SETCAP: 'true',
             },
