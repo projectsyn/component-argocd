@@ -1,75 +1,75 @@
 parameters:
   kapitan:
     dependencies:
-    # CRDs
-    - type: https
-      source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/crds/application-crd.yaml
-      output_path: dependencies/argocd/manifests/${argocd:git_tag}/crds/application-crd.yaml
-    - type: https
-      source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/crds/appproject-crd.yaml
-      output_path: dependencies/argocd/manifests/${argocd:git_tag}/crds/appproject-crd.yaml
-    # application-controller
-    - type: https
-      source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/application-controller/argocd-application-controller-deployment.yaml
-      output_path: dependencies/argocd/manifests/${argocd:git_tag}/application-controller/argocd-application-controller-deployment.yaml
-    - type: https
-      source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/application-controller/argocd-application-controller-role.yaml
-      output_path: dependencies/argocd/manifests/${argocd:git_tag}/application-controller/argocd-application-controller-role.yaml
-    - type: https
-      source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/application-controller/argocd-application-controller-rolebinding.yaml
-      output_path: dependencies/argocd/manifests/${argocd:git_tag}/application-controller/argocd-application-controller-rolebinding.yaml
-    - type: https
-      source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/application-controller/argocd-application-controller-sa.yaml
-      output_path: dependencies/argocd/manifests/${argocd:git_tag}/application-controller/argocd-application-controller-sa.yaml
-    - type: https
-      source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/application-controller/argocd-metrics.yaml
-      output_path: dependencies/argocd/manifests/${argocd:git_tag}/application-controller/argocd-metrics.yaml
-    # repo-server
-    - type: https
-      source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/repo-server/argocd-repo-server-deployment.yaml
-      output_path: dependencies/argocd/manifests/${argocd:git_tag}/repo-server/argocd-repo-server-deployment.yaml
-    - type: https
-      source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/repo-server/argocd-repo-server-service.yaml
-      output_path: dependencies/argocd/manifests/${argocd:git_tag}/repo-server/argocd-repo-server-service.yaml
-    # server
-    - type: https
-      source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/server/argocd-server-deployment.yaml
-      output_path: dependencies/argocd/manifests/${argocd:git_tag}/server/argocd-server-deployment.yaml
-    - type: https
-      source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/server/argocd-server-role.yaml
-      output_path: dependencies/argocd/manifests/${argocd:git_tag}/server/argocd-server-role.yaml
-    - type: https
-      source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/server/argocd-server-rolebinding.yaml
-      output_path: dependencies/argocd/manifests/${argocd:git_tag}/server/argocd-server-rolebinding.yaml
-    - type: https
-      source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/server/argocd-server-sa.yaml
-      output_path: dependencies/argocd/manifests/${argocd:git_tag}/server/argocd-server-sa.yaml
-    - type: https
-      source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/server/argocd-server-service.yaml
-      output_path: dependencies/argocd/manifests/${argocd:git_tag}/server/argocd-server-service.yaml
-    - type: https
-      source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/server/argocd-server-metrics.yaml
-      output_path: dependencies/argocd/manifests/${argocd:git_tag}/server/argocd-server-metrics.yaml
-    # redis
-    - type: https
-      source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/redis/argocd-redis-deployment.yaml
-      output_path: dependencies/argocd/manifests/${argocd:git_tag}/redis/argocd-redis-deployment.yaml
-    - type: https
-      source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/redis/argocd-redis-service.yaml
-      output_path: dependencies/argocd/manifests/${argocd:git_tag}/redis/argocd-redis-service.yaml
-    # RBAC
-    - type: https
-      source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/cluster-rbac/argocd-application-controller-clusterrole.yaml
-      output_path: dependencies/argocd/manifests/${argocd:git_tag}/rbac/argocd-application-controller-clusterrole.yaml
-    - type: https
-      source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/cluster-rbac/argocd-application-controller-clusterrolebinding.yaml
-      output_path: dependencies/argocd/manifests/${argocd:git_tag}/rbac/argocd-application-controller-clusterrolebinding.yaml
-    - type: https
-      source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/cluster-rbac/argocd-server-clusterrole.yaml
-      output_path: dependencies/argocd/manifests/${argocd:git_tag}/rbac/argocd-server-clusterrole.yaml
-    - type: https
-      source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/cluster-rbac/argocd-server-clusterrolebinding.yaml
-      output_path: dependencies/argocd/manifests/${argocd:git_tag}/rbac/argocd-server-clusterrolebinding.yaml
+      # CRDs
+      - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/crds/application-crd.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/crds/application-crd.yaml
+      - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/crds/appproject-crd.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/crds/appproject-crd.yaml
+      # application-controller
+      - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/application-controller/argocd-application-controller-deployment.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/application-controller/argocd-application-controller-deployment.yaml
+      - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/application-controller/argocd-application-controller-role.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/application-controller/argocd-application-controller-role.yaml
+      - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/application-controller/argocd-application-controller-rolebinding.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/application-controller/argocd-application-controller-rolebinding.yaml
+      - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/application-controller/argocd-application-controller-sa.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/application-controller/argocd-application-controller-sa.yaml
+      - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/application-controller/argocd-metrics.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/application-controller/argocd-metrics.yaml
+      # repo-server
+      - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/repo-server/argocd-repo-server-deployment.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/repo-server/argocd-repo-server-deployment.yaml
+      - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/repo-server/argocd-repo-server-service.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/repo-server/argocd-repo-server-service.yaml
+      # server
+      - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/server/argocd-server-deployment.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/server/argocd-server-deployment.yaml
+      - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/server/argocd-server-role.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/server/argocd-server-role.yaml
+      - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/server/argocd-server-rolebinding.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/server/argocd-server-rolebinding.yaml
+      - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/server/argocd-server-sa.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/server/argocd-server-sa.yaml
+      - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/server/argocd-server-service.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/server/argocd-server-service.yaml
+      - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/server/argocd-server-metrics.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/server/argocd-server-metrics.yaml
+      # redis
+      - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/redis/argocd-redis-deployment.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/redis/argocd-redis-deployment.yaml
+      - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/redis/argocd-redis-service.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/redis/argocd-redis-service.yaml
+      # RBAC
+      - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/cluster-rbac/argocd-application-controller-clusterrole.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/rbac/argocd-application-controller-clusterrole.yaml
+      - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/cluster-rbac/argocd-application-controller-clusterrolebinding.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/rbac/argocd-application-controller-clusterrolebinding.yaml
+      - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/cluster-rbac/argocd-server-clusterrole.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/rbac/argocd-server-clusterrole.yaml
+      - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/cluster-rbac/argocd-server-clusterrolebinding.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/rbac/argocd-server-clusterrolebinding.yaml
 
     compile:
       - input_paths:

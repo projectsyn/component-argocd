@@ -1,0 +1,3 @@
+= Argo CD: A Commodore component to manage Argo CD
+
+{doctitle} is a Commodore component which installs an manages https://argoproj.github.io/argo-cd/[**Argo CD**] on a cluster.
