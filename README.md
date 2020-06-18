@@ -1,6 +1,6 @@
 # Commodore Component: Argo CD
 
-This is a [Commodore](https://docs.syn.tools/commodore/index.html) Component which installs an manages https://argoproj.github.io/argo-cd/[**Argo CD**] on a cluster.
+This is a [Commodore](https://docs.syn.tools/commodore/index.html) Component which installs an manages [**Argo CD**](https://argoproj.github.io/argo-cd) on a cluster.
 
 This repository is part of Project Syn. For documentation about Project Syn and this component, see https://syn.tools.
 
