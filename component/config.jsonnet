@@ -28,6 +28,14 @@ local config = [
             key: sshPrivateKey
       |||,
       'resource.customizations': |||
+        admissionregistration.k8s.io/MutatingWebhookConfiguration:
+          ignoreDifferences: |
+            jsonPointers:
+              - /webhooks/0/clientConfig/caBundle
+        admissionregistration.k8s.io/ValidatingWebhookConfiguration:
+          ignoreDifferences: |
+            jsonPointers:
+              - /webhooks/0/clientConfig/caBundle
         apiextensions.k8s.io/CustomResourceDefinition:
           ignoreDifferences: |
             jsonPointers:
