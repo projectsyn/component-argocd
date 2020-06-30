@@ -8,8 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Open source component ([#1])
-- Update Argo CD to v1.6.1 ([#3])
+- Update Argo CD to v1.6.1
+
+### Added
+
+- Ignore CA bundles of webhooks ([#2])
+
+### Fixed
+
+- Remove empty `finalizers` field on root app ([#2])
 
 [Unreleased]: https://github.com/projectsyn/component-argocd/compare/546caccdd6868a8085aaa29d9e7a159ea53ff0aa..HEAD
 [#1]: https://github.com/projectsyn/component-argocd/pull/1
-[#3]: https://github.com/projectsyn/component-argocd/pull/3
+[#2]: https://github.com/projectsyn/component-argocd/pull/2
