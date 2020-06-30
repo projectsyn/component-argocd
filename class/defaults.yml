@@ -1,12 +1,12 @@
 parameters:
   argocd:
     namespace: syn
-    git_tag: v1.5.4
+    git_tag: v1.6.1
     resync_seconds: 180
     images:
       argocd:
         image: docker.io/argoproj/argocd
-        tag: 'v1.5.7@sha256:bc6ede4f7c371a09eb9647e9037396161414a0c22959e5f09c645f9a5fe5d917'
+        tag: 'v1.6.1'
       redis:
         image: docker.io/redis
         tag: '5.0.9@sha256:ef5c2a05d9b443d92e185c3e1bf976501f53c97005ec7627668a074f108a64b1'
