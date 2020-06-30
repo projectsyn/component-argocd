@@ -19,8 +19,9 @@ local default_project = argocd.Project('default') {
   },
 };
 local root_app = argocd.App('root', params.namespace, secrets=false) {
-  metadata+: {
-    finalizers: [],
+  metadata: {
+    name: 'root',
+    namespace: params.namespace,
   },
   spec+: {
     source+: {
