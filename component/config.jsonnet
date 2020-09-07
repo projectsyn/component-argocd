@@ -60,6 +60,7 @@ local config = [
     },
   },
   kube.ConfigMap('argocd-tls-certs-cm'),
+  kube.ConfigMap('argocd-gpg-keys-cm'),
   kube._Object('v1', 'Secret', 'argocd-secret') {
     type: 'Opaque',
   },

@@ -1,21 +1,21 @@
 parameters:
   argocd:
     namespace: syn
-    git_tag: v1.6.1
+    git_tag: v1.7.4
     resync_seconds: 180
     images:
       argocd:
         image: docker.io/argoproj/argocd
-        tag: 'v1.6.1'
+        tag: 'v1.7.4@sha256:d8a356b76d8b1bd810c9381f88ec0ae8cc71ad0ec2e22910a47f5c56417a40d0'
       redis:
         image: docker.io/redis
-        tag: '5.0.9@sha256:ef5c2a05d9b443d92e185c3e1bf976501f53c97005ec7627668a074f108a64b1'
+        tag: '5.0.9@sha256:ab3998e18bfaa570fad08c884ffbcc7861f59caf736a5a0c1ad5383c4d863958'
       kapitan:
         image: docker.io/vshn/kapitan
         tag: 'v0.29.1@sha256:32440e6c1eecc7c02feeec3a842d370c99b884ff238f8795258146393de45e3f'
       vault_agent:
         image: docker.io/vault
-        tag: '1.4.2@sha256:c89130e9e494c96f0945235597372b271a991eb7c694f7b42be8d9a23081c1a0'
+        tag: '1.5.3@sha256:14c29a6810974d3611c578509ad9398cadf44e8f6fa354c7d1ced62b5f26d372'
     ssh_known_hosts: |
       git.vshn.net ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCnE1dMkh+3uHWck+cTvQqeNUW0lj1uVcIC9JX2Tg6gmkKCYA73+o+I7vo4g6nPtSOAfITvYdHJLzwE9GwlSFsXHMR9q0ErWl2wC+w6FawLMz9//5XqiBi2qq/8WnWp3ecY16jDoGRW4eymT+USFHKJVi696XBy3WE/0BBapPZ58WPqkKN6A27qkIK6FehI80f+zN4ZqikdwWuCFs35fsimcmLnWqWPm8zbOkgCiB+ov4O/xmRNHwJWCk/qzU6X/M9YtMXzAa5mjwDvcHSAizFD3a3Fv68G1VsmRZ0THLrRKM/WOxrWNZoimSNgyjTzoCwiKeckvL5+hpNcNSW+eBPt
       git.vshn.net ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO9EkPcVdsz/oVTI2VJkBlq8Mv/dg3rhcbgzAEKyiwUG
