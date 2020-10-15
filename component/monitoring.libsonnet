@@ -45,6 +45,7 @@ local alert_rules =
               'for': '10m',
               labels: {
                 severity: 'warning',
+                syn: 'true',
               },
               annotations: {
                 message: 'Argo CD app {{ $labels.name }} is not synced',
@@ -58,6 +59,7 @@ local alert_rules =
               'for': '10m',
               labels: {
                 severity: 'critical',
+                syn: 'true',
               },
               annotations: {
                 message: 'Argo CD app {{ $labels.name }} is not healthy',
@@ -71,6 +73,7 @@ local alert_rules =
               'for': '5m',
               labels: {
                 severity: 'critical',
+                syn: 'true',
               },
               annotations: {
                 message: 'Argo CD job {{ $labels.job }} is down',

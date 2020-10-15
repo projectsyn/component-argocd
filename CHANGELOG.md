@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Ignore CA bundles of webhooks ([#2])
+- Syn label to alert rules ([#7])
 
 ### Fixed
 
@@ -28,3 +29,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#3]: https://github.com/projectsyn/component-argocd/pull/3
 [#4]: https://github.com/projectsyn/component-argocd/pull/4
 [#5]: https://github.com/projectsyn/component-argocd/pull/5
+[#7]: https://github.com/projectsyn/component-argocd/pull/7
