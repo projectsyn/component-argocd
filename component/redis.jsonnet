@@ -11,7 +11,7 @@ local objects = [
     spec+: {
       template+: {
         spec+: {
-          [if std.startsWith(inv.parameters.cluster.dist, 'openshift') then
+          [if std.startsWith(inv.parameters.facts.distribution, 'openshift') then
             'securityContext']:: {},
           volumes: [{
             name: 'data',

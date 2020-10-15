@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update Argo CD to v1.6.1
 - Update Kapitan to v0.29.1 ([#3])
 - Update Argo CD to v1.7.4 ([#5])
+- Update deprecated parameters ([#8])
 
 ### Added
 
@@ -30,3 +31,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#4]: https://github.com/projectsyn/component-argocd/pull/4
 [#5]: https://github.com/projectsyn/component-argocd/pull/5
 [#7]: https://github.com/projectsyn/component-argocd/pull/7
+[#8]: https://github.com/projectsyn/component-argocd/pull/8
