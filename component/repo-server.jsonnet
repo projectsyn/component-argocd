@@ -5,6 +5,7 @@ local inv = kap.inventory();
 local params = inv.parameters.argocd;
 local image = params.images.argocd.image + ':' + params.images.argocd.tag;
 
+local isOpenshift = std.startsWith(inv.parameters.facts.distribution, 'openshift');
 local deployment = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/repo-server/argocd-repo-server-deployment.yaml'));
 local service = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/repo-server/argocd-repo-server-service.yaml'));
 local vault_agent_config = kube.ConfigMap('vault-agent-config') {
@@ -78,6 +79,9 @@ local objects = [
               '-config',
               '/etc/vault/vault-agent-config.hcl',
             ],
+            [if !isOpenshift then 'securityContext']: {
+              runAsUser: 100,
+            },
             env_: com.proxyVars {
               VAULT_ADDR: inv.parameters.secret_management.vault_addr,
               SKIP_SETCAP: 'true',
