@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Ignore CA bundles of webhooks ([#2])
 - Syn label to alert rules ([#7])
+- Health check for Crossplane provider ([#11])
 
 ### Fixed
 
@@ -34,3 +35,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#7]: https://github.com/projectsyn/component-argocd/pull/7
 [#8]: https://github.com/projectsyn/component-argocd/pull/8
 [#10]: https://github.com/projectsyn/component-argocd/pull/10
+[#11]: https://github.com/projectsyn/component-argocd/pull/11
