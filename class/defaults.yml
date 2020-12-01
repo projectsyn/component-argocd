@@ -11,8 +11,8 @@ parameters:
         image: docker.io/redis
         tag: '5.0.9@sha256:ab3998e18bfaa570fad08c884ffbcc7861f59caf736a5a0c1ad5383c4d863958'
       kapitan:
-        image: docker.io/vshn/kapitan
-        tag: 'v0.29.1@sha256:32440e6c1eecc7c02feeec3a842d370c99b884ff238f8795258146393de45e3f'
+        image: docker.io/projectsyn/kapitan
+        tag: 'v0.29.1@sha256:14f31adadb5d1a28fa097a98bb48bb5a2a0cc1fbaa6f3bcd915e8ba7cd016662'
       vault_agent:
         image: docker.io/vault
         tag: '1.5.3@sha256:14c29a6810974d3611c578509ad9398cadf44e8f6fa354c7d1ced62b5f26d372'
