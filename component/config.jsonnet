@@ -100,7 +100,7 @@ local config = [
 
 {
   '00_namespace': namespace,
-  [if std.member(inv.classes, 'components.synsights-metrics') then
+  [if params.monitoring.enabled then
     '20_monitoring']: import 'monitoring.libsonnet',
 } + {
   ['10_%s' % [obj.metadata.name]]: obj {

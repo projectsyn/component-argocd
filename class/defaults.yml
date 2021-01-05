@@ -1,6 +1,11 @@
 parameters:
   argocd:
     namespace: syn
+    monitoring:
+      enabled: true
+      dashboards: false
+      prometheus_rule_labels:
+        prometheus: platform
     git_tag: v1.7.4
     resync_seconds: 180
     images:
