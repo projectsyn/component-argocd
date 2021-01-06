@@ -1,0 +1,84 @@
+= Parameters
+
+The parent key for all of the following parameters is `argocd`.
+
+
+== `namespace`
+
+[horizontal]
+type:: string
+default:: `syn`
+
+The namespace in which to deploy this component.
+
+== `git_tag`
+
+[horizontal]
+type:: string
+default:: `v1.7.4`
+
+Git tag of Argo CD to deploy.
+
+=== `resync_seconds`
+
+[horizontal]
+type:: int
+default:: `180`
+
+Resync interval in seconds.
+Lower values mean quicker sync but higher CPU usage and more Git traffic.
+
+=== `ssh_known_hosts`
+
+[horizontal]
+type:: string
+
+SSH known hosts for Git servers.
+
+== `images`
+
+[horizontal]
+type:: dictionary
+
+Dictionary containing the container images used by this component.
+
+== `monitoring.enabled`
+
+[horizontal]
+type:: bool
+default:: `true`
+
+If monitoring should be enabled for this component.
+Requires the https://github.com/prometheus-operator/prometheus-operator[Prometheus Operator] to be installed.
+
+== `monitoring.dashboards`
+
+[horizontal]
+type:: bool
+default:: `true`
+
+If dashboards should be enabled for this component.
+Requires the https://github.com/integr8ly/grafana-operator[Grafana Operator] to be installed.
+
+== `monitoring.prometheus_rule_labels`
+
+[horizontal]
+type:: dict
+default:: `{"prometheus":"platform"}`
+
+Labels to set on the alert rule configuration.
+Can be used to ensure prometheus-operator picks up the `PrometheusRule` object by setting appropriate labels.
+
+
+== Example
+
+[source,yaml]
+----
+parameters:
+  argocd:
+    resync_seconds: 3
+    ssh_known_hosts: |
+      git.example.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO9EkPcVdsz/oVTI2VJkBlq8Mv/dg3rhcbgzAEKyiwUG
+    monitoring:
+      dashboards: true
+----

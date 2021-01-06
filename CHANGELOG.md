@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update deprecated parameters ([#8])
 - Run Vault agent as user ([#10])
 - Pull Kapitan image from docker.io/projectsyn/kapitan by default ([#12])
+- Remove dependency on synsights ([#13])
 
 ### Added
 
@@ -38,3 +39,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#10]: https://github.com/projectsyn/component-argocd/pull/10
 [#11]: https://github.com/projectsyn/component-argocd/pull/11
 [#12]: https://github.com/projectsyn/component-argocd/pull/12
+[#13]: https://github.com/projectsyn/component-argocd/pull/13

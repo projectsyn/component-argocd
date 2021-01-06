@@ -30,9 +30,8 @@ local alert_rules =
     metadata+: {
       namespace: params.namespace,
       labels+: {
-        prometheus: inv.parameters.synsights.prometheus.name,
         role: 'alert-rules',
-      },
+      } + params.monitoring.prometheus_rule_labels,
     },
     spec: {
       groups: [
@@ -89,10 +88,7 @@ local alert_rules =
 local grafana_dashboard =
   kube._Object('integreatly.org/v1alpha1', 'GrafanaDashboard', 'argocd') {
     metadata+: {
-      namespace: inv.parameters.synsights.namespace,
-      labels+: {
-        app: inv.parameters.synsights.grafana_name,
-      },
+      namespace: params.namespace,
     },
     spec: {
       name: 'argocd',
@@ -105,5 +101,4 @@ local grafana_dashboard =
   serviceMonitor('argocd-server-metrics'),
   serviceMonitor('argocd-repo-server'),
   alert_rules,
-  if std.member(inv.classes, 'components.synsights-analytics') then grafana_dashboard,
-]
+] + if params.monitoring.dashboards then [grafana_dashboard] else []
