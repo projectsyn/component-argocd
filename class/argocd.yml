@@ -55,6 +55,15 @@ parameters:
         source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/redis/argocd-redis-deployment.yaml
         output_path: dependencies/argocd/manifests/${argocd:git_tag}/redis/argocd-redis-deployment.yaml
       - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/redis/argocd-redis-role.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/redis/argocd-redis-role.yaml
+      - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/redis/argocd-redis-rolebinding.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/redis/argocd-redis-rolebinding.yaml
+      - type: https
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/redis/argocd-redis-sa.yaml
+        output_path: dependencies/argocd/manifests/${argocd:git_tag}/redis/argocd-redis-sa.yaml
+      - type: https
         source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:git_tag}/manifests/base/redis/argocd-redis-service.yaml
         output_path: dependencies/argocd/manifests/${argocd:git_tag}/redis/argocd-redis-service.yaml
       # RBAC

@@ -5,6 +5,9 @@ local params = inv.parameters.argocd;
 local image = params.images.redis.image + ':' + params.images.redis.tag;
 
 local deployment = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/redis/argocd-redis-deployment.yaml'));
+local role = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/redis/argocd-redis-role.yaml'));
+local role_binding = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/redis/argocd-redis-rolebinding.yaml'));
+local serviceaccount = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/redis/argocd-redis-sa.yaml'));
 local service = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/redis/argocd-redis-service.yaml'));
 local objects = [
   deployment {
@@ -29,6 +32,9 @@ local objects = [
       },
     },
   },
+  role,
+  role_binding,
+  serviceaccount,
   service,
 ];
 
