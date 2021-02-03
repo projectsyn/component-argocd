@@ -4,18 +4,18 @@ local inv = kap.inventory();
 local params = inv.parameters.argocd;
 local image = params.images.argocd.image + ':' + params.images.argocd.tag;
 
-local deployment = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/application-controller/argocd-application-controller-deployment.yaml'));
+local statefulset = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/application-controller/argocd-application-controller-statefulset.yaml'));
 local role = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/application-controller/argocd-application-controller-role.yaml'));
 local role_binding = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/application-controller/argocd-application-controller-rolebinding.yaml'));
 local serviceaccount = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/application-controller/argocd-application-controller-sa.yaml'));
 local metrics_svc = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/application-controller/argocd-metrics.yaml'));
 
 local objects = [
-  deployment {
+  statefulset {
     spec+: {
       template+: {
         spec+: {
-          containers: [deployment.spec.template.spec.containers[0] {
+          containers: [statefulset.spec.template.spec.containers[0] {
             image: image,
             imagePullPolicy: 'IfNotPresent',
             command: [
