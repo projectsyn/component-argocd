@@ -6,12 +6,12 @@ parameters:
       dashboards: false
       prometheus_rule_labels:
         prometheus: platform
-    git_tag: v1.8.3
+    git_tag: v1.8.7
     resync_seconds: 180
     images:
       argocd:
         image: docker.io/argoproj/argocd
-        tag: 'v1.8.3@sha256:60b995ec72afbf286638cd5b54a9f58f14d4aa7871e414246954f5c3664e63ed'
+        tag: 'v1.8.7@sha256:ce34acd7bac34d5a4fdbf96faf11fa5e01a7f96a27041d4472ca498886000cbf'
       redis:
         image: docker.io/redis
         tag: '5.0.9@sha256:ab3998e18bfaa570fad08c884ffbcc7861f59caf736a5a0c1ad5383c4d863958'
