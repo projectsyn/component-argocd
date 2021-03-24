@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.0.0]
+
+### Changed
+- Upgrade ArgoCD from v1.7.4 to 1.8.7 ([#15])
+
+### BREAKING CHANGES
+- The version v2.0.0 does use a statefulset instead of a deployment and is only compatible with ArgoCD 1.8.
+- It requires the steward component v2.0.0.
+
 ## [v1.0.0]
 
 ### Changed
@@ -28,8 +37,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove empty `finalizers` field on root app ([#2])
 - Kapitan container image digest ([#4])
 
-[Unreleased]: https://github.com/projectsyn/component-argocd/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/projectsyn/component-argocd/compare/v2.0.0...HEAD
 [v1.0.0]: https://github.com/projectsyn/component-argocd/releases/tag/v1.0.0
+[v2.0.0]: https://github.com/projectsyn/component-argocd/releases/tag/v2.0.0
 
 [#1]: https://github.com/projectsyn/component-argocd/pull/1
 [#2]: https://github.com/projectsyn/component-argocd/pull/2
@@ -42,3 +52,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#11]: https://github.com/projectsyn/component-argocd/pull/11
 [#12]: https://github.com/projectsyn/component-argocd/pull/12
 [#13]: https://github.com/projectsyn/component-argocd/pull/13
+[#15]: https://github.com/projectsyn/component-argocd/pull/15
