@@ -16,18 +16,18 @@ local objects = [
         spec+: {
           [if std.startsWith(inv.parameters.facts.distribution, 'openshift') then
             'securityContext']:: {},
-          volumes: [{
+          volumes: [ {
             name: 'data',
             emptyDir: {},
-          }],
-          containers: [deployment.spec.template.spec.containers[0] {
+          } ],
+          containers: [ deployment.spec.template.spec.containers[0] {
             image: image,
             imagePullPolicy: 'IfNotPresent',
-            volumeMounts: [{
+            volumeMounts: [ {
               name: 'data',
               mountPath: '/data',
-            }],
-          }],
+            } ],
+          } ],
         },
       },
     },
@@ -39,7 +39,7 @@ local objects = [
 ];
 
 {
-  ['%s' % [std.asciiLower(obj.kind)]]: obj {
+  ['%s' % [ std.asciiLower(obj.kind) ]]: obj {
     metadata+: {
       namespace: params.namespace,
     },

@@ -22,9 +22,9 @@ local patch_role = patch_name;
 // role name.
 local patch_rolebinding(obj) =
   patch_name(obj) {
-    subjects: [super.subjects[0] {
+    subjects: [ super.subjects[0] {
       namespace: params.namespace,
-    }],
+    } ],
     roleRef+: {
       name: 'syn-%s' % super.name,
     },
@@ -38,6 +38,6 @@ local objects = [
 ];
 
 {
-  ['%s-%s' % [obj.metadata.name, std.asciiLower(obj.kind)]]: obj
+  ['%s-%s' % [ obj.metadata.name, std.asciiLower(obj.kind) ]]: obj
   for obj in objects
 }
