@@ -15,7 +15,7 @@ local objects = [
     spec+: {
       template+: {
         spec+: {
-          containers: [statefulset.spec.template.spec.containers[0] {
+          containers: [ statefulset.spec.template.spec.containers[0] {
             image: image,
             imagePullPolicy: 'IfNotPresent',
             command: [
@@ -27,7 +27,7 @@ local objects = [
               '--app-resync',
               std.format('%d', params.resync_seconds),
             ],
-          }],
+          } ],
         },
       },
     },
@@ -39,7 +39,7 @@ local objects = [
 ];
 
 {
-  ['%s' % [std.asciiLower(obj.kind)]]: obj {
+  ['%s' % [ std.asciiLower(obj.kind) ]]: obj {
     metadata+: {
       namespace: params.namespace,
     },

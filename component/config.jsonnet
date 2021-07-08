@@ -103,7 +103,7 @@ local config = [
   [if params.monitoring.enabled then
     '20_monitoring']: import 'monitoring.libsonnet',
 } + {
-  ['10_%s' % [obj.metadata.name]]: obj {
+  ['10_%s' % [ obj.metadata.name ]]: obj {
     metadata+: {
       namespace: params.namespace,
       labels+: {

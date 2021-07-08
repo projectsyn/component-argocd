@@ -20,7 +20,7 @@ local objects = [
     spec+: {
       template+: {
         spec+: {
-          containers: [deployment.spec.template.spec.containers[0] {
+          containers: [ deployment.spec.template.spec.containers[0] {
             image: image,
             imagePullPolicy: 'IfNotPresent',
             command: [
@@ -29,7 +29,7 @@ local objects = [
               '/shared/app',
               '--insecure',
             ],
-          }] + deployment.spec.template.spec.containers[1:],
+          } ] + deployment.spec.template.spec.containers[1:],
         },
       },
     },
@@ -41,7 +41,7 @@ local objects = [
 ];
 
 {
-  ['%s' % [std.asciiLower(obj.kind)]]: obj {
+  ['%s' % [ std.asciiLower(obj.kind) ]]: obj {
     metadata+: {
       namespace: params.namespace,
     },

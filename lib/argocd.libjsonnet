@@ -78,17 +78,17 @@ local ArgoProject(name) = {
     sourceRepos: [
       inv.parameters.cluster.catalog_url,
     ],
-    destinations: [{
+    destinations: [ {
       server: 'https://kubernetes.default.svc',
       namespace: '*',
-    }],
+    } ],
     orphanedResources: {
       warn: false,
     },
-    clusterResourceWhitelist: [{
+    clusterResourceWhitelist: [ {
       group: '*',
       kind: '*',
-    }],
+    } ],
   },
 };
 

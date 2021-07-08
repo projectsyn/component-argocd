@@ -7,15 +7,15 @@ local argocd = import 'lib/argocd.libjsonnet';
 local syn_project = argocd.Project('syn');
 local default_project = argocd.Project('default') {
   spec: {
-    destinations: [{
+    destinations: [ {
       namespace: '*',
       server: '*',
-    }],
-    clusterResourceWhitelist: [{
+    } ],
+    clusterResourceWhitelist: [ {
       group: '*',
       kind: '*',
-    }],
-    sourceRepos: ['*'],
+    } ],
+    sourceRepos: [ '*' ],
   },
 };
 local root_app = argocd.App('root', params.namespace, secrets=false) {

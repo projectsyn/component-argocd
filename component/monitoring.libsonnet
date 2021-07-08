@@ -13,9 +13,9 @@ local serviceMonitor(name) =
       },
     },
     spec: {
-      endpoints: [{
+      endpoints: [ {
         port: 'metrics',
-      }],
+      } ],
       selector: {
         matchLabels: {
           'app.kubernetes.io/name': name,
@@ -101,4 +101,4 @@ local grafana_dashboard =
   serviceMonitor('argocd-server-metrics'),
   serviceMonitor('argocd-repo-server'),
   alert_rules,
-] + if params.monitoring.dashboards then [grafana_dashboard] else []
+] + if params.monitoring.dashboards then [ grafana_dashboard ] else []

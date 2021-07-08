@@ -36,7 +36,7 @@ local objects = [
     spec+: {
       template+: {
         spec+: {
-          initContainers+: [{
+          initContainers+: [ {
             name: 'install-kapitan',
             image: params.images.kapitan.image + ':' + params.images.kapitan.tag,
             imagePullPolicy: 'Always',
@@ -46,12 +46,12 @@ local objects = [
               '/usr/local/bin/kapitan',
               '/custom-tools/',
             ],
-            volumeMounts: [{
+            volumeMounts: [ {
               name: 'kapitan-bin',
               mountPath: '/custom-tools',
-            }],
-          }],
-          containers: [deployment.spec.template.spec.containers[0] {
+            } ],
+          } ],
+          containers: [ deployment.spec.template.spec.containers[0] {
             image: image,
             imagePullPolicy: 'IfNotPresent',
             command: [
@@ -63,14 +63,14 @@ local objects = [
             env+: com.envList(com.proxyVars {
               HOME: '/home/argocd',
             }),
-            volumeMounts+: [{
+            volumeMounts+: [ {
               name: 'kapitan-bin',
               mountPath: '/usr/local/bin/kapitan',
               subPath: 'kapitan',
             }, {
               name: 'vault-token',
               mountPath: '/home/argocd/',
-            }],
+            } ],
           }, kube.Container('vault-agent') {
             name: 'vault-agent',
             image: params.images.vault_agent.image + ':' + params.images.vault_agent.tag,
@@ -97,8 +97,8 @@ local objects = [
                 mountPath: '/var/run/secrets/syn/',
               },
             },
-          }],
-          volumes+: [{
+          } ],
+          volumes+: [ {
             name: 'kapitan-bin',
             emptyDir: {},
           }, {
@@ -116,7 +116,7 @@ local objects = [
             secret: {
               secretName: 'steward',
             },
-          }],
+          } ],
         },
       },
     },
@@ -125,7 +125,7 @@ local objects = [
 ];
 
 {
-  ['%s' % [std.asciiLower(obj.kind)]]: obj {
+  ['%s' % [ std.asciiLower(obj.kind) ]]: obj {
     metadata+: {
       namespace: params.namespace,
     },
