@@ -1,3 +1,9 @@
+#
+# File managed by ModuleSync - Do Not Edit
+#
+# Additional Makefiles can be added to `.sync.yml` in 'Makefile.includes'
+#
+
 MAKEFLAGS += --warn-undefined-variables
 SHELL := bash
 .SHELLFLAGS := -eu -o pipefail -c
@@ -5,28 +11,50 @@ SHELL := bash
 .DELETE_ON_ERROR:
 .SUFFIXES:
 
-FILES_JSONNET ?= $(shell find . -type f -name '*.*jsonnet' -or -name '*.libsonnet')
-FILES_YAML ?= $(shell find . -type f -name '*.yaml' -or -name '*.yml')
+include Makefile.vars.mk
 
-JSONNETFMT_ARGS ?= --in-place
+.PHONY: help
+help: ## Show this help
+	@grep -E -h '\s##\s' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = "(: ).*?## "}; {gsub(/\\:/,":", $$1)}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 .PHONY: all
 all: lint
 
 .PHONY: lint
-lint: lint_jsonnet lint_yaml
+lint: lint_jsonnet lint_yaml lint_adoc ## All-in-one linting
 
 .PHONY: lint_jsonnet
-lint_jsonnet: $(FILES_JSONNET)
-	jsonnetfmt $(JSONNETFMT_ARGS) --test -- $?
+lint_jsonnet: $(JSONNET_FILES) ## Lint jsonnet files
+	$(JSONNET_DOCKER) $(JSONNETFMT_ARGS) --test -- $?
 
 .PHONY: lint_yaml
-lint_yaml: $(FILES_YAML)
-	yamllint -f parsable -c .yamllint.yaml --no-warnings -- $?
+lint_yaml: $(YAML_FILES) ## Lint yaml files
+	$(YAMLLINT_DOCKER) -f parsable -c $(YAMLLINT_CONFIG) $(YAMLLINT_ARGS) -- $?
+
+.PHONY: lint_adoc
+lint_adoc: ## Lint documentation
+	$(VALE_CMD) $(VALE_ARGS)
 
 .PHONY: format
-format: format_jsonnet
+format: format_jsonnet ## All-in-one formatting
 
 .PHONY: format_jsonnet
-format_jsonnet: $(FILES_JSONNET)
-	jsonnetfmt $(JSONNETFMT_ARGS) -- $?
+format_jsonnet: $(JSONNET_FILES) ## Format jsonnet files
+	$(JSONNET_DOCKER) $(JSONNETFMT_ARGS) -- $?
+
+.PHONY: docs-serve
+docs-serve: ## Preview the documentation
+	$(ANTORA_PREVIEW_CMD)
+
+.PHONY: compile
+.compile:
+	mkdir -p dependencies
+	$(COMMODORE_CMD)
+
+.PHONY: test
+test: commodore_args = -f tests/$(instance).yml --search-paths ./dependencies
+test: .compile ## Compile the component
+
+.PHONY: clean
+clean: ## Clean the project
+	rm -rf compiled dependencies vendor helmcharts jsonnetfile*.json || true
