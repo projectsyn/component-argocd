@@ -1,0 +1,8 @@
+:global:
+  componentName: argocd
+  githubUrl: https://github.com/projectsyn/component-argocd
+  feature_goUnitTests: false
+
+docs/antora.yml:
+  name: argocd
+  title: argocd
