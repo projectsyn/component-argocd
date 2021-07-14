@@ -22,10 +22,16 @@ local objects = [
           } ],
           containers: [ deployment.spec.template.spec.containers[0] {
             image: image,
+            args: [],
+            env+: [
+              { name: 'ALLOW_EMPTY_PASSWORD', value: 'yes' },
+              { name: 'REDIS_AOF_ENABLED', value: 'no' },
+              { name: 'REDIS_EXTRA_FLAGS', value: "--save ''" },
+            ],
             imagePullPolicy: 'IfNotPresent',
             volumeMounts: [ {
               name: 'data',
-              mountPath: '/data',
+              mountPath: '/bitnami/redis/data',
             } ],
           } ],
         },
