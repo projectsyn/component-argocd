@@ -42,6 +42,8 @@ type:: dictionary
 
 Dictionary containing the container images used by this component.
 
+NOTE: For Redis, both https://hub.docker.com/_/redis[`library/redis`] and https://hub.docker.com/r/bitnami/redis[`bitnami/redis`] images are supported.
+
 == `monitoring.enabled`
 
 [horizontal]
