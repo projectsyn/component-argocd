@@ -10,10 +10,12 @@ local role_binding = std.parseJson(kap.yaml_load('argocd/manifests/' + params.gi
 local serviceaccount = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/redis/argocd-redis-sa.yaml'));
 local service = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/redis/argocd-redis-service.yaml'));
 
+local strContains(s, substr) = std.findSubstr(substr, s) != [];
+
+local isBitnamiImage = strContains(image, 'bitnami');
+local isOnOpenshift = std.startsWith(inv.parameters.facts.distribution, 'openshift');
 
 local redisSpec(image) =
-  local strContains(s, substr) = std.findSubstr(substr, s) != [];
-
   local volumeMounts(path) = [ {
     name: 'data',
     mountPath: path,
@@ -23,7 +25,7 @@ local redisSpec(image) =
     image: image,
     imagePullPolicy: 'IfNotPresent',
   } +
-  if strContains(image, 'bitnami') then
+  if isBitnamiImage then
     {
       env+: [
         { name: 'ALLOW_EMPTY_PASSWORD', value: 'yes' },
@@ -38,12 +40,23 @@ local redisSpec(image) =
       volumeMounts: volumeMounts('/data'),
     };
 
+local securityContext = if isOnOpenshift then
+  { securityContext:: {} }
+else if isBitnamiImage then
+  { securityContext+: {
+    runAsUser: 1001,
+    runAsGroup: 1001,
+    fsGroup: 1001,
+    runAsNonRoot: true,
+  } }
+else
+  {};
+
 local objects = [
   deployment {
     spec+: {
       template+: {
-        spec+: {
-          securityContext:: {},
+        spec+: securityContext {
           volumes: [ {
             name: 'data',
             emptyDir: {},
