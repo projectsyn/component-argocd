@@ -1,1 +1,4 @@
 * xref:index.adoc[Home]
+
+.References
+* xref:references/parameters.adoc[Parameters]
