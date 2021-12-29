@@ -2,6 +2,7 @@
   componentName: argocd
   githubUrl: https://github.com/projectsyn/component-argocd
   feature_goUnitTests: false
+  feature_goldenTests: true
 
 docs/antora.yml:
   name: argocd
