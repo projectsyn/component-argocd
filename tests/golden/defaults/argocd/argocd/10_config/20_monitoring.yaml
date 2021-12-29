@@ -57,9 +57,11 @@ kind: PrometheusRule
 metadata:
   annotations: {}
   labels:
+    cluster_id: c-green-test-1234
     name: argocd
     prometheus: platform
     role: alert-rules
+    tenant_id: t-silent-test-1234
   name: argocd
   namespace: syn
 spec:
