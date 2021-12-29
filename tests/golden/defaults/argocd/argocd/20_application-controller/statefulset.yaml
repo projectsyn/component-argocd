@@ -42,7 +42,98 @@ spec:
             - '10'
             - --app-resync
             - '180'
-          image: quay.io/argoproj/argocd:v2.0.4@sha256:976dfbfadb817ba59f4f641597a13df7b967cd5a1059c966fa843869c9463348
+          env:
+            - name: ARGOCD_RECONCILIATION_TIMEOUT
+              valueFrom:
+                configMapKeyRef:
+                  key: timeout.reconciliation
+                  name: argocd-cm
+                  optional: true
+            - name: ARGOCD_APPLICATION_CONTROLLER_REPO_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  key: repo.server
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATION_CONTROLLER_REPO_SERVER_TIMEOUT_SECONDS
+              valueFrom:
+                configMapKeyRef:
+                  key: controller.repo.server.timeout.seconds
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATION_CONTROLLER_STATUS_PROCESSORS
+              valueFrom:
+                configMapKeyRef:
+                  key: controller.status.processors
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATION_CONTROLLER_OPERATION_PROCESSORS
+              valueFrom:
+                configMapKeyRef:
+                  key: controller.operation.processors
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATION_CONTROLLER_LOGFORMAT
+              valueFrom:
+                configMapKeyRef:
+                  key: controller.log.format
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATION_CONTROLLER_LOGLEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: controller.log.level
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATION_CONTROLLER_METRICS_CACHE_EXPIRATION
+              valueFrom:
+                configMapKeyRef:
+                  key: controller.metrics.cache.expiration
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATION_CONTROLLER_SELF_HEAL_TIMEOUT_SECONDS
+              valueFrom:
+                configMapKeyRef:
+                  key: controller.self.heal.timeout.seconds
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATION_CONTROLLER_REPO_SERVER_PLAINTEXT
+              valueFrom:
+                configMapKeyRef:
+                  key: controller.repo.server.plaintext
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APPLICATION_CONTROLLER_REPO_SERVER_STRICT_TLS
+              valueFrom:
+                configMapKeyRef:
+                  key: controller.repo.server.strict.tls
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_APP_STATE_CACHE_EXPIRATION
+              valueFrom:
+                configMapKeyRef:
+                  key: controller.app.state.cache.expiration
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: REDIS_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  key: redis.server
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: REDISDB
+              valueFrom:
+                configMapKeyRef:
+                  key: redis.db
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_DEFAULT_CACHE_EXPIRATION
+              valueFrom:
+                configMapKeyRef:
+                  key: controller.default.cache.expiration
+                  name: argocd-cmd-params-cm
+                  optional: true
+          image: quay.io/argoproj/argocd:v2.2.1
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -64,11 +155,18 @@ spec:
             capabilities:
               drop:
                 - all
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
           volumeMounts:
             - mountPath: /app/config/controller/tls
               name: argocd-repo-server-tls
+            - mountPath: /home/argocd
+              name: argocd-home
+          workingDir: /home/argocd
       serviceAccountName: argocd-application-controller
       volumes:
+        - emptyDir: {}
+          name: argocd-home
         - name: argocd-repo-server-tls
           secret:
             items:

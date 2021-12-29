@@ -8,14 +8,14 @@ parameters:
         prometheus: platform
         cluster_id: ${cluster:name}
         tenant_id: ${cluster:tenant}
-    git_tag: v2.0.4
+    git_tag: v2.2.1
     resync_seconds: 180
     images:
       argocd:
         image: quay.io/argoproj/argocd
-        tag: 'v2.0.4@sha256:976dfbfadb817ba59f4f641597a13df7b967cd5a1059c966fa843869c9463348'
+        tag: 'v2.2.1'
       redis:
-        image: quay.io/bitnami/redis
+        image: docker.io/library/redis
         tag: '6.2.4'
       kapitan:
         image: docker.io/projectsyn/kapitan

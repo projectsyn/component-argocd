@@ -32,28 +32,17 @@ spec:
                 topologyKey: kubernetes.io/hostname
               weight: 5
       containers:
-        - args: []
-          env:
-            - name: ALLOW_EMPTY_PASSWORD
-              value: 'yes'
-            - name: REDIS_AOF_ENABLED
-              value: 'no'
-            - name: REDIS_EXTRA_FLAGS
-              value: --save ''
-          image: quay.io/bitnami/redis:6.2.4
-          imagePullPolicy: IfNotPresent
+        - args:
+            - --save
+            - ''
+            - --appendonly
+            - 'no'
+          image: redis:6.2.4-alpine
+          imagePullPolicy: Always
           name: redis
           ports:
             - containerPort: 6379
-          volumeMounts:
-            - mountPath: /bitnami/redis/data
-              name: data
       securityContext:
-        fsGroup: 1001
-        runAsGroup: 1001
         runAsNonRoot: true
-        runAsUser: 1001
+        runAsUser: 999
       serviceAccountName: argocd-redis
-      volumes:
-        - emptyDir: {}
-          name: data

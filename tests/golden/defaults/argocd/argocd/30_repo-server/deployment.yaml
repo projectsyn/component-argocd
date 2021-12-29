@@ -39,9 +39,87 @@ spec:
             - --redis
             - argocd-redis:6379
           env:
+            - name: ARGOCD_RECONCILIATION_TIMEOUT
+              valueFrom:
+                configMapKeyRef:
+                  key: timeout.reconciliation
+                  name: argocd-cm
+                  optional: true
+            - name: ARGOCD_REPO_SERVER_LOGFORMAT
+              valueFrom:
+                configMapKeyRef:
+                  key: reposerver.log.format
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_REPO_SERVER_LOGLEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: reposerver.log.level
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_REPO_SERVER_PARALLELISM_LIMIT
+              valueFrom:
+                configMapKeyRef:
+                  key: reposerver.parallelism.limit
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_REPO_SERVER_DISABLE_TLS
+              valueFrom:
+                configMapKeyRef:
+                  key: reposerver.disable.tls
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_TLS_MIN_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  key: reposerver.tls.minversion
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_TLS_MAX_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  key: reposerver.tls.maxversion
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_TLS_CIPHERS
+              valueFrom:
+                configMapKeyRef:
+                  key: reposerver.tls.ciphers
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_REPO_CACHE_EXPIRATION
+              valueFrom:
+                configMapKeyRef:
+                  key: reposerver.repo.cache.expiration
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: REDIS_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  key: redis.server
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: REDISDB
+              valueFrom:
+                configMapKeyRef:
+                  key: redis.db
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: ARGOCD_DEFAULT_CACHE_EXPIRATION
+              valueFrom:
+                configMapKeyRef:
+                  key: reposerver.default.cache.expiration
+                  name: argocd-cmd-params-cm
+                  optional: true
+            - name: HELM_CACHE_HOME
+              value: /helm-working-dir
+            - name: HELM_CONFIG_HOME
+              value: /helm-working-dir
+            - name: HELM_DATA_HOME
+              value: /helm-working-dir
             - name: HOME
               value: /home/argocd
-          image: quay.io/argoproj/argocd:v2.0.4@sha256:976dfbfadb817ba59f4f641597a13df7b967cd5a1059c966fa843869c9463348
+          image: quay.io/argoproj/argocd:v2.2.1
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -65,6 +143,8 @@ spec:
             capabilities:
               drop:
                 - all
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
           volumeMounts:
             - mountPath: /app/config/ssh
               name: ssh-known-hosts
@@ -76,6 +156,12 @@ spec:
               name: gpg-keyring
             - mountPath: /app/config/reposerver/tls
               name: argocd-repo-server-tls
+            - mountPath: /tmp
+              name: tmp
+            - mountPath: /helm-working-dir
+              name: helm-working-dir
+            - mountPath: /home/argocd/cmp-server/plugins
+              name: plugins
             - mountPath: /usr/local/bin/kapitan
               name: kapitan-bin
               subPath: kapitan
@@ -108,6 +194,16 @@ spec:
       initContainers:
         - command:
             - cp
+            - -n
+            - /usr/local/bin/argocd
+            - /var/run/argocd/argocd-cmp-server
+          image: quay.io/argoproj/argocd:latest
+          name: copyutil
+          volumeMounts:
+            - mountPath: /var/run/argocd
+              name: var-files
+        - command:
+            - cp
             - -v
             - /usr/local/bin/kapitan
             - /custom-tools/
@@ -129,6 +225,10 @@ spec:
           name: gpg-keys
         - emptyDir: {}
           name: gpg-keyring
+        - emptyDir: {}
+          name: tmp
+        - emptyDir: {}
+          name: helm-working-dir
         - name: argocd-repo-server-tls
           secret:
             items:
@@ -140,6 +240,10 @@ spec:
                 path: ca.crt
             optional: true
             secretName: argocd-repo-server-tls
+        - emptyDir: {}
+          name: var-files
+        - emptyDir: {}
+          name: plugins
         - emptyDir: {}
           name: kapitan-bin
         - emptyDir:
