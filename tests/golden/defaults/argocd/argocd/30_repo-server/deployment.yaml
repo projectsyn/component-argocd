@@ -1,0 +1,153 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: repo-server
+    app.kubernetes.io/name: argocd-repo-server
+    app.kubernetes.io/part-of: argocd
+  name: argocd-repo-server
+  namespace: syn
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-repo-server
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: argocd-repo-server
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: argocd-repo-server
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/part-of: argocd
+                topologyKey: kubernetes.io/hostname
+              weight: 5
+      automountServiceAccountToken: false
+      containers:
+        - command:
+            - uid_entrypoint.sh
+            - argocd-repo-server
+            - --redis
+            - argocd-redis:6379
+          env:
+            - name: HOME
+              value: /home/argocd
+          image: quay.io/argoproj/argocd:v2.0.4@sha256:976dfbfadb817ba59f4f641597a13df7b967cd5a1059c966fa843869c9463348
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /healthz?full=true
+              port: 8084
+            initialDelaySeconds: 30
+            periodSeconds: 5
+          name: argocd-repo-server
+          ports:
+            - containerPort: 8081
+            - containerPort: 8084
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8084
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - all
+          volumeMounts:
+            - mountPath: /app/config/ssh
+              name: ssh-known-hosts
+            - mountPath: /app/config/tls
+              name: tls-certs
+            - mountPath: /app/config/gpg/source
+              name: gpg-keys
+            - mountPath: /app/config/gpg/keys
+              name: gpg-keyring
+            - mountPath: /app/config/reposerver/tls
+              name: argocd-repo-server-tls
+            - mountPath: /usr/local/bin/kapitan
+              name: kapitan-bin
+              subPath: kapitan
+            - mountPath: /home/argocd/
+              name: vault-token
+        - args:
+            - agent
+            - -config
+            - /etc/vault/vault-agent-config.hcl
+          env:
+            - name: SKIP_SETCAP
+              value: 'true'
+            - name: VAULT_ADDR
+              value: test.syn.tools
+          image: docker.io/vault:1.5.8@sha256:3b2209bedb1bbc70315fcd9e2187a49a1359f8f6f46cca7a51efcadb461fe98a
+          imagePullPolicy: IfNotPresent
+          name: vault-agent
+          ports: []
+          securityContext:
+            runAsUser: 100
+          stdin: false
+          tty: false
+          volumeMounts:
+            - mountPath: /var/run/secrets/syn/
+              name: steward-token
+            - mountPath: /etc/vault/
+              name: vault-config
+            - mountPath: /home/vault/
+              name: vault-token
+      initContainers:
+        - command:
+            - cp
+            - -v
+            - /usr/local/bin/kapitan
+            - /custom-tools/
+          image: docker.io/projectsyn/kapitan:v0.29.5@sha256:f0ddfc1052a2dc11c4c4ce97d0a784995b7b0fd8e1f8e032edb7606431b2733a
+          imagePullPolicy: Always
+          name: install-kapitan
+          volumeMounts:
+            - mountPath: /custom-tools
+              name: kapitan-bin
+      volumes:
+        - configMap:
+            name: argocd-ssh-known-hosts-cm
+          name: ssh-known-hosts
+        - configMap:
+            name: argocd-tls-certs-cm
+          name: tls-certs
+        - configMap:
+            name: argocd-gpg-keys-cm
+          name: gpg-keys
+        - emptyDir: {}
+          name: gpg-keyring
+        - name: argocd-repo-server-tls
+          secret:
+            items:
+              - key: tls.crt
+                path: tls.crt
+              - key: tls.key
+                path: tls.key
+              - key: ca.crt
+                path: ca.crt
+            optional: true
+            secretName: argocd-repo-server-tls
+        - emptyDir: {}
+          name: kapitan-bin
+        - emptyDir:
+            medium: Memory
+          name: vault-token
+        - configMap:
+            name: vault-agent-config
+          name: vault-config
+        - name: steward-token
+          secret:
+            secretName: steward

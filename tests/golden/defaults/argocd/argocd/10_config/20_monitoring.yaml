@@ -1,0 +1,99 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  annotations: {}
+  labels:
+    app.kubernetes.io/name: argocd-metrics
+    app.kubernetes.io/part-of: argocd
+    name: argocd-metrics
+  name: argocd-metrics
+  namespace: syn
+spec:
+  endpoints:
+    - port: metrics
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-metrics
+      app.kubernetes.io/part-of: argocd
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  annotations: {}
+  labels:
+    app.kubernetes.io/name: argocd-server-metrics
+    app.kubernetes.io/part-of: argocd
+    name: argocd-server-metrics
+  name: argocd-server-metrics
+  namespace: syn
+spec:
+  endpoints:
+    - port: metrics
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-server-metrics
+      app.kubernetes.io/part-of: argocd
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  annotations: {}
+  labels:
+    app.kubernetes.io/name: argocd-repo-server
+    app.kubernetes.io/part-of: argocd
+    name: argocd-repo-server
+  name: argocd-repo-server
+  namespace: syn
+spec:
+  endpoints:
+    - port: metrics
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-repo-server
+      app.kubernetes.io/part-of: argocd
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  annotations: {}
+  labels:
+    name: argocd
+    prometheus: platform
+    role: alert-rules
+  name: argocd
+  namespace: syn
+spec:
+  groups:
+    - name: argocd.rules
+      rules:
+        - alert: ArgoCDAppUnsynced
+          annotations:
+            dashboard: argocd
+            description: kubectl -n syn describe app {{ $labels.name }}
+            message: Argo CD app {{ $labels.name }} is not synced
+          expr: argocd_app_info{exported_namespace="syn", sync_status!="Synced"} >
+            0
+          for: 10m
+          labels:
+            severity: warning
+            syn: 'true'
+        - alert: ArgoCDAppUnhealthy
+          annotations:
+            dashboard: argocd
+            description: kubectl -n syn describe app {{ $labels.name }}
+            message: Argo CD app {{ $labels.name }} is not healthy
+          expr: argocd_app_info{exported_namespace="syn", health_status!="Healthy"}
+            > 0
+          for: 10m
+          labels:
+            severity: critical
+            syn: 'true'
+        - alert: ArgoCDDown
+          annotations:
+            dashboard: argocd
+            message: Argo CD job {{ $labels.job }} is down
+          expr: up{namespace="syn", job=~"^argocd-.+$"} != 1
+          for: 5m
+          labels:
+            severity: critical
+            syn: 'true'
