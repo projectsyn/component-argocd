@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations: {}
+  labels:
+    SYNMonitoring: main
+    app.kubernetes.io/part-of: argocd
+    name: syn
+  name: syn

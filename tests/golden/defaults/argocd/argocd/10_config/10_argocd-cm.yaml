@@ -1,0 +1,33 @@
+apiVersion: v1
+data:
+  application.instanceLabelKey: argocd.argoproj.io/instance
+  configManagementPlugins: "- name: kapitan\n  generate:\n    command: [kapitan, refs,\
+    \ --reveal, --refs-path, ../../refs/, --file, ./]\n"
+  repositories: '- url: ssh://git@git.example.com/org/repo.git'
+  repository.credentials: "- url: ssh://git@\n  sshPrivateKeySecret:\n    name: argo-ssh-key\n\
+    \    key: sshPrivateKey\n"
+  resource.customizations: "admissionregistration.k8s.io/MutatingWebhookConfiguration:\n\
+    \  ignoreDifferences: |\n    jsonPointers:\n      - /webhooks/0/clientConfig/caBundle\n\
+    admissionregistration.k8s.io/ValidatingWebhookConfiguration:\n  ignoreDifferences:\
+    \ |\n    jsonPointers:\n      - /webhooks/0/clientConfig/caBundle\napiextensions.k8s.io/CustomResourceDefinition:\n\
+    \  ignoreDifferences: |\n    jsonPointers:\n      - /status\n      - /spec/scope\n\
+    pkg.crossplane.io/Provider:\n  health.lua: |\n    hs = {}\n    if obj.status ~=\
+    \ nil then\n      if obj.status.conditions ~= nil then\n        installed = false\n\
+    \        healthy = false\n        for i, condition in ipairs(obj.status.conditions)\
+    \ do\n          if condition.type == \"Installed\" then\n            installed\
+    \ = condition.status == \"True\"\n            installed_message = condition.reason\n\
+    \          elseif condition.type == \"Healthy\" then\n            healthy = condition.status\
+    \ == \"True\"\n            healthy_message = condition.reason\n          end\n\
+    \        end\n        if installed and healthy then\n          hs.status = \"\
+    Healthy\"\n        else\n          hs.status = \"Degraded\"\n        end\n   \
+    \     hs.message = installed_message .. \" \" .. healthy_message\n        return\
+    \ hs\n      end\n    end\n\n    hs.status = \"Progressing\"\n    hs.message =\
+    \ \"Waiting for provider to be installed\"\n    return hs\n"
+kind: ConfigMap
+metadata:
+  annotations: {}
+  labels:
+    app.kubernetes.io/part-of: argocd
+    name: argocd-cm
+  name: argocd-cm
+  namespace: syn
