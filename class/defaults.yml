@@ -6,6 +6,8 @@ parameters:
       dashboards: false
       prometheus_rule_labels:
         prometheus: platform
+        cluster_id: ${cluster:name}
+        tenant_id: ${cluster:tenant}
     git_tag: v2.0.4
     resync_seconds: 180
     images:
