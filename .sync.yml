@@ -7,3 +7,12 @@
 docs/antora.yml:
   name: argocd
   title: Argo CD
+
+.github/workflows/test.yaml:
+  test_makeTarget: test -e instance=${{ matrix.instance }}
+  goldenTest_makeTarget: golden-diff -e instance=${{ matrix.instance }}
+  matrix:
+    key: instance
+    entries:
+      - defaults
+      - openshift
