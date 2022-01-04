@@ -1,0 +1,7 @@
+= Upgrade `component-argocd` from `v3.x` to `v4.x`
+
+== `bitnami/redis` Image Support Removed
+
+Due to file system permission problems, support for the https://hub.docker.com/r/bitnami/redis[`bitnami/redis`] image has been removed.
+
+All Redis repository or version pins should be removed from your hierarchy or verified to point to `docker.io/library/redis`.
