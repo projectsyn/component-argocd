@@ -15,7 +15,7 @@ The namespace in which to deploy this component.
 
 [horizontal]
 type:: string
-default:: `v2.2.2`
+default:: see `defaults.yml`
 
 Git tag of Argo CD to deploy.
 
