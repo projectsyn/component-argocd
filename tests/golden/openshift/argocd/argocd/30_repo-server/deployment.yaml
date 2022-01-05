@@ -180,8 +180,6 @@ spec:
           imagePullPolicy: IfNotPresent
           name: vault-agent
           ports: []
-          securityContext:
-            runAsUser: 100
           stdin: false
           tty: false
           volumeMounts:

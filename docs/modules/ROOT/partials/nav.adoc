@@ -1,4 +1,7 @@
 * xref:index.adoc[Home]
 
+.How-tos
+* xref:how-tos/upgrade-v3-v4.adoc[Upgrade from `v3.x` to `v4.x`]
+
 .References
 * xref:references/parameters.adoc[Parameters]

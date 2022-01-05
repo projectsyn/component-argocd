@@ -15,7 +15,7 @@ The namespace in which to deploy this component.
 
 [horizontal]
 type:: string
-default:: `v1.7.4`
+default:: see `defaults.yml`
 
 Git tag of Argo CD to deploy.
 
@@ -41,8 +41,6 @@ SSH known hosts for Git servers.
 type:: dictionary
 
 Dictionary containing the container images used by this component.
-
-NOTE: For Redis, both https://hub.docker.com/_/redis[`library/redis`] and https://hub.docker.com/r/bitnami/redis[`bitnami/redis`] images are supported.
 
 == `monitoring.enabled`
 

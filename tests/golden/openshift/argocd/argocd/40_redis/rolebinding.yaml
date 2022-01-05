@@ -1,5 +1,5 @@
 apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
+kind: RoleBinding
 metadata:
   labels:
     app.kubernetes.io/component: redis
@@ -7,12 +7,10 @@ metadata:
     app.kubernetes.io/part-of: argocd
   name: argocd-redis
   namespace: syn
-rules:
-  - apiGroups:
-      - security.openshift.io
-    resourceNames:
-      - nonroot
-    resources:
-      - securitycontextconstraints
-    verbs:
-      - use
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: argocd-redis
+subjects:
+  - kind: ServiceAccount
+    name: argocd-redis
