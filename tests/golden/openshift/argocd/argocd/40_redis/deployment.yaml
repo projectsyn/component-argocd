@@ -37,8 +37,8 @@ spec:
             - ''
             - --appendonly
             - 'no'
-          image: redis:6.2.4-alpine
-          imagePullPolicy: Always
+          image: docker.io/library/redis:6.2.4
+          imagePullPolicy: IfNotPresent
           name: redis
           ports:
             - containerPort: 6379

@@ -195,7 +195,8 @@ spec:
             - -n
             - /usr/local/bin/argocd
             - /var/run/argocd/argocd-cmp-server
-          image: quay.io/argoproj/argocd:latest
+          image: quay.io/argoproj/argocd:v2.2.2
+          imagePullPolicy: IfNotPresent
           name: copyutil
           volumeMounts:
             - mountPath: /var/run/argocd

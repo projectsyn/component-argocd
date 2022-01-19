@@ -36,21 +36,28 @@ local objects = [
     spec+: {
       template+: {
         spec+: {
-          initContainers+: [ {
-            name: 'install-kapitan',
-            image: params.images.kapitan.image + ':' + params.images.kapitan.tag,
-            imagePullPolicy: 'Always',
-            command: [
-              'cp',
-              '-v',
-              '/usr/local/bin/kapitan',
-              '/custom-tools/',
-            ],
-            volumeMounts: [ {
-              name: 'kapitan-bin',
-              mountPath: '/custom-tools',
-            } ],
-          } ],
+          assert std.length(super.initContainers) == 1 : 'expected one upstream initContainer',
+          initContainers: [
+            super.initContainers[0] {
+              image: image,
+              imagePullPolicy: 'IfNotPresent',
+            },
+            {
+              name: 'install-kapitan',
+              image: params.images.kapitan.image + ':' + params.images.kapitan.tag,
+              imagePullPolicy: 'Always',
+              command: [
+                'cp',
+                '-v',
+                '/usr/local/bin/kapitan',
+                '/custom-tools/',
+              ],
+              volumeMounts: [ {
+                name: 'kapitan-bin',
+                mountPath: '/custom-tools',
+              } ],
+            },
+          ],
           containers: [ deployment.spec.template.spec.containers[0] {
             image: image,
             imagePullPolicy: 'IfNotPresent',

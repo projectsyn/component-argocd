@@ -2,3 +2,14 @@ parameters:
   secret_management:
     vault_role: test
     vault_addr: test.syn.tools
+
+  argocd:
+    images:
+      argocd:
+        image: mymirror.io/argoproj/argocd
+      redis:
+        image: mymirror.io/library/redis
+      kapitan:
+        image: mymirror.io/projectsyn/kapitan
+      vault_agent:
+        image: mymirror.io/vault
