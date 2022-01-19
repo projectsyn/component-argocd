@@ -11,6 +11,12 @@ local service = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag
 
 local isOnOpenshift = std.startsWith(inv.parameters.facts.distribution, 'openshift');
 
+local redisContainerSpec(image) =
+  {
+    image: image,
+    imagePullPolicy: 'IfNotPresent',
+  };
+
 local securityContext = if isOnOpenshift then
   { securityContext:: {} }
 else
@@ -20,7 +26,11 @@ local objects = [
   deployment {
     spec+: {
       template+: {
-        spec+: securityContext,
+        spec+: securityContext {
+          containers: [
+            super.containers[0] + redisContainerSpec(image),
+          ],
+        },
       },
     },
   },
