@@ -11,6 +11,14 @@ default:: `syn`
 
 The namespace in which to deploy this component.
 
+== `distribution`
+
+[horizontal]
+type:: string
+default:: ${facts:distribution}
+
+The Kubernetes distribution of the cluster.
+
 == `git_tag`
 
 [horizontal]
