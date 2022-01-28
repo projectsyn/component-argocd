@@ -1,6 +1,7 @@
 parameters:
   argocd:
     namespace: syn
+    distribution: ${facts:distribution}
     monitoring:
       enabled: true
       dashboards: false

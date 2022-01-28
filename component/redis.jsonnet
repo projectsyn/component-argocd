@@ -9,7 +9,7 @@ local role_binding = std.parseJson(kap.yaml_load('argocd/manifests/' + params.gi
 local serviceaccount = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/redis/argocd-redis-sa.yaml'));
 local service = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/redis/argocd-redis-service.yaml'));
 
-local isOnOpenshift = std.startsWith(inv.parameters.facts.distribution, 'openshift');
+local isOnOpenshift = std.startsWith(params.distribution, 'openshift');
 
 local redisContainerSpec(image) =
   {
