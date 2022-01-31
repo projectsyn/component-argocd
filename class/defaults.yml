@@ -23,7 +23,7 @@ parameters:
         tag: 'v0.29.5@sha256:f0ddfc1052a2dc11c4c4ce97d0a784995b7b0fd8e1f8e032edb7606431b2733a'
       vault_agent:
         image: docker.io/vault
-        tag: '1.5.8@sha256:3b2209bedb1bbc70315fcd9e2187a49a1359f8f6f46cca7a51efcadb461fe98a'
+        tag: '1.9.3@sha256:cafdf67809db6efbbf3ea8662df002f0b5ba2d6cdddac64df1acb4d86c18b2c1'
     ssh_known_hosts: |
       git.vshn.net ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCnE1dMkh+3uHWck+cTvQqeNUW0lj1uVcIC9JX2Tg6gmkKCYA73+o+I7vo4g6nPtSOAfITvYdHJLzwE9GwlSFsXHMR9q0ErWl2wC+w6FawLMz9//5XqiBi2qq/8WnWp3ecY16jDoGRW4eymT+USFHKJVi696XBy3WE/0BBapPZ58WPqkKN6A27qkIK6FehI80f+zN4ZqikdwWuCFs35fsimcmLnWqWPm8zbOkgCiB+ov4O/xmRNHwJWCk/qzU6X/M9YtMXzAa5mjwDvcHSAizFD3a3Fv68G1VsmRZ0THLrRKM/WOxrWNZoimSNgyjTzoCwiKeckvL5+hpNcNSW+eBPt
       git.vshn.net ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO9EkPcVdsz/oVTI2VJkBlq8Mv/dg3rhcbgzAEKyiwUG
