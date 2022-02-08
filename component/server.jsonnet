@@ -29,7 +29,8 @@ local objects = [
               '/shared/app',
               '--insecure',
             ],
-            resources: params.resources.server,
+            [if params.resources.server != null then 'resources']:
+              std.prune(params.resources.server),
           } ] + deployment.spec.template.spec.containers[1:],
         },
       },

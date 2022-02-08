@@ -29,7 +29,8 @@ local objects = [
         spec+: securityContext {
           containers: [
             super.containers[0] + redisContainerSpec(image) {
-              resources: params.resources.redis,
+              [if params.resources.redis != null then 'resources']:
+                std.prune(params.resources.redis),
             },
           ],
         },
