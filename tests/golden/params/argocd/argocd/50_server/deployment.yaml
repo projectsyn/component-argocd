@@ -188,7 +188,7 @@ spec:
                   key: server.http.cookie.maxnumber
                   name: argocd-cmd-params-cm
                   optional: true
-          image: quay.io/argoproj/argocd:v2.2.2
+          image: mymirror.io/argoproj/argocd:v2.2.2
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -206,10 +206,6 @@ spec:
               port: 8080
             initialDelaySeconds: 3
             periodSeconds: 30
-          resources:
-            requests:
-              cpu: 10m
-              memory: 32Mi
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:

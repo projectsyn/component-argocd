@@ -1,0 +1,25 @@
+---
+parameters:
+  secret_management:
+    vault_role: test
+    vault_addr: test.syn.tools
+
+  argocd:
+    # Test overwriting images
+    images:
+      argocd:
+        image: mymirror.io/argoproj/argocd
+      redis:
+        image: mymirror.io/library/redis
+      kapitan:
+        image: mymirror.io/projectsyn/kapitan
+      vault_agent:
+        image: mymirror.io/vault
+
+    # Test unsetting resource requests & limits
+    resources:
+      application_controller: null
+      redis: null
+      repo_server: null
+      repo_server_vault_agent: null
+      server: null

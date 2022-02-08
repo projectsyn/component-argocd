@@ -133,7 +133,7 @@ spec:
                   key: controller.default.cache.expiration
                   name: argocd-cmd-params-cm
                   optional: true
-          image: quay.io/argoproj/argocd:v2.2.2
+          image: mymirror.io/argoproj/argocd:v2.2.2
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -150,12 +150,6 @@ spec:
               port: 8082
             initialDelaySeconds: 5
             periodSeconds: 10
-          resources:
-            limits:
-              memory: 2Gi
-            requests:
-              cpu: 100m
-              memory: 256Mi
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
