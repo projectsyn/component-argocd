@@ -29,6 +29,7 @@ local objects = [
               '/shared/app',
               '--insecure',
             ],
+            resources: params.resources.server,
           } ] + deployment.spec.template.spec.containers[1:],
         },
       },

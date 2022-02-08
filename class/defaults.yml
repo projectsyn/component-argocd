@@ -1,3 +1,4 @@
+---
 parameters:
   argocd:
     namespace: syn
@@ -11,6 +12,7 @@ parameters:
         tenant_id: ${cluster:tenant}
     git_tag: v2.2.2
     resync_seconds: 180
+
     images:
       argocd:
         image: quay.io/argoproj/argocd
@@ -24,6 +26,34 @@ parameters:
       vault_agent:
         image: docker.io/vault
         tag: '1.5.8@sha256:3b2209bedb1bbc70315fcd9e2187a49a1359f8f6f46cca7a51efcadb461fe98a'
+
+    resources:
+      application_controller:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          memory: 2Gi
+      redis:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      repo_server:
+        requests:
+          cpu: 10m
+          memory: 128Mi
+        limits:
+          memory: 1Gi
+      repo_server_vault_agent:
+        requests:
+          memory: 32Mi
+        limits:
+          memory: 1Gi
+      server:
+        requests:
+          cpu: 10m
+          memory: 32Mi
+
     ssh_known_hosts: |
       git.vshn.net ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCnE1dMkh+3uHWck+cTvQqeNUW0lj1uVcIC9JX2Tg6gmkKCYA73+o+I7vo4g6nPtSOAfITvYdHJLzwE9GwlSFsXHMR9q0ErWl2wC+w6FawLMz9//5XqiBi2qq/8WnWp3ecY16jDoGRW4eymT+USFHKJVi696XBy3WE/0BBapPZ58WPqkKN6A27qkIK6FehI80f+zN4ZqikdwWuCFs35fsimcmLnWqWPm8zbOkgCiB+ov4O/xmRNHwJWCk/qzU6X/M9YtMXzAa5mjwDvcHSAizFD3a3Fv68G1VsmRZ0THLrRKM/WOxrWNZoimSNgyjTzoCwiKeckvL5+hpNcNSW+eBPt
       git.vshn.net ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO9EkPcVdsz/oVTI2VJkBlq8Mv/dg3rhcbgzAEKyiwUG

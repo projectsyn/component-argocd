@@ -27,6 +27,7 @@ local objects = [
               '--app-resync',
               std.format('%d', params.resync_seconds),
             ],
+            resources: params.resources.application_controller,
           } ],
         },
       },

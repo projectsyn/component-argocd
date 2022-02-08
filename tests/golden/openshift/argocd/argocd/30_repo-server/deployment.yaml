@@ -138,6 +138,12 @@ spec:
               port: 8084
             initialDelaySeconds: 5
             periodSeconds: 10
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              cpu: 10m
+              memory: 128Mi
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -180,6 +186,11 @@ spec:
           imagePullPolicy: IfNotPresent
           name: vault-agent
           ports: []
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              memory: 32Mi
           stdin: false
           tty: false
           volumeMounts:

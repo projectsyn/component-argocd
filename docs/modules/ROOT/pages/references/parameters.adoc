@@ -50,6 +50,25 @@ type:: dictionary
 
 Dictionary containing the container images used by this component.
 
+
+== `resources`
+
+[horizontal]
+type:: dictionary
+defaults:: https://github.com/projectsyn/component-argocd/blob/master/class/defaults.yml[See `class/defaults.yml`]
+
+Dictionary containing the resource requests and limits for the different
+components. Keys correspond to different pods/containers:
+
+* `application_controller`
+* `redis`
+* `repo_server`
+* `repo_server_vault_agent` - for the `vault_agent` container in the `repo-server` pod
+* `server`
+
+Users can remove configured requests and limits by setting any keys or subkeys in the dictionary to `null`.
+
+
 == `monitoring.enabled`
 
 [horizontal]

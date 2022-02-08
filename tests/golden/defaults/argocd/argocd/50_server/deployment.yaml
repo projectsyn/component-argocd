@@ -206,6 +206,10 @@ spec:
               port: 8080
             initialDelaySeconds: 3
             periodSeconds: 30
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:

@@ -28,7 +28,9 @@ local objects = [
       template+: {
         spec+: securityContext {
           containers: [
-            super.containers[0] + redisContainerSpec(image),
+            super.containers[0] + redisContainerSpec(image) {
+              resources: params.resources.redis,
+            },
           ],
         },
       },
