@@ -28,7 +28,10 @@ local objects = [
       template+: {
         spec+: securityContext {
           containers: [
-            super.containers[0] + redisContainerSpec(image),
+            super.containers[0] + redisContainerSpec(image) {
+              [if params.resources.redis != null then 'resources']:
+                std.prune(params.resources.redis),
+            },
           ],
         },
       },

@@ -37,13 +37,12 @@ spec:
             - ''
             - --appendonly
             - 'no'
-          image: docker.io/library/redis:6.2.4
+          image: mymirror.io/library/redis:6.2.4
           imagePullPolicy: IfNotPresent
           name: redis
           ports:
             - containerPort: 6379
-          resources:
-            requests:
-              cpu: 10m
-              memory: 16Mi
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
       serviceAccountName: argocd-redis

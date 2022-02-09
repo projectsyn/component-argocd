@@ -70,6 +70,8 @@ local objects = [
             env+: com.envList(com.proxyVars {
               HOME: '/home/argocd',
             }),
+            [if params.resources.repo_server != null then 'resources']:
+              std.prune(params.resources.repo_server),
             volumeMounts+: [ {
               name: 'kapitan-bin',
               mountPath: '/usr/local/bin/kapitan',
@@ -93,6 +95,8 @@ local objects = [
               VAULT_ADDR: inv.parameters.secret_management.vault_addr,
               SKIP_SETCAP: 'true',
             },
+            [if params.resources.repo_server_vault_agent != null then 'resources']:
+              std.prune(params.resources.repo_server_vault_agent),
             volumeMounts_: {
               'vault-token': {
                 mountPath: '/home/vault/',

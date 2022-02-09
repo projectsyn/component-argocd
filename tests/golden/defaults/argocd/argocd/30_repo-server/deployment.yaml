@@ -119,7 +119,7 @@ spec:
               value: /helm-working-dir
             - name: HOME
               value: /home/argocd
-          image: mymirror.io/argoproj/argocd:v2.2.2
+          image: quay.io/argoproj/argocd:v2.2.2
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -138,6 +138,12 @@ spec:
               port: 8084
             initialDelaySeconds: 5
             periodSeconds: 10
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              cpu: 10m
+              memory: 128Mi
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -176,10 +182,15 @@ spec:
               value: 'true'
             - name: VAULT_ADDR
               value: test.syn.tools
-          image: mymirror.io/vault:1.5.8@sha256:3b2209bedb1bbc70315fcd9e2187a49a1359f8f6f46cca7a51efcadb461fe98a
+          image: docker.io/vault:1.5.8@sha256:3b2209bedb1bbc70315fcd9e2187a49a1359f8f6f46cca7a51efcadb461fe98a
           imagePullPolicy: IfNotPresent
           name: vault-agent
           ports: []
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              memory: 32Mi
           securityContext:
             runAsUser: 100
           stdin: false
@@ -197,7 +208,7 @@ spec:
             - -n
             - /usr/local/bin/argocd
             - /var/run/argocd/argocd-cmp-server
-          image: mymirror.io/argoproj/argocd:v2.2.2
+          image: quay.io/argoproj/argocd:v2.2.2
           imagePullPolicy: IfNotPresent
           name: copyutil
           volumeMounts:
@@ -208,7 +219,7 @@ spec:
             - -v
             - /usr/local/bin/kapitan
             - /custom-tools/
-          image: mymirror.io/projectsyn/kapitan:v0.29.5@sha256:f0ddfc1052a2dc11c4c4ce97d0a784995b7b0fd8e1f8e032edb7606431b2733a
+          image: docker.io/projectsyn/kapitan:v0.29.5@sha256:f0ddfc1052a2dc11c4c4ce97d0a784995b7b0fd8e1f8e032edb7606431b2733a
           imagePullPolicy: Always
           name: install-kapitan
           volumeMounts:
