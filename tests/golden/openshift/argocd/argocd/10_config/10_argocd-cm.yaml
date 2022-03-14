@@ -24,7 +24,8 @@ data:
     \ hs\n      end\n    end\n\n    hs.status = \"Progressing\"\n    hs.message =\
     \ \"Waiting for provider to be installed\"\n    return hs\noperators.coreos.com/Subscription:\n\
     \  health.lua.useOpenLibs: true\n  health.lua: |\n    -- Base check copied from\
-    \ upstream\n    health_status = {}\n    if obj.status ~= nil then\n      if obj.status.conditions\
+    \ upstream\n    -- See https://github.com/argoproj/argo-cd/blob/f3730da01ef05c0b7ae97385aca6642faf9e4c52/resource_customizations/operators.coreos.com/Subscription/health.lua\n\
+    \    health_status = {}\n    if obj.status ~= nil then\n      if obj.status.conditions\
     \ ~= nil then\n        numDegraded = 0\n        numPending = 0\n        msg =\
     \ \"\"\n        for i, condition in pairs(obj.status.conditions) do\n        \
     \  msg = msg .. i .. \": \" .. condition.type .. \" | \" .. condition.status ..\
@@ -32,10 +33,12 @@ data:
     \ == \"True\" then\n            numPending = numPending + 1\n          elseif\
     \ (condition.type == \"CatalogSourcesUnhealthy\" or condition.type == \"InstallPlanMissing\"\
     \ or condition.type == \"InstallPlanFailed\" or condition.type == \"ResolutionFailed\"\
-    ) and condition.status == \"True\" then\n            if condition.type == \"ResolutionFailed\"\
-    \  and condition.reason == \"ConstraintsNotSatisfiable\" and string.find(condition.message,\
-    \ \"cilium%-enterprise\") then\n              msg = msg .. \"; Ignoring ConstraintsNotSatisfiable\
-    \ for cilium-enterprise subscription\"\n            else\n              numDegraded\
+    ) and condition.status == \"True\" then\n            -- Custom check to ignore\
+    \ ConstraintsNotSatisfiable for\n            -- cilium-enterprise subscription.\n\
+    \            if condition.type == \"ResolutionFailed\"  and condition.reason ==\
+    \ \"ConstraintsNotSatisfiable\" and string.find(condition.message, \"cilium%-enterprise\"\
+    ) then\n              msg = msg .. \"; Ignoring ConstraintsNotSatisfiable for\
+    \ cilium-enterprise subscription\"\n            else\n              numDegraded\
     \ = numDegraded + 1\n            end\n          end\n        end\n        if numDegraded\
     \ == 0 and numPending == 0 then\n          health_status.status = \"Healthy\"\n\
     \          health_status.message = msg\n          return health_status\n     \
