@@ -1,5 +1,5 @@
 parameters:
   secret_management:
     vault_role: test
-    vault_mount_path: lieutenant
+    vault_auth_mount_path: auth/lieutenant
     vault_addr: test.syn.tools

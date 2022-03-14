@@ -9,7 +9,7 @@ data:
     \                    \"path\": \"/home/vault/.vault-token\"\n                \
     \    },\n                    \"type\": \"file\"\n                }\n         \
     \   }\n        ]\n    },\n    \"exit_after_auth\": false,\n    \"mount_path\"\
-    : \"lieutenant\"\n}"
+    : \"auth/lieutenant\"\n}"
 kind: ConfigMap
 metadata:
   annotations: {}
