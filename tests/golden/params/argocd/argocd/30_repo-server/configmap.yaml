@@ -1,10 +1,14 @@
 apiVersion: v1
 data:
-  vault-agent-config.hcl: "exit_after_auth = false\n\nauto_auth {\n    method \"kubernetes\"\
-    \ {\n        config = {\n            role = \"test\"\n            token_path =\
-    \ \"/var/run/secrets/syn/token\"\n        }\n    }\n    sink \"file\" {\n    \
-    \    config = {\n            path = \"/home/vault/.vault-token\"\n           \
-    \ mode = 0644\n        }\n    }\n}\n"
+  vault-agent-config.json: "{\n    \"auto_auth\": {\n        \"method\": [\n     \
+    \       {\n                \"config\": {\n                    \"role\": \"test\"\
+    ,\n                    \"token_path\": \"/var/run/secrets/syn/token\"\n      \
+    \          },\n                \"type\": \"kubernetes\"\n            }\n     \
+    \   ],\n        \"sinks\": [\n            {\n                \"sink\": {\n   \
+    \                 \"config\": {\n                        \"mode\": 644,\n    \
+    \                    \"path\": \"/home/vault/.vault-token\"\n                \
+    \    },\n                    \"type\": \"file\"\n                }\n         \
+    \   }\n        ]\n    },\n    \"exit_after_auth\": false\n}"
 kind: ConfigMap
 metadata:
   annotations: {}

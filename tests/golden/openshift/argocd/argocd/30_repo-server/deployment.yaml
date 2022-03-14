@@ -176,7 +176,7 @@ spec:
         - args:
             - agent
             - -config
-            - /etc/vault/vault-agent-config.hcl
+            - /etc/vault/vault-agent-config.json
           env:
             - name: SKIP_SETCAP
               value: 'true'

@@ -10,24 +10,32 @@ local deployment = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_
 local service = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/repo-server/argocd-repo-server-service.yaml'));
 local vault_agent_config = kube.ConfigMap('vault-agent-config') {
   data: {
-    'vault-agent-config.hcl': |||
-      exit_after_auth = false
-
-      auto_auth {
-          method "kubernetes" {
-              config = {
-                  role = "%s"
-                  token_path = "/var/run/secrets/syn/token"
-              }
-          }
-          sink "file" {
-              config = {
-                  path = "/home/vault/.vault-token"
-                  mode = 0644
-              }
-          }
-      }
-    ||| % inv.parameters.secret_management.vault_role,
+    'vault-agent-config.json': std.manifestJson({
+      exit_after_auth: false,
+      [if std.objectHas(inv.parameters.secret_management, 'vault_auth_mount_path') then 'mount_path']: inv.parameters.secret_management.vault_auth_mount_path,
+      auto_auth: {
+        method: [
+          {
+            type: 'kubernetes',
+            config: {
+              role: inv.parameters.secret_management.vault_role,
+              token_path: '/var/run/secrets/syn/token',
+            },
+          },
+        ],
+        sinks: [
+          {
+            sink: {
+              type: 'file',
+              config: {
+                path: '/home/vault/.vault-token',
+                mode: 644,
+              },
+            },
+          },
+        ],
+      },
+    }),
   },
 };
 local objects = [
@@ -86,7 +94,7 @@ local objects = [
             args: [
               'agent',
               '-config',
-              '/etc/vault/vault-agent-config.hcl',
+              '/etc/vault/vault-agent-config.json',
             ],
             [if !isOpenshift then 'securityContext']: {
               runAsUser: 100,
