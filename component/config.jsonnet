@@ -70,6 +70,46 @@ local config = [
             hs.status = "Progressing"
             hs.message = "Waiting for provider to be installed"
             return hs
+        operators.coreos.com/Subscription:
+          health.lua.useOpenLibs: true
+          health.lua: |
+            -- Base check copied from upstream
+            health_status = {}
+            if obj.status ~= nil then
+              if obj.status.conditions ~= nil then
+                numDegraded = 0
+                numPending = 0
+                msg = ""
+                for i, condition in pairs(obj.status.conditions) do
+                  msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. "\n"
+                  if condition.type == "InstallPlanPending" and condition.status == "True" then
+                    numPending = numPending + 1
+                  elseif (condition.type == "CatalogSourcesUnhealthy" or condition.type == "InstallPlanMissing" or condition.type == "InstallPlanFailed" or condition.type == "ResolutionFailed") and condition.status == "True" then
+                    if condition.type == "ResolutionFailed"  and condition.reason == "ConstraintsNotSatisfiable" and string.find(condition.message, "cilium%-enterprise") then
+                      msg = msg .. "; Ignoring ConstraintsNotSatisfiable for cilium-enterprise subscription"
+                    else
+                      numDegraded = numDegraded + 1
+                    end
+                  end
+                end
+                if numDegraded == 0 and numPending == 0 then
+                  health_status.status = "Healthy"
+                  health_status.message = msg
+                  return health_status
+                elseif numPending > 0 and numDegraded == 0 then
+                  health_status.status = "Progressing"
+                  health_status.message = "An install plan for a subscription is pending installation"
+                  return health_status
+                else
+                  health_status.status = "Degraded"
+                  health_status.message = msg
+                  return health_status
+                end
+              end
+            end
+            health_status.status = "Progressing"
+            health_status.message = "An install plan for a subscription is pending installation"
+            return health_status
       |||,
       'application.instanceLabelKey': 'argocd.argoproj.io/instance',
     },
