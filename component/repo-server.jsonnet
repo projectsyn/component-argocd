@@ -12,11 +12,11 @@ local vault_agent_config = kube.ConfigMap('vault-agent-config') {
   data: {
     'vault-agent-config.json': std.manifestJson({
       exit_after_auth: false,
-      [if std.objectHas(inv.parameters.secret_management, 'vault_auth_mount_path') then 'mount_path']: inv.parameters.secret_management.vault_auth_mount_path,
       auto_auth: {
         method: [
           {
             type: 'kubernetes',
+            [if std.objectHas(inv.parameters.secret_management, 'vault_auth_mount_path') then 'mount_path']: inv.parameters.secret_management.vault_auth_mount_path,
             config: {
               role: inv.parameters.secret_management.vault_role,
               token_path: '/var/run/secrets/syn/token',
