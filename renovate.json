@@ -12,6 +12,7 @@
     "fileFilters": [ "tests/golden/**" ],
     "executionMode": "update"
   },
+  "suppressNotifications": [ "artifactErrors" ],
   "labels": [
     "dependency"
   ]
