@@ -4,6 +4,14 @@
     ":gitSignOff",
     ":disableDependencyDashboard"
   ],
+  "postUpgradeTasks": {
+    "commands": [
+      "make gen-golden -e instance=defaults",
+      "make gen-golden -e instance=openshift"
+    ],
+    "fileFilters": [ "tests/golden/**" ],
+    "executionMode": "update"
+  },
   "labels": [
     "dependency"
   ]
