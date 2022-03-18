@@ -29,7 +29,7 @@ local vault_agent_config = kube.ConfigMap('vault-agent-config') {
               type: 'file',
               config: {
                 path: '/home/vault/.vault-token',
-                mode: 644,
+                mode: std.parseOctal('0644'),
               },
             },
           },

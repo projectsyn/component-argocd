@@ -5,7 +5,7 @@ data:
     ,\n                    \"token_path\": \"/var/run/secrets/syn/token\"\n      \
     \          },\n                \"type\": \"kubernetes\"\n            }\n     \
     \   ],\n        \"sinks\": [\n            {\n                \"sink\": {\n   \
-    \                 \"config\": {\n                        \"mode\": 644,\n    \
+    \                 \"config\": {\n                        \"mode\": 420,\n    \
     \                    \"path\": \"/home/vault/.vault-token\"\n                \
     \    },\n                    \"type\": \"file\"\n                }\n         \
     \   }\n        ]\n    },\n    \"exit_after_auth\": false\n}"
