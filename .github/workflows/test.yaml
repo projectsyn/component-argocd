@@ -34,7 +34,6 @@ jobs:
         instance:
           - defaults
           - openshift
-          - params
     defaults:
       run:
         working-directory: ${{ env.COMPONENT_NAME }}
@@ -51,7 +50,6 @@ jobs:
         instance:
           - defaults
           - openshift
-          - params
     defaults:
       run:
         working-directory: ${{ env.COMPONENT_NAME }}
