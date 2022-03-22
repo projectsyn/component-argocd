@@ -3,6 +3,12 @@
   githubUrl: https://github.com/projectsyn/component-argocd
   feature_goUnitTests: false
   feature_goldenTests: true
+  testMatrix:
+    key: instance
+    entries:
+      - defaults
+      - openshift
+      - params
 
 docs/antora.yml:
   name: argocd
@@ -11,8 +17,3 @@ docs/antora.yml:
 .github/workflows/test.yaml:
   makeTarget: test -e instance=${{ matrix.instance }}
   goldenTest_makeTarget: golden-diff -e instance=${{ matrix.instance }}
-  matrix:
-    key: instance
-    entries:
-      - defaults
-      - openshift
