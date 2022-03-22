@@ -6,8 +6,7 @@
   ],
   "postUpgradeTasks": {
     "commands": [
-      "make gen-golden -e instance=defaults",
-      "make gen-golden -e instance=openshift"
+      "make gen-golden"
     ],
     "fileFilters": [ "tests/golden/**" ],
     "executionMode": "update"
