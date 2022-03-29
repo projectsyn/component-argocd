@@ -19,7 +19,7 @@ parameters:
         tag: ${argocd:git_tag}
       redis:
         image: docker.io/library/redis
-        tag: '6.2.4'
+        tag: '6.2.6'
       kapitan:
         image: docker.io/projectsyn/kapitan
         tag: 'v0.29.5@sha256:f0ddfc1052a2dc11c4c4ce97d0a784995b7b0fd8e1f8e032edb7606431b2733a'
