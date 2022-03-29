@@ -6,4 +6,5 @@ metadata:
     SYNMonitoring: main
     app.kubernetes.io/part-of: argocd
     name: syn
+    openshift.io/cluster-monitoring: 'true'
   name: syn
