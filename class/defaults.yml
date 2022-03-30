@@ -22,7 +22,7 @@ parameters:
         tag: '6.2.6'
       kapitan:
         image: docker.io/projectsyn/kapitan
-        tag: 'v0.29.5@sha256:f0ddfc1052a2dc11c4c4ce97d0a784995b7b0fd8e1f8e032edb7606431b2733a'
+        tag: 'v0.29.5@sha256:1cc6b834cda93d7b3728a10631237a45c46224f25c1b7bec2b244353a113e581'
       vault_agent:
         image: docker.io/vault
         tag: '1.5.8@sha256:3b2209bedb1bbc70315fcd9e2187a49a1359f8f6f46cca7a51efcadb461fe98a'
