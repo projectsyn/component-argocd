@@ -85,7 +85,7 @@ local objects = [
             args: [
               'agent',
               '-config',
-              '/etc/vault/vault-agent-config.hcl',
+              '/etc/vault/vault-agent-config.json',
             ],
             [if !isOpenshift then 'securityContext']: {
               runAsUser: 100,
