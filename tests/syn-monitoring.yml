@@ -1,0 +1,24 @@
+parameters:
+  kapitan:
+    dependencies:
+      - type: https
+        source: https://raw.githubusercontent.com/projectsyn/component-prometheus/feat/cluster-monitoring/lib/prometheus.libsonnet
+        output_path: vendor/lib/prometheus.libsonnet
+
+  prometheus:
+    base:
+      common:
+        namespace: syn-prometheus
+    instances:
+      foo:
+        prometheus:
+          enabled: true
+
+  secret_management:
+    vault_role: test
+    vault_auth_mount_path: auth/lieutenant
+    vault_addr: test.syn.tools
+
+  argocd:
+    syn_monitoring:
+      enabled: true

@@ -2,6 +2,5 @@ parameters:
   secret_management:
     vault_role: test
     vault_addr: test.syn.tools
-
   facts:
     distribution: openshift4

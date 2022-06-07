@@ -1,7 +1,10 @@
 local kap = import 'lib/kapitan.libjsonnet';
 local kube = import 'lib/kube.libjsonnet';
+local prometheus = import 'lib/prometheus.libsonnet';
+
 local inv = kap.inventory();
 local params = inv.parameters.argocd;
+
 
 local namespace = kube.Namespace(params.namespace) {
   metadata+: {
@@ -143,9 +146,14 @@ local config = [
 ];
 
 {
-  '00_namespace': namespace,
-  [if params.monitoring.enabled then
-    '20_monitoring']: import 'monitoring.libsonnet',
+  '00_namespace': if params.syn_monitoring.enabled then
+    [
+      prometheus.RegisterNamespace(namespace),
+      prometheus.NetworkPolicy(),
+    ]
+  else
+    namespace,
+  [if params.monitoring.enabled || params.syn_monitoring.enabled then '20_monitoring']: import 'monitoring.libsonnet',
 } + {
   ['10_%s' % [ obj.metadata.name ]]: obj {
     metadata+: {
