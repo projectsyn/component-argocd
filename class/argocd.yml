@@ -65,16 +65,16 @@ parameters:
         output_path: dependencies/argocd/manifests/${argocd:images:argocd:tag}/redis/argocd-redis-service.yaml
       # RBAC
       - type: https
-        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:images:argocd:tag}/manifests/cluster-rbac/argocd-application-controller-clusterrole.yaml
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:images:argocd:tag}/manifests/cluster-rbac/application-controller/argocd-application-controller-clusterrole.yaml
         output_path: dependencies/argocd/manifests/${argocd:images:argocd:tag}/rbac/argocd-application-controller-clusterrole.yaml
       - type: https
-        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:images:argocd:tag}/manifests/cluster-rbac/argocd-application-controller-clusterrolebinding.yaml
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:images:argocd:tag}/manifests/cluster-rbac/application-controller/argocd-application-controller-clusterrolebinding.yaml
         output_path: dependencies/argocd/manifests/${argocd:images:argocd:tag}/rbac/argocd-application-controller-clusterrolebinding.yaml
       - type: https
-        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:images:argocd:tag}/manifests/cluster-rbac/argocd-server-clusterrole.yaml
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:images:argocd:tag}/manifests/cluster-rbac/server/argocd-server-clusterrole.yaml
         output_path: dependencies/argocd/manifests/${argocd:images:argocd:tag}/rbac/argocd-server-clusterrole.yaml
       - type: https
-        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:images:argocd:tag}/manifests/cluster-rbac/argocd-server-clusterrolebinding.yaml
+        source: https://raw.githubusercontent.com/argoproj/argo-cd/${argocd:images:argocd:tag}/manifests/cluster-rbac/server/argocd-server-clusterrolebinding.yaml
         output_path: dependencies/argocd/manifests/${argocd:images:argocd:tag}/rbac/argocd-server-clusterrolebinding.yaml
 
     compile:

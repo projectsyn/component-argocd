@@ -119,7 +119,7 @@ spec:
               value: /helm-working-dir
             - name: HOME
               value: /home/argocd
-          image: mymirror.io/argoproj/argocd:v2.2.2
+          image: mymirror.io/argoproj/argocd:v2.3.4
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -197,7 +197,7 @@ spec:
             - -n
             - /usr/local/bin/argocd
             - /var/run/argocd/argocd-cmp-server
-          image: mymirror.io/argoproj/argocd:v2.2.2
+          image: mymirror.io/argoproj/argocd:v2.3.4
           imagePullPolicy: IfNotPresent
           name: copyutil
           volumeMounts:
