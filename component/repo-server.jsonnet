@@ -4,10 +4,11 @@ local kube = import 'lib/kube.libjsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.argocd;
 local image = params.images.argocd.image + ':' + params.images.argocd.tag;
+local loadManifest = (import 'common.libsonnet').loadManifest;
 
 local isOpenshift = std.startsWith(params.distribution, 'openshift');
-local deployment = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/repo-server/argocd-repo-server-deployment.yaml'));
-local service = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/repo-server/argocd-repo-server-service.yaml'));
+local deployment = loadManifest('repo-server/argocd-repo-server-deployment.yaml');
+local service = loadManifest('repo-server/argocd-repo-server-service.yaml');
 local vault_agent_config = kube.ConfigMap('vault-agent-config') {
   data: {
     'vault-agent-config.json': std.manifestJson({

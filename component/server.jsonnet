@@ -3,13 +3,14 @@ local kube = import 'lib/kube.libjsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.argocd;
 local image = params.images.argocd.image + ':' + params.images.argocd.tag;
+local loadManifest = (import 'common.libsonnet').loadManifest;
 
-local deployment = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/server/argocd-server-deployment.yaml'));
-local role = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/server/argocd-server-role.yaml'));
-local role_binding = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/server/argocd-server-rolebinding.yaml'));
-local serviceaccount = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/server/argocd-server-sa.yaml'));
-local service = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/server/argocd-server-service.yaml'));
-local metrics_svc = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/server/argocd-server-metrics.yaml')) {
+local deployment = loadManifest('server/argocd-server-deployment.yaml');
+local role = loadManifest('server/argocd-server-role.yaml');
+local role_binding = loadManifest('server/argocd-server-rolebinding.yaml');
+local serviceaccount = loadManifest('server/argocd-server-sa.yaml');
+local service = loadManifest('server/argocd-server-service.yaml');
+local metrics_svc = loadManifest('server/argocd-server-metrics.yaml') {
   metadata+: {
     namespace: params.namespace,
   },

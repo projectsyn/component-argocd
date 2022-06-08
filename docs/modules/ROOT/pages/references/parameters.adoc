@@ -19,14 +19,6 @@ default:: ${facts:distribution}
 
 The Kubernetes distribution of the cluster.
 
-== `git_tag`
-
-[horizontal]
-type:: string
-default:: see `defaults.yml`
-
-Git tag of Argo CD to deploy.
-
 === `resync_seconds`
 
 [horizontal]
@@ -50,6 +42,8 @@ type:: dictionary
 
 Dictionary containing the container images used by this component.
 
+[NOTE]
+The tag for the ArgoCD image is used to download the corresponding deployment manifests.
 
 == `resources`
 
