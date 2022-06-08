@@ -2,11 +2,12 @@ local kap = import 'lib/kapitan.libjsonnet';
 local kube = import 'lib/kube.libjsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.argocd;
+local loadManifest = (import 'common.libsonnet').loadManifest;
 
-local controller_clusterrole = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/rbac/argocd-application-controller-clusterrole.yaml'));
-local controller_clusterrolebinding = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/rbac/argocd-application-controller-clusterrolebinding.yaml'));
-local server_clusterrole = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/rbac/argocd-server-clusterrole.yaml'));
-local server_clusterrolebinding = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/rbac/argocd-server-clusterrolebinding.yaml'));
+local controller_clusterrole = loadManifest('rbac/argocd-application-controller-clusterrole.yaml');
+local controller_clusterrolebinding = loadManifest('rbac/argocd-application-controller-clusterrolebinding.yaml');
+local server_clusterrole = loadManifest('rbac/argocd-server-clusterrole.yaml');
+local server_clusterrolebinding = loadManifest('rbac/argocd-server-clusterrolebinding.yaml');
 
 local patch_name(obj) =
   obj {

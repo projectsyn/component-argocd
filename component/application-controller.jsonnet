@@ -3,12 +3,13 @@ local kube = import 'lib/kube.libjsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.argocd;
 local image = params.images.argocd.image + ':' + params.images.argocd.tag;
+local loadManifest = (import 'common.libsonnet').loadManifest;
 
-local statefulset = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/application-controller/argocd-application-controller-statefulset.yaml'));
-local role = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/application-controller/argocd-application-controller-role.yaml'));
-local role_binding = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/application-controller/argocd-application-controller-rolebinding.yaml'));
-local serviceaccount = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/application-controller/argocd-application-controller-sa.yaml'));
-local metrics_svc = std.parseJson(kap.yaml_load('argocd/manifests/' + params.git_tag + '/application-controller/argocd-metrics.yaml'));
+local statefulset = loadManifest('application-controller/argocd-application-controller-statefulset.yaml');
+local role = loadManifest('application-controller/argocd-application-controller-role.yaml');
+local role_binding = loadManifest('application-controller/argocd-application-controller-rolebinding.yaml');
+local serviceaccount = loadManifest('application-controller/argocd-application-controller-sa.yaml');
+local metrics_svc = loadManifest('application-controller/argocd-metrics.yaml');
 
 local objects = [
   statefulset {

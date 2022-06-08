@@ -92,7 +92,7 @@ local grafana_dashboard =
     },
     spec: {
       name: 'argocd',
-      url: 'https://raw.githubusercontent.com/argoproj/argo-cd/' + params.git_tag + '/examples/dashboard.json',
+      url: 'https://raw.githubusercontent.com/argoproj/argo-cd/' + params.images.argocd.tag + '/examples/dashboard.json',
     },
   };
 

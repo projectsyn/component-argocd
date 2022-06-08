@@ -10,13 +10,12 @@ parameters:
         prometheus: platform
         cluster_id: ${cluster:name}
         tenant_id: ${cluster:tenant}
-    git_tag: v2.2.2
     resync_seconds: 180
 
     images:
       argocd:
         image: quay.io/argoproj/argocd
-        tag: ${argocd:git_tag}
+        tag: v2.2.2
       redis:
         image: docker.io/library/redis
         tag: '6.2.6'
