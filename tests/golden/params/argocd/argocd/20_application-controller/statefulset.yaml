@@ -133,7 +133,7 @@ spec:
                   key: controller.default.cache.expiration
                   name: argocd-cmd-params-cm
                   optional: true
-          image: mymirror.io/argoproj/argocd:v2.2.2
+          image: mymirror.io/argoproj/argocd:v2.3.4
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
