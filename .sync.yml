@@ -1,5 +1,5 @@
 :global:
-  componentName: argocd
+  componentName: Argo CD
   githubUrl: https://github.com/projectsyn/component-argocd
   feature_goUnitTests: false
   feature_goldenTests: true
@@ -9,10 +9,6 @@
       - defaults
       - openshift
       - params
-
-docs/antora.yml:
-  name: argocd
-  title: Argo CD
 
 .github/workflows/test.yaml:
   makeTarget: test -e instance=${{ matrix.instance }}
