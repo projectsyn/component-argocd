@@ -5,7 +5,7 @@ on:
       - master
 
 env:
-  COMPONENT_NAME: argocd
+  COMPONENT_NAME: Argo CD
 
 jobs:
   linting:
