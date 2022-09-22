@@ -5,6 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/name: argocd-metrics
     app.kubernetes.io/part-of: argocd
+    monitoring.syn.tools/enabled: 'true'
     name: argocd-metrics
   name: argocd-metrics
   namespace: syn
@@ -23,6 +24,7 @@ metadata:
   labels:
     app.kubernetes.io/name: argocd-server-metrics
     app.kubernetes.io/part-of: argocd
+    monitoring.syn.tools/enabled: 'true'
     name: argocd-server-metrics
   name: argocd-server-metrics
   namespace: syn
@@ -41,6 +43,7 @@ metadata:
   labels:
     app.kubernetes.io/name: argocd-repo-server
     app.kubernetes.io/part-of: argocd
+    monitoring.syn.tools/enabled: 'true'
     name: argocd-repo-server
   name: argocd-repo-server
   namespace: syn
@@ -58,6 +61,7 @@ metadata:
   annotations: {}
   labels:
     cluster_id: c-green-test-1234
+    monitoring.syn.tools/enabled: 'true'
     name: argocd
     prometheus: platform
     role: alert-rules
