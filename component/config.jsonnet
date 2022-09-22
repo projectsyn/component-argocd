@@ -1,9 +1,10 @@
 local kap = import 'lib/kapitan.libjsonnet';
 local kube = import 'lib/kube.libjsonnet';
+local prometheus = import 'lib/prometheus.libsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.argocd;
 
-local namespace = kube.Namespace(params.namespace) {
+local ns_metadata = {
   metadata+: {
     labels+: {
       SYNMonitoring: 'main',
@@ -12,6 +13,13 @@ local namespace = kube.Namespace(params.namespace) {
     },
   },
 };
+
+local namespace =
+  if std.member(inv.applications, 'prometheus') then
+    prometheus.RegisterNamespace(kube.Namespace(params.namespace)) + ns_metadata
+  else
+    kube.Namespace(params.namespace) + ns_metadata
+;
 
 local config = [
   kube.ConfigMap('argocd-cm') {

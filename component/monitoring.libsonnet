@@ -1,5 +1,6 @@
 local kap = import 'lib/kapitan.libjsonnet';
 local kube = import 'lib/kube.libjsonnet';
+local prometheus = import 'lib/prometheus.libsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.argocd;
 
@@ -96,9 +97,15 @@ local grafana_dashboard =
     },
   };
 
+local promEnable = function(obj)
+  if std.member(inv.applications, 'prometheus') then
+    prometheus.Enable(obj)
+  else obj
+;
+
 [
-  serviceMonitor('argocd-metrics'),
-  serviceMonitor('argocd-server-metrics'),
-  serviceMonitor('argocd-repo-server'),
-  alert_rules,
+  promEnable(serviceMonitor('argocd-metrics')),
+  promEnable(serviceMonitor('argocd-server-metrics')),
+  promEnable(serviceMonitor('argocd-repo-server')),
+  promEnable(alert_rules),
 ] + if params.monitoring.dashboards then [ grafana_dashboard ] else []
