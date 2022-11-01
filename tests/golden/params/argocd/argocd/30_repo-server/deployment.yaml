@@ -38,6 +38,10 @@ spec:
             - argocd-repo-server
             - --redis
             - argocd-redis:6379
+            - --loglevel
+            - info
+            - --logformat
+            - text
           env:
             - name: ARGOCD_RECONCILIATION_TIMEOUT
               valueFrom:

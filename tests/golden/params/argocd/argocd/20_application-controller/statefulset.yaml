@@ -42,6 +42,10 @@ spec:
             - '10'
             - --app-resync
             - '180'
+            - --loglevel
+            - info
+            - --logformat
+            - text
           env:
             - name: ARGOCD_RECONCILIATION_TIMEOUT
               valueFrom:
