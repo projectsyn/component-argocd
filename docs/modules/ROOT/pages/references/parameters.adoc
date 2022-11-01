@@ -45,6 +45,28 @@ Dictionary containing the container images used by this component.
 [NOTE]
 The tag for the ArgoCD image is used to download the corresponding deployment manifests.
 
+== `log_level.default`
+
+[horizontal]
+type:: string
+default:: `info`
+
+The default log level for all ArgoCD components.
+
+[NOTE]
+By using the `log_level.[component]` parameter, you can override the default log level for a specific component. `[component]` can be one of `server`, `application_controller` or `repo_server`.
+
+== `log_format.default`
+
+[horizontal]
+type:: string
+default:: `text`
+
+The default log format for all ArgoCD components.
+
+[NOTE]
+By using the `log_format.[component]` parameter, you can override the default log format for a specific component. `[component]` can be one of `server`, `application_controller` or `repo_server`.
+
 == `resources`
 
 [horizontal]
