@@ -49,7 +49,7 @@ The tag for the ArgoCD image is used to download the corresponding deployment ma
 
 [horizontal]
 type:: object
-default:: 
+default::
 +
 [source,yaml]
 ----
@@ -64,7 +64,7 @@ The log level can be customized for individual components by providing the desir
 
 [horizontal]
 type:: object
-default:: 
+default::
 +
 [source,yaml]
 ----
