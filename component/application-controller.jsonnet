@@ -3,7 +3,8 @@ local kube = import 'lib/kube.libjsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.argocd;
 local image = params.images.argocd.image + ':' + params.images.argocd.tag;
-local loadManifest = (import 'common.libsonnet').loadManifest;
+local common = import 'common.libsonnet';
+local loadManifest = common.loadManifest;
 
 local statefulset = loadManifest('application-controller/argocd-application-controller-statefulset.yaml');
 local role = loadManifest('application-controller/argocd-application-controller-role.yaml');
@@ -27,6 +28,10 @@ local objects = [
               '10',
               '--app-resync',
               std.format('%d', params.resync_seconds),
+              '--loglevel',
+              common.evaluate_log_level('application_controller'),
+              '--logformat',
+              common.evaluate_log_format('application_controller'),
             ],
             [if params.resources.application_controller != null then 'resources']:
               std.prune(params.resources.application_controller),

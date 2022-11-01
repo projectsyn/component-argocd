@@ -4,7 +4,8 @@ local kube = import 'lib/kube.libjsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.argocd;
 local image = params.images.argocd.image + ':' + params.images.argocd.tag;
-local loadManifest = (import 'common.libsonnet').loadManifest;
+local common = import 'common.libsonnet';
+local loadManifest = common.loadManifest;
 
 local isOpenshift = std.startsWith(params.distribution, 'openshift');
 local deployment = loadManifest('repo-server/argocd-repo-server-deployment.yaml');
@@ -75,6 +76,10 @@ local objects = [
               'argocd-repo-server',
               '--redis',
               'argocd-redis:6379',
+              '--loglevel',
+              common.evaluate_log_level('repo_server'),
+              '--logformat',
+              common.evaluate_log_format('repo_server'),
             ],
             env+: com.envList(com.proxyVars {
               HOME: '/home/argocd',

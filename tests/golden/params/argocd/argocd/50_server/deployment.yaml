@@ -37,6 +37,10 @@ spec:
             - --staticassets
             - /shared/app
             - --insecure
+            - --loglevel
+            - info
+            - --logformat
+            - text
           env:
             - name: ARGOCD_SERVER_INSECURE
               valueFrom:

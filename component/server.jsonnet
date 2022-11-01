@@ -3,7 +3,8 @@ local kube = import 'lib/kube.libjsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.argocd;
 local image = params.images.argocd.image + ':' + params.images.argocd.tag;
-local loadManifest = (import 'common.libsonnet').loadManifest;
+local common = import 'common.libsonnet';
+local loadManifest = common.loadManifest;
 
 local deployment = loadManifest('server/argocd-server-deployment.yaml');
 local role = loadManifest('server/argocd-server-role.yaml');
@@ -29,6 +30,10 @@ local objects = [
               '--staticassets',
               '/shared/app',
               '--insecure',
+              '--loglevel',
+              common.evaluate_log_level('server'),
+              '--logformat',
+              common.evaluate_log_format('server'),
             ],
             [if params.resources.server != null then 'resources']:
               std.prune(params.resources.server),

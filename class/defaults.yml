@@ -11,6 +11,10 @@ parameters:
         cluster_id: ${cluster:name}
         tenant_id: ${cluster:tenant}
     resync_seconds: 180
+    log_format:
+      default: text
+    log_level:
+      default: info
 
     images:
       argocd:
