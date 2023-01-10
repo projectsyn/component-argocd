@@ -192,7 +192,7 @@ spec:
                   key: server.http.cookie.maxnumber
                   name: argocd-cmd-params-cm
                   optional: true
-          image: mymirror.io/argoproj/argocd:v2.3.4
+          image: mymirror.io/argoproj/argocd:v2.3.12
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
