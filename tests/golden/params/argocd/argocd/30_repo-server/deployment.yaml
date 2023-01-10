@@ -115,6 +115,12 @@ spec:
                   key: reposerver.default.cache.expiration
                   name: argocd-cmd-params-cm
                   optional: true
+            - name: ARGOCD_REPO_SERVER_MAX_COMBINED_DIRECTORY_MANIFESTS_SIZE
+              valueFrom:
+                configMapKeyRef:
+                  key: reposerver.max.combined.directory.manifests.size
+                  name: argocd-cmd-params-cm
+                  optional: true
             - name: HELM_CACHE_HOME
               value: /helm-working-dir
             - name: HELM_CONFIG_HOME
@@ -123,7 +129,7 @@ spec:
               value: /helm-working-dir
             - name: HOME
               value: /home/argocd
-          image: mymirror.io/argoproj/argocd:v2.3.4
+          image: mymirror.io/argoproj/argocd:v2.3.12
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -201,7 +207,7 @@ spec:
             - -n
             - /usr/local/bin/argocd
             - /var/run/argocd/argocd-cmp-server
-          image: mymirror.io/argoproj/argocd:v2.3.4
+          image: mymirror.io/argoproj/argocd:v2.3.12
           imagePullPolicy: IfNotPresent
           name: copyutil
           volumeMounts:

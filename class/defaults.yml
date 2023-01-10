@@ -19,7 +19,7 @@ parameters:
     images:
       argocd:
         image: quay.io/argoproj/argocd
-        tag: v2.3.4
+        tag: v2.3.12
       redis:
         image: docker.io/library/redis
         tag: '6.2.6'
