@@ -38,7 +38,54 @@ local objects = [
   patch_rolebinding(server_clusterrolebinding),
 ];
 
+// create aggregated clusterrole for access to ArgoCD custom resources.
+
+local custom_resources = {
+  apiGroups: [ 'argoproj.io' ],
+  resources: [ 'applications', 'appprojects' ],
+};
+
+local aggregated_rbac = [
+  kube.ClusterRole('syn-argocd-view') {
+    metadata+: {
+      labels+: {
+        'rbac.authorization.k8s.io/aggregate-to-admin': 'true',
+        'rbac.authorization.k8s.io/aggregate-to-edit': 'true',
+        'rbac.authorization.k8s.io/aggregate-to-view': 'true',
+      },
+    },
+    rules: [
+      custom_resources {
+        verbs: [
+          'get',
+          'list',
+          'watch',
+        ],
+      },
+    ],
+  },
+  kube.ClusterRole('syn-argocd-edit') {
+    metadata+: {
+      labels+: {
+        'rbac.authorization.k8s.io/aggregate-to-admin': 'true',
+        'rbac.authorization.k8s.io/aggregate-to-edit': 'true',
+      },
+    },
+    rules: [
+      custom_resources {
+        verbs: [
+          'create',
+          'delete',
+          'deletecollection',
+          'patch',
+          'update',
+        ],
+      },
+    ],
+  },
+];
+
 {
   ['%s-%s' % [ obj.metadata.name, std.asciiLower(obj.kind) ]]: obj
-  for obj in objects
+  for obj in objects + aggregated_rbac
 }
