@@ -218,7 +218,7 @@ spec:
             - -v
             - /usr/local/bin/kapitan
             - /custom-tools/
-          image: mymirror.io/projectsyn/kapitan:v0.29.5@sha256:1cc6b834cda93d7b3728a10631237a45c46224f25c1b7bec2b244353a113e581
+          image: mymirror.io/projectsyn/kapitan:v0.29.5@sha256:33715063f8238a93938f79053bc939e992def3bbe95ae1f9f6e48e5c1421d569
           imagePullPolicy: Always
           name: install-kapitan
           volumeMounts:
