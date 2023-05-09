@@ -110,3 +110,34 @@ parameters:
         input_type: jsonnet
         input_paths:
           - argocd/component/server.jsonnet
+      # Operator kustomization
+      - output_path: ${_base_directory}/operator_kustomize
+        output_type: yaml
+        input_type: jsonnet
+        input_paths:
+          - argocd/component/operator.jsonnet
+      - output_path: .
+        input_type: external
+        input_paths:
+          - ${_kustomize_wrapper}
+        env_vars:
+          INPUT_DIR: ${_base_directory}/operator_kustomize
+        args:
+          - ${_base_directory}/operator_kustomize_compiled
+      - output_path: .
+        input_type: remove
+        input_paths:
+          - ${_base_directory}/operator_kustomize
+      - output_path: .
+        input_type: remove
+        input_paths:
+          - operator_kustomize_compiled/apiextensions.k8s.io_v1_customresourcedefinition_applications.argoproj.io.yaml
+          - operator_kustomize_compiled/apiextensions.k8s.io_v1_customresourcedefinition_appprojects.argoproj.io.yaml
+      - output_path: argocd/60_operator/
+        input_type: copy
+        input_paths:
+          - operator_kustomize_compiled/
+      - output_path: .
+        input_type: remove
+        input_paths:
+          - operator_kustomize_compiled/
