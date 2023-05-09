@@ -21,6 +21,7 @@ local namespace =
     kube.Namespace(params.namespace) + ns_metadata
 ;
 
+// TODO remove
 local config = [
   kube.ConfigMap('argocd-cm') {
     data: {
@@ -154,14 +155,4 @@ local config = [
   '00_namespace': namespace,
   [if params.monitoring.enabled then
     '20_monitoring']: import 'monitoring.libsonnet',
-} + {
-  ['10_%s' % [ obj.metadata.name ]]: obj {
-    metadata+: {
-      namespace: params.namespace,
-      labels+: {
-        'app.kubernetes.io/part-of': 'argocd',
-      },
-    },
-  }
-  for obj in config
 }

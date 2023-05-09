@@ -3,6 +3,7 @@ parameters:
   argocd:
     namespace: syn
     distribution: ${facts:distribution}
+    version: v2.3.12
     monitoring:
       enabled: true
       dashboards: false
@@ -72,5 +73,5 @@ parameters:
       manifests_version: v0.6.0
       kustomization_url: https://github.com/argoproj-labs/argocd-operator//config/default/
       kustomize_input:
-        namePrefix: syn-argocd-operator-
+        namePrefix: syn-
         namespace: ${argocd:namespace}
