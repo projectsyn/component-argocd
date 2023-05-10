@@ -18,12 +18,10 @@ parameters:
       default: info
 
     images:
-      argocd:
-        image: quay.io/argoproj/argocd
-        tag: v2.3.12
-      redis:
-        image: docker.io/library/redis
-        tag: '6.2.6'
+      kubectl:
+        registry: docker.io
+        image: bitnami/kubectl
+        tag: '1.25.5@sha256:19dff0248157ae4cd320097ace1b5e0ffbb8bc7c7ea7fa3f13f73993fc6d7ee2'
       kapitan:
         image: docker.io/projectsyn/kapitan
         tag: 'v0.29.5@sha256:33715063f8238a93938f79053bc939e992def3bbe95ae1f9f6e48e5c1421d569'
@@ -65,6 +63,7 @@ parameters:
       gitlab-dev.syn.tools ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCz/gtGxqX+WS6E9/NLYTkRLkM7r7JHU5N7vz2kJjRbjhR91JvP7NaHtuN5aPm5Wv9rtPKSackQ9B78VCkr6GLw=
       gitlab-dev.syn.tools ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKtv4stHQjApa7wkgvgo4dB52qLzI/zN2Us+89cQXXm0
     operator:
+      namespace: syn-argocd-operator
       images:
         argocd_operator:
           registry: quay.io
@@ -74,4 +73,14 @@ parameters:
       kustomization_url: https://github.com/argoproj-labs/argocd-operator//config/default/
       kustomize_input:
         namePrefix: syn-
-        namespace: ${argocd:namespace}
+        namespace: ${argocd:operator:namespace}
+        patches:
+          - patch: |-
+              - op: add
+                path: "/spec/template/spec/containers/1/env/-"
+                value:
+                  name: "ARGOCD_CLUSTER_CONFIG_NAMESPACES"
+                  value: "${argocd:namespace}"
+            target:
+              kind: Deployment
+              name: argocd-operator-controller-manager

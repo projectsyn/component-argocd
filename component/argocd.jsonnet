@@ -26,7 +26,6 @@ local redis = {
 
 local server = {
   insecure: true,
-  extraCommandArgs: [ '--staticassets', '/shared/app' ],
   logLevel: common.evaluate_log_level('server'),
   logFormat: common.evaluate_log_format('server'),
   [if params.resources.server != null then 'resources']:
@@ -159,6 +158,9 @@ local argocd(name) =
     metadata+: {
       name: name,
       namespace: params.namespace,
+      annotations+: {
+        'argocd.argoproj.io/sync-wave': '10',
+      },
     },
     spec: {
       applicationInstanceLabelKey: 'argocd.argoproj.io/instance',

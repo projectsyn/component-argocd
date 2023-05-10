@@ -7,14 +7,12 @@ parameters:
   argocd:
     # Test overwriting images
     images:
-      argocd:
-        image: mymirror.io/argoproj/argocd
-      redis:
-        image: mymirror.io/library/redis
       kapitan:
         image: mymirror.io/projectsyn/kapitan
       vault_agent:
         image: mymirror.io/vault
+      kubectl:
+        image: mymirror.io/kubectl
 
     # Test unsetting resource requests & limits
     resources:
