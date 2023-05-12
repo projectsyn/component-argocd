@@ -7,7 +7,6 @@ local params = inv.parameters.argocd;
 local ns_metadata = {
   metadata+: {
     labels+: {
-      SYNMonitoring: 'main',
       'app.kubernetes.io/part-of': 'argocd',
       'openshift.io/cluster-monitoring': 'true',
     },

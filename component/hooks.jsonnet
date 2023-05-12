@@ -68,7 +68,7 @@ local createJob(jobName, hook, args) = kube.Job(jobName) {
         containers_+: {
           annotate_argocd: kube.Container(jobName) {
             workingDir: '/home',
-            image: params.images.kubectl.image + ':' + params.images.kubectl.tag,
+            image: '%(registry)s/%(repository)s:%(tag)s' % params.images.kubectl,
             command: [ 'kubectl' ],
             args: args,
             env: [

@@ -26,6 +26,7 @@ spec:
       requests:
         cpu: 100m
         memory: 256Mi
+  image: quay.io/argoproj/argocd
   initialRepositories: '- url: ssh://git@git.example.com/org/repo.git'
   initialSSHKnownHosts:
     keys: |
@@ -42,10 +43,12 @@ spec:
       gitlab-dev.syn.tools ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCz/gtGxqX+WS6E9/NLYTkRLkM7r7JHU5N7vz2kJjRbjhR91JvP7NaHtuN5aPm5Wv9rtPKSackQ9B78VCkr6GLw=
       gitlab-dev.syn.tools ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKtv4stHQjApa7wkgvgo4dB52qLzI/zN2Us+89cQXXm0
   redis:
+    image: docker.io/library/redis
     resources:
       requests:
         cpu: 10m
         memory: 16Mi
+    version: 6.2.6
   repo:
     initContainers:
       - command:

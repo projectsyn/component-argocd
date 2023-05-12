@@ -19,13 +19,6 @@ default:: ${facts:distribution}
 
 The Kubernetes distribution of the cluster.
 
-== `version`
-[horizontal]
-type:: string
-default:: v2.3.12
-
-The ArgoCD version to deploy
-
 === `resync_seconds`
 
 [horizontal]
@@ -165,7 +158,7 @@ Dictionary containing the container images used by the operator
 
 [horizontal]
 type:: string
-default:: `v0.6.0`
+default:: `${argocd:images:argocd_operator:tag}`
 
 Version of the kubernetes manifests for the operator
 

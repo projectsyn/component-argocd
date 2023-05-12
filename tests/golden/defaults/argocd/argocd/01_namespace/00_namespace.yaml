@@ -3,7 +3,6 @@ kind: Namespace
 metadata:
   annotations: {}
   labels:
-    SYNMonitoring: main
     app.kubernetes.io/part-of: argocd
     monitoring.syn.tools/infra: 'true'
     name: syn

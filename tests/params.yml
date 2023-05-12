@@ -8,11 +8,14 @@ parameters:
     # Test overwriting images
     images:
       kapitan:
-        image: mymirror.io/projectsyn/kapitan
+        registry: mymirror.io
+        repository: projectsyn/kapitan
       vault_agent:
-        image: mymirror.io/vault
+        registry: mymirror.io
+        repository: vault
       kubectl:
-        image: mymirror.io/kubectl
+        registry: mymirror.io
+        repository: kubectl
 
     # Test unsetting resource requests & limits
     resources:

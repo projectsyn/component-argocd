@@ -3,7 +3,6 @@ parameters:
   argocd:
     namespace: syn
     distribution: ${facts:distribution}
-    version: v2.3.12
     monitoring:
       enabled: true
       dashboards: false
@@ -20,14 +19,32 @@ parameters:
     images:
       kubectl:
         registry: docker.io
-        image: bitnami/kubectl
+        repository: bitnami/kubectl
         tag: '1.25.5@sha256:19dff0248157ae4cd320097ace1b5e0ffbb8bc7c7ea7fa3f13f73993fc6d7ee2'
       kapitan:
-        image: docker.io/projectsyn/kapitan
+        registry: docker.io
+        repository: projectsyn/kapitan
         tag: 'v0.29.5@sha256:33715063f8238a93938f79053bc939e992def3bbe95ae1f9f6e48e5c1421d569'
       vault_agent:
-        image: docker.io/vault
+        registry: docker.io
+        repository: vault
         tag: '1.5.8@sha256:3b2209bedb1bbc70315fcd9e2187a49a1359f8f6f46cca7a51efcadb461fe98a'
+      argocd:
+        registry: quay.io
+        repository: argoproj/argocd
+        tag: v2.3.12
+      redis:
+        registry: docker.io
+        repository: library/redis
+        tag: '6.2.6'
+      argocd_applicationset:
+        registry: quay.io
+        repository: argoproj/argocd-applicationset
+        tag: ${argocd:images:argocd:tag}
+      argocd_operator:
+        registry: quay.io
+        repository: argoprojlabs/argocd-operator
+        tag: v0.6.0
 
     resources:
       application_controller:
@@ -65,11 +82,8 @@ parameters:
     operator:
       namespace: syn-argocd-operator
       images:
-        argocd_operator:
-          registry: quay.io
-          repository: argoprojlabs/argocd-operator
-          tag: v0.6.0
-      manifests_version: v0.6.0
+        argocd_operator: ${argocd:images:argocd_operator}
+      manifests_version: ${argocd:images:argocd_operator:tag}
       kustomization_url: https://github.com/argoproj-labs/argocd-operator//config/default/
       kustomize_input:
         namePrefix: syn-
