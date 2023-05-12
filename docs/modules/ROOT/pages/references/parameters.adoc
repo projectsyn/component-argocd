@@ -19,6 +19,13 @@ default:: ${facts:distribution}
 
 The Kubernetes distribution of the cluster.
 
+== `version`
+[horizontal]
+type:: string
+default:: v2.3.12
+
+The ArgoCD version to deploy
+
 === `resync_seconds`
 
 [horizontal]
@@ -41,9 +48,6 @@ SSH known hosts for Git servers.
 type:: dictionary
 
 Dictionary containing the container images used by this component.
-
-[NOTE]
-The tag for the ArgoCD image is used to download the corresponding deployment manifests.
 
 == `log_level`
 
@@ -133,3 +137,50 @@ parameters:
     monitoring:
       dashboards: true
 ----
+
+== `operator`
+
+[horizontal]
+type:: dict
+defaults:: https://github.com/projectsyn/component-argocd/blob/master/class/defaults.yml[See `class/defaults.yml`]
+
+Configuration for the ArgoCD operator which is deployed as part of this component.
+
+
+=== `operator.namespace`
+type:: string
+default:: `syn-argocd-operator`
+
+The namespace in which to deploy the argocd operator
+
+== `operator.images`
+
+[horizontal]
+type:: dictionary
+defaults:: https://github.com/projectsyn/component-argocd/blob/master/class/defaults.yml[See `class/defaults.yml`]
+
+Dictionary containing the container images used by the operator
+
+=== `operator.manifests_version`
+
+[horizontal]
+type:: string
+default:: `v0.6.0`
+
+Version of the kubernetes manifests for the operator
+
+=== `operator.kustomization_url`
+
+[horizontal]
+type:: string
+default:: `https://github.com/argoproj-labs/argocd-operator//config/default/`
+
+URL of the kustomization to deploy the operator
+
+=== `operator.kustomize_input`
+
+[horizontal]
+type:: dictionary
+defaults:: https://github.com/projectsyn/component-argocd/blob/master/class/defaults.yml[See `class/defaults.yml`]
+
+Kustomize inputs supplied to the argocd operator kustomization
