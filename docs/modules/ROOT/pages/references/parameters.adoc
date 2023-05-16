@@ -146,7 +146,13 @@ default:: `syn-argocd-operator`
 
 The namespace in which to deploy the argocd operator
 
-== `operator.images`
+=== `operator.migrate`
+type:: string
+default:: `false`
+
+Whether to migrate from v5 or earlier. If you are upgrading from v5, set this to `true` on the first catalog compilation.
+
+=== `operator.images`
 
 [horizontal]
 type:: dictionary

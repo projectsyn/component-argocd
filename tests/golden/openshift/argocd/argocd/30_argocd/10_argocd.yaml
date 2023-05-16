@@ -50,6 +50,9 @@ spec:
         memory: 16Mi
     version: 6.2.6
   repo:
+    env:
+      - name: HOME
+        value: /home/argocd
     initContainers:
       - command:
           - cp

@@ -17,10 +17,6 @@ parameters:
       default: info
 
     images:
-      kubectl:
-        registry: docker.io
-        repository: bitnami/kubectl
-        tag: '1.25.5@sha256:19dff0248157ae4cd320097ace1b5e0ffbb8bc7c7ea7fa3f13f73993fc6d7ee2'
       kapitan:
         registry: docker.io
         repository: projectsyn/kapitan
@@ -80,6 +76,7 @@ parameters:
       gitlab-dev.syn.tools ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCz/gtGxqX+WS6E9/NLYTkRLkM7r7JHU5N7vz2kJjRbjhR91JvP7NaHtuN5aPm5Wv9rtPKSackQ9B78VCkr6GLw=
       gitlab-dev.syn.tools ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKtv4stHQjApa7wkgvgo4dB52qLzI/zN2Us+89cQXXm0
     operator:
+      migrate: false
       namespace: syn-argocd-operator
       images:
         argocd_operator: ${argocd:images:argocd_operator}
@@ -98,3 +95,16 @@ parameters:
             target:
               kind: Deployment
               name: argocd-operator-controller-manager
+          - patch: |-
+              - op: add
+                path: "/rules/-"
+                value:
+                  apiGroups:
+                  - monitoring.coreos.com
+                  resources:
+                  - prometheusrules
+                  verbs:
+                  - '*'
+            target:
+              kind: ClusterRole
+              name: argocd-operator-manager-role

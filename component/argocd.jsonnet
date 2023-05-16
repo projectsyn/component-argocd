@@ -68,6 +68,9 @@ local vault_agent_config = kube.ConfigMap('vault-agent-config') {
 local repoServer = {
   logLevel: common.evaluate_log_level('repo_server'),
   logFormat: common.evaluate_log_format('repo_server'),
+  env: com.envList(com.proxyVars {
+    HOME: '/home/argocd',
+  }),
   [if params.resources.repo_server != null then 'resources']:
     std.prune(params.resources.repo_server),
   volumeMounts: [

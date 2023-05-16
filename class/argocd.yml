@@ -13,10 +13,6 @@ parameters:
         input_type: jsonnet
         input_paths:
           - argocd/component/rbac.jsonnet
-      - output_path: argocd/25_hooks/
-        input_type: jsonnet
-        input_paths:
-          - argocd/component/hooks.jsonnet
       - output_path: argocd/30_argocd/
         input_type: jsonnet
         input_paths:

@@ -40,6 +40,9 @@ spec:
     image: docker.io/library/redis
     version: 6.2.6
   repo:
+    env:
+      - name: HOME
+        value: /home/argocd
     initContainers:
       - command:
           - cp
