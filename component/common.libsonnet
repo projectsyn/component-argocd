@@ -7,7 +7,11 @@ local evaluate_log_level = function(component)
 local evaluate_log_format = function(component)
   std.get(params.log_format, component, params.log_format.default);
 
+local loadManifest = function(path)
+  std.parseJson(kap.yaml_load('argocd/manifests/' + params.images.argocd.tag + '/' + path));
+
 {
+  loadManifest: loadManifest,
   evaluate_log_level: evaluate_log_level,
   evaluate_log_format: evaluate_log_format,
 }
