@@ -81,20 +81,13 @@ parameters:
       images:
         argocd_operator: ${argocd:images:argocd_operator}
       manifests_version: ${argocd:images:argocd_operator:tag}
+      cluster_scope_namespaces:
+        - "${argocd:namespace}"
       kustomization_url: https://github.com/argoproj-labs/argocd-operator//config/default/
       kustomize_input:
         namePrefix: syn-
         namespace: ${argocd:operator:namespace}
         patches:
-          - patch: |-
-              - op: add
-                path: "/spec/template/spec/containers/1/env/-"
-                value:
-                  name: "ARGOCD_CLUSTER_CONFIG_NAMESPACES"
-                  value: "${argocd:namespace}"
-            target:
-              kind: Deployment
-              name: argocd-operator-controller-manager
           - patch: |-
               - op: add
                 path: "/rules/-"

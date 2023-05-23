@@ -146,6 +146,12 @@ default:: `syn-argocd-operator`
 
 The namespace in which to deploy the argocd operator
 
+=== `operator.cluster_scope_namespaces`
+type:: array
+default:: `["${argocd:namespace}"]`
+
+List of namespaces in which argocd is allowed to be installed at the cluster scope.
+
 === `operator.migrate`
 type:: string
 default:: `false`
