@@ -17,6 +17,10 @@ parameters:
       default: info
 
     images:
+      kubectl:
+        registry: docker.io
+        repository: bitnami/kubectl
+        tag: '1.25.5@sha256:19dff0248157ae4cd320097ace1b5e0ffbb8bc7c7ea7fa3f13f73993fc6d7ee2'
       kapitan:
         registry: docker.io
         repository: projectsyn/kapitan
