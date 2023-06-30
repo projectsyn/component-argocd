@@ -4,8 +4,8 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: '10'
   labels:
-    name: argocd
-  name: argocd
+    name: syn-argocd
+  name: syn-argocd
   namespace: syn
 spec:
   applicationInstanceLabelKey: argocd.argoproj.io/instance

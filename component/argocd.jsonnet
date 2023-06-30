@@ -309,5 +309,5 @@ local argocd(name) =
 
 {
   '00_vault_agent_config': vault_agent_config,
-  '10_argocd': argocd('argocd'),
+  '10_argocd': argocd('syn-argocd'),
 }
