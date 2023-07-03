@@ -307,7 +307,12 @@ local argocd(name) =
     },
   };
 
+local ssh_secret = kube._Object('v1', 'Secret', 'argo-ssh-key') {
+  type: 'Opaque',
+};
+
 {
   '00_vault_agent_config': vault_agent_config,
+  '00_ssh_secret': ssh_secret,
   '10_argocd': argocd('syn-argocd'),
 }
