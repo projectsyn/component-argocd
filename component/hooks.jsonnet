@@ -10,7 +10,7 @@ local role = kube.Role(name) {
   metadata+: {
     namespace: params.namespace,
     annotations+: {
-      'argocd.argoproj.io/hook': 'PreSync',
+      'argocd.argoproj.io/hook': 'PostSync',
     },
   },
   rules: [
@@ -31,7 +31,7 @@ local serviceAccount = kube.ServiceAccount(name) {
   metadata+: {
     namespace: params.namespace,
     annotations+: {
-      'argocd.argoproj.io/hook': 'PreSync',
+      'argocd.argoproj.io/hook': 'PostSync',
     },
   },
 };
@@ -40,7 +40,7 @@ local roleBinding = kube.RoleBinding(name) {
   metadata+: {
     namespace: params.namespace,
     annotations+: {
-      'argocd.argoproj.io/hook': 'PreSync',
+      'argocd.argoproj.io/hook': 'PostSync',
     },
   },
   subjects_: [ serviceAccount ],
