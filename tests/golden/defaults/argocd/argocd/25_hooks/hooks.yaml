@@ -27,15 +27,6 @@ rules:
       - get
       - update
       - patch
-  - apiGroups:
-      - argoproj.io
-    resources:
-      - applications
-    verbs:
-      - list
-      - get
-      - update
-      - patch
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -71,7 +62,7 @@ metadata:
   annotations:
     argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: HookSucceeded
-  generateName: argocd-post-sync-remove-annotations-
+  generateName: argocd-post-sync-
   labels: {}
   namespace: syn
 spec:
@@ -97,58 +88,7 @@ spec:
               value: /home
           image: docker.io/bitnami/kubectl:1.25.5@sha256:19dff0248157ae4cd320097ace1b5e0ffbb8bc7c7ea7fa3f13f73993fc6d7ee2
           imagePullPolicy: IfNotPresent
-          name: argocd-post-sync-remove-annotations
-          ports: []
-          stdin: false
-          tty: false
-          volumeMounts:
-            - mountPath: /home
-              name: home
-          workingDir: /home
-      imagePullSecrets: []
-      initContainers: []
-      restartPolicy: OnFailure
-      serviceAccountName: argocd-hooks
-      terminationGracePeriodSeconds: 30
-      volumes:
-        - emptyDir: {}
-          name: home
----
-apiVersion: batch/v1
-kind: Job
-metadata:
-  annotations:
-    argocd.argoproj.io/hook: PostSync
-    argocd.argoproj.io/hook-delete-policy: HookSucceeded
-  generateName: argocd-post-sync-set-prune-
-  labels: {}
-  namespace: syn
-spec:
-  completions: 1
-  parallelism: 1
-  template:
-    metadata:
-      labels: {}
-    spec:
-      containers:
-        - args:
-            - -n
-            - syn
-            - patch
-            - app
-            - argocd
-            - --type
-            - merge
-            - -p
-            - '{"spec":{"syncPolicy":{"automated":{"prune":true}}}}'
-          command:
-            - kubectl
-          env:
-            - name: HOME
-              value: /home
-          image: docker.io/bitnami/kubectl:1.25.5@sha256:19dff0248157ae4cd320097ace1b5e0ffbb8bc7c7ea7fa3f13f73993fc6d7ee2
-          imagePullPolicy: IfNotPresent
-          name: argocd-post-sync-set-prune
+          name: argocd-post-sync
           ports: []
           stdin: false
           tty: false
