@@ -24,6 +24,11 @@ local role = kube.Role(name) {
       resources: [ 'services' ],
       verbs: [ 'list', 'get', 'update', 'patch' ],
     },
+    {
+      apiGroups: [ 'argoproj.io' ],
+      resources: [ 'applications' ],
+      verbs: [ 'list', 'get', 'update', 'patch' ],
+    },
   ],
 };
 
@@ -88,7 +93,7 @@ local createJob(jobName, hook, args) = kube.Job(jobName) {
 };
 
 local postSyncJob = createJob(
-  'argocd-post-sync', 'PostSync', [
+  'argocd-post-sync-remove-annotations', 'PostSync', [
     '-n',
     params.namespace,
     'annotate',
@@ -99,4 +104,18 @@ local postSyncJob = createJob(
   ]
 );
 
-[ role, serviceAccount, roleBinding, postSyncJob ]
+local patchJob = createJob(
+  'argocd-post-sync-set-prune', 'PostSync', [
+    '-n',
+    params.namespace,
+    'patch',
+    'app',
+    'argocd',
+    '--type',
+    'merge',
+    '-p',
+    '{"spec":{"syncPolicy":{"automated":{"prune":true}}}}',
+  ]
+);
+
+[ role, serviceAccount, roleBinding, postSyncJob, patchJob ]
