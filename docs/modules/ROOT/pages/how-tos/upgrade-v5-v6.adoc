@@ -1,0 +1,41 @@
+= Upgrade `component-argocd` from `v5.5.x` to `v6.x`
+
+== Migration to ArgoCD Operator
+
+As of version 6, the ArgoCD operator is used to manage ArgoCD on the cluster.
+To avoid ArgoCD becoming unavailable during the migration, it has to be prevented from pruning itself until the migration is complete.
+
+
+=== 1. Ensure component-argocd version v5.5.0 or higher is rolled out
+
+component-argocd v5.5.0 or higher disables auto-pruning by default.
+This is required for the migration to succeed.
+Ensure your cluster uses component-argocd v5.5.0 or higher.
+
+=== 2. Ensure steward version v0.9.0 or higher is installed on the cluster
+
+Steward supports the migration to component-argocd v6.x starting from steward version v0.9.0.
+Older versions of steward will interfere with the operator-managed ArgoCD deployment.
+
+Steward version v0.9.0 is introduced in component-steward v3.6.0.
+If you manage steward via Project Syn, ensure that component-steward v3.6.0 or higher is rolled out on the cluster.
+
+=== 3. Upgrade component-argocd with migration flag
+
+The first time you roll out component-argocd v6.x, set the following configuration in your hierarchy:
+
+[source,yaml]
+----
+parameters:
+  argocd:
+    operator:
+      migrate: true
+----
+
+Roll out the upgrade with this configuration, and wait until the new pods for `syn-argocd` appear in the configured namespace.
+
+=== 4. Remove the migration flag to complete the migration
+
+After the first rollout of v6.x, the migration flag can be removed.
+Once this change is rolled out, ArgoCD can become unavailable for up to 15 minutes, after which it should recover without manual intervention.
+
