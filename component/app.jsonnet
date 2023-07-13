@@ -30,7 +30,15 @@ local root_app = argocd.App('root', params.namespace, secrets=false) {
   },
 };
 
-local app = argocd.App('argocd', params.namespace, secrets=false);
+local app = argocd.App('argocd', params.namespace, secrets=false) {
+  spec+: {
+    syncPolicy+: {
+      automated+: {
+        prune: false,
+      },
+    },
+  },
+};
 
 {
   '00_syn-project': syn_project,
