@@ -2,7 +2,7 @@
 
 == Migration to ArgoCD Operator
 
-As of version 6, the ArgoCD operator is used to manage ArgoCD on the cluster.
+As of component version 6, the ArgoCD operator is used to manage ArgoCD on the cluster.
 To avoid ArgoCD becoming unavailable during the migration, it has to be prevented from pruning itself until the migration is complete.
 
 
@@ -12,13 +12,13 @@ component-argocd v5.5.0 or higher disables auto-pruning by default.
 This is required for the migration to succeed.
 Ensure your cluster uses component-argocd v5.5.0 or higher.
 
-=== 2. Ensure steward version v0.9.0 or higher is installed on the cluster
+=== 2. Ensure Steward version v0.9.0 or higher is installed on the cluster
 
-Steward supports the migration to component-argocd v6.x starting from steward version v0.9.0.
-Older versions of steward will interfere with the operator-managed ArgoCD deployment.
+Steward v0.9.0 and newer supports the migration to component-argocd v6.x.
+Older versions of Steward will interfere with the operator-managed ArgoCD deployment.
 
 Steward version v0.9.0 is introduced in component-steward v3.6.0.
-If you manage steward via Project Syn, ensure that component-steward v3.6.0 or higher is rolled out on the cluster.
+If you manage Steward via Project Syn, ensure that component-steward v3.6.0 or higher is rolled out on the cluster.
 
 === 3. Upgrade component-argocd with migration flag
 
