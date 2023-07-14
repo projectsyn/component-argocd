@@ -4,6 +4,7 @@ local kube = import 'lib/kube.libjsonnet';
 
 local inv = kap.inventory();
 local params = inv.parameters.argocd;
+local common = import 'common.libsonnet';
 local name = 'argocd-hooks';
 
 local role = kube.Role(name) {
@@ -68,7 +69,7 @@ local createJob(jobName, hook, args) = kube.Job(jobName) {
         containers_+: {
           annotate_argocd: kube.Container(jobName) {
             workingDir: '/home',
-            image: '%(registry)s/%(repository)s:%(tag)s' % params.images.kubectl,
+            image: common.render_image('kubectl', include_tag=true),
             command: [ 'kubectl' ],
             args: args,
             env: [

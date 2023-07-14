@@ -20,7 +20,7 @@ local applicationController = {
 };
 
 local redis = {
-  image: '%(registry)s/%(repository)s' % params.images.redis,
+  image: common.render_image('redis'),
   version: params.images.redis.tag,
   [if params.resources.redis != null then 'resources']:
     std.prune(params.resources.redis),
@@ -111,7 +111,7 @@ local repoServer = {
   initContainers: [
     {
       name: 'install-kapitan',
-      image: '%(registry)s/%(repository)s:%(tag)s' % params.images.kapitan,
+      image: common.render_image('kapitan', include_tag=true),
       imagePullPolicy: 'Always',
       command: [
         'cp',
@@ -128,7 +128,7 @@ local repoServer = {
   sidecarContainers: [
     kube.Container('vault-agent') {
       name: 'vault-agent',
-      image: '%(registry)s/%(repository)s:%(tag)s' % params.images.vault_agent,
+      image: common.render_image('vault_agent', include_tag=true),
       args: [
         'agent',
         '-config',
@@ -168,7 +168,7 @@ local argocd(name) =
       },
     },
     spec: {
-      image: '%(registry)s/%(repository)s' % params.images.argocd,
+      image: common.render_image('argocd'),
       version: params.images.argocd.tag,
       applicationInstanceLabelKey: 'argocd.argoproj.io/instance',
       configManagementPlugins: |||

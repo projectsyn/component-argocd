@@ -27,7 +27,7 @@ parameters:
         tag: 'v0.29.5@sha256:33715063f8238a93938f79053bc939e992def3bbe95ae1f9f6e48e5c1421d569'
       vault_agent:
         registry: docker.io
-        repository: vault
+        repository: library/vault
         tag: '1.5.8@sha256:3b2209bedb1bbc70315fcd9e2187a49a1359f8f6f46cca7a51efcadb461fe98a'
       argocd:
         registry: quay.io
