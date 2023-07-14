@@ -12,7 +12,7 @@ local render_image(imagename, include_tag=false) =
   local image =
     if std.objectHas(imagespec, 'image') then
       std.trace(
-        "Field `image` for selecting the container image `%s' has been deprecated in favor of fields `registry` and `repository`, please update your config" % imagename,
+        'Field `image` for selecting the container image `%s` has been deprecated in favor of fields `registry` and `repository`, please update your config' % imagename,
         imagespec.image
       )
     else

@@ -14,8 +14,7 @@ parameters:
         registry: mymirror.io
         repository: vault
       kubectl:
-        registry: mymirror.io
-        repository: kubectl
+        image: mymirror.io/kubectl
 
     # Test unsetting resource requests & limits
     resources:
@@ -24,3 +23,5 @@ parameters:
       repo_server: null
       repo_server_vault_agent: null
       server: null
+    operator:
+      migrate: true
