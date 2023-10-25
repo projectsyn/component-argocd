@@ -69,7 +69,7 @@ local alert_rules =
             },
             {
               alert: 'ArgoCDDown',
-              expr: 'up{namespace="' + params.namespace + '", job=~"^argocd-.+$"} != 1',
+              expr: 'up{namespace="' + params.namespace + '", job=~"^syn-argocd-.+$"} != 1',
               'for': '5m',
               labels: {
                 severity: 'critical',
@@ -104,8 +104,8 @@ local promEnable = function(obj)
 ;
 
 [
-  promEnable(serviceMonitor('argocd-metrics')),
-  promEnable(serviceMonitor('argocd-server-metrics')),
-  promEnable(serviceMonitor('argocd-repo-server')),
+  promEnable(serviceMonitor('syn-argocd-metrics')),
+  promEnable(serviceMonitor('syn-argocd-server-metrics')),
+  promEnable(serviceMonitor('syn-argocd-repo-server')),
   promEnable(alert_rules),
 ] + if params.monitoring.dashboards then [ grafana_dashboard ] else []

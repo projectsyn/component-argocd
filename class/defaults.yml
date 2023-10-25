@@ -17,18 +17,34 @@ parameters:
       default: info
 
     images:
-      argocd:
-        image: quay.io/argoproj/argocd
-        tag: v2.3.12
-      redis:
-        image: docker.io/library/redis
-        tag: '6.2.6'
+      kubectl:
+        registry: docker.io
+        repository: bitnami/kubectl
+        tag: '1.25.5@sha256:19dff0248157ae4cd320097ace1b5e0ffbb8bc7c7ea7fa3f13f73993fc6d7ee2'
       kapitan:
-        image: docker.io/projectsyn/kapitan
+        registry: docker.io
+        repository: projectsyn/kapitan
         tag: 'v0.29.5@sha256:33715063f8238a93938f79053bc939e992def3bbe95ae1f9f6e48e5c1421d569'
       vault_agent:
-        image: docker.io/vault
+        registry: docker.io
+        repository: library/vault
         tag: '1.5.8@sha256:3b2209bedb1bbc70315fcd9e2187a49a1359f8f6f46cca7a51efcadb461fe98a'
+      argocd:
+        registry: quay.io
+        repository: argoproj/argocd
+        tag: v2.3.12
+      redis:
+        registry: docker.io
+        repository: library/redis
+        tag: '6.2.6'
+      argocd_applicationset:
+        registry: quay.io
+        repository: argoproj/argocd-applicationset
+        tag: ${argocd:images:argocd:tag}
+      argocd_operator:
+        registry: quay.io
+        repository: argoprojlabs/argocd-operator
+        tag: v0.6.0
 
     resources:
       application_controller:
@@ -63,3 +79,29 @@ parameters:
       gitlab-dev.syn.tools ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDybOH3scUSfAJFkskpVn1VcL1mPNSiV05asrCCjDTzSJOeJuCE99KkHf7eTA29as9NaqtMtJcCxhptLfNaRzUR3zf29eUuPhkh2B5PUaqLpsbm6330QxvWsZNJyI8Cf7i78O3qe4dv7p2Fe78ayLKX/q3dRj0PZnl7kMj7YpCfY7VCndqoIKEOlIEqNjzAFhHLgHEMJ8f8cM5s4qorgc3TdCqORGVs5vqkeNm977yz2hMxB7iEET4O2jfBUHzzZ68T5h5AtrL5YVBMP0xTgaLskk7/QnoEsfKAgTXo/AaUuXbzM6N0nIjH00Ll0s6P2fWyRVXz05eauZZhBS85GQTD
       gitlab-dev.syn.tools ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCz/gtGxqX+WS6E9/NLYTkRLkM7r7JHU5N7vz2kJjRbjhR91JvP7NaHtuN5aPm5Wv9rtPKSackQ9B78VCkr6GLw=
       gitlab-dev.syn.tools ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKtv4stHQjApa7wkgvgo4dB52qLzI/zN2Us+89cQXXm0
+    operator:
+      migrate: false
+      namespace: syn-argocd-operator
+      images:
+        argocd_operator: ${argocd:images:argocd_operator}
+      manifests_version: ${argocd:images:argocd_operator:tag}
+      cluster_scope_namespaces:
+        - "${argocd:namespace}"
+      kustomization_url: https://github.com/argoproj-labs/argocd-operator//config/default/
+      kustomize_input:
+        namePrefix: syn-
+        namespace: ${argocd:operator:namespace}
+        patches:
+          - patch: |-
+              - op: add
+                path: "/rules/-"
+                value:
+                  apiGroups:
+                  - monitoring.coreos.com
+                  resources:
+                  - prometheusrules
+                  verbs:
+                  - '*'
+            target:
+              kind: ClusterRole
+              name: argocd-operator-manager-role

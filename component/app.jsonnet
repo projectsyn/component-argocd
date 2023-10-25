@@ -34,7 +34,7 @@ local app = argocd.App('argocd', params.namespace, secrets=false) {
   spec+: {
     syncPolicy+: {
       automated+: {
-        prune: false,
+        [if params.operator.migrate then 'prune' else null]: false,
       },
     },
   },
