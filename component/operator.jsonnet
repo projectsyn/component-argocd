@@ -5,6 +5,7 @@ local inv = kap.inventory();
 local params = inv.parameters.argocd.operator;
 
 local image = params.images.argocd_operator;
+local rbac = params.images.kube_rbac_proxy;
 
 local kustomize_input = params.kustomize_input {
   patches+: [
@@ -31,6 +32,10 @@ com.Kustomization(
     'quay.io/argoprojlabs/argocd-operator': {
       newTag: image.tag,
       newName: '%(registry)s/%(repository)s' % image,
+    },
+    'gcr.io/kubebuilder/kube-rbac-proxy': {
+      newTag: rbac.tag,
+      newName: '%(registry)s/%(repository)s' % rbac,
     },
   },
   kustomize_input,

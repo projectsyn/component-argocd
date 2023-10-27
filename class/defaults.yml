@@ -45,6 +45,10 @@ parameters:
         registry: quay.io
         repository: argoprojlabs/argocd-operator
         tag: v0.6.0
+      kube_rbac_proxy:
+        registry: gcr.io
+        repository: kubebuilder/kube-rbac-proxy
+        tag: v0.8.0
 
     resources:
       application_controller:
@@ -84,6 +88,7 @@ parameters:
       namespace: syn-argocd-operator
       images:
         argocd_operator: ${argocd:images:argocd_operator}
+        kube_rbac_proxy: ${argocd:images:kube_rbac_proxy}
       manifests_version: ${argocd:images:argocd_operator:tag}
       cluster_scope_namespaces:
         - "${argocd:namespace}"

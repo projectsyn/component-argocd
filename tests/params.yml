@@ -15,6 +15,9 @@ parameters:
         repository: vault
       kubectl:
         image: mymirror.io/kubectl
+      kube_rbac_proxy:
+        registry: mymirror.io
+        tag: v1.1.1
 
     # Test unsetting resource requests & limits
     resources:
