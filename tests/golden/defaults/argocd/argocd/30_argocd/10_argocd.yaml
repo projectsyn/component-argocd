@@ -83,7 +83,7 @@ spec:
             value: 'true'
           - name: VAULT_ADDR
             value: test.syn.tools
-        image: docker.io/library/vault:1.5.8@sha256:3b2209bedb1bbc70315fcd9e2187a49a1359f8f6f46cca7a51efcadb461fe98a
+        image: docker.io/library/vault:1.5.9@sha256:e1ea5a848204f3bf1d71c4f776a43a503487a1e5263ee7a034330f48fc6be3f4
         imagePullPolicy: IfNotPresent
         name: vault-agent
         ports: []
