@@ -202,4 +202,4 @@ spec:
     insecure: true
     logFormat: text
     logLevel: info
-  version: v2.3.12
+  version: v2.3.17
