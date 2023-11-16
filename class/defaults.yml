@@ -23,8 +23,8 @@ parameters:
         tag: '1.25.5@sha256:19dff0248157ae4cd320097ace1b5e0ffbb8bc7c7ea7fa3f13f73993fc6d7ee2'
       kapitan:
         registry: docker.io
-        repository: projectsyn/kapitan
-        tag: 'v0.29.5@sha256:33715063f8238a93938f79053bc939e992def3bbe95ae1f9f6e48e5c1421d569'
+        repository: kapicorp/kapitan
+        tag: 'v0.32.0'
       vault_agent:
         registry: docker.io
         repository: library/vault
