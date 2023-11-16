@@ -104,8 +104,10 @@ local promEnable = function(obj)
 ;
 
 [
-  promEnable(serviceMonitor('syn-argocd-metrics')),
-  promEnable(serviceMonitor('syn-argocd-server-metrics')),
-  promEnable(serviceMonitor('syn-argocd-repo-server')),
+  // We explicitly select names for the service monitors which don't match the
+  // operator-generated names for instance syn-argocd
+  promEnable(serviceMonitor('syn-component-argocd-metrics')),
+  promEnable(serviceMonitor('syn-component-argocd-server-metrics')),
+  promEnable(serviceMonitor('syn-component-argocd-repo-server')),
   promEnable(alert_rules),
 ] + if params.monitoring.dashboards then [ grafana_dashboard ] else []
