@@ -9,10 +9,6 @@ metadata:
   namespace: syn
 spec:
   applicationInstanceLabelKey: argocd.argoproj.io/instance
-  configManagementPlugins: |
-    - name: kapitan
-      generate:
-        command: [kapitan, refs, --reveal, --refs-path, ../../refs/, --file, ./]
   controller:
     appSync: 180s
     logFormat: text
@@ -43,21 +39,33 @@ spec:
     env:
       - name: HOME
         value: /home/argocd
-    initContainers:
-      - command:
-          - cp
-          - -v
-          - /usr/local/bin/kapitan
-          - /custom-tools/
-        image: mymirror.io/projectsyn/kapitan:v0.29.5@sha256:33715063f8238a93938f79053bc939e992def3bbe95ae1f9f6e48e5c1421d569
-        imagePullPolicy: Always
-        name: install-kapitan
-        volumeMounts:
-          - mountPath: /custom-tools
-            name: kapitan-bin
     logFormat: text
     logLevel: info
     sidecarContainers:
+      - args: []
+        command:
+          - /var/run/argocd/argocd-cmp-server
+        env:
+          - name: HOME
+            value: /home/argocd
+        image: mymirror.io/projectsyn/kapitan:v0.32.0
+        imagePullPolicy: IfNotPresent
+        name: kapitan
+        ports: []
+        securityContext:
+          runAsNonRoot: true
+        stdin: false
+        tty: false
+        volumeMounts:
+          - mountPath: /home/argocd/cmp-server/config/plugin.yaml
+            name: kapitan-plugin-config
+            subPath: plugin.yaml
+          - mountPath: /home/argocd/cmp-server/plugins
+            name: plugins
+          - mountPath: /var/run/argocd
+            name: var-files
+          - mountPath: /home/argocd/
+            name: vault-token
       - args:
           - agent
           - -config
@@ -83,14 +91,9 @@ spec:
           - mountPath: /home/vault/
             name: vault-token
     volumeMounts:
-      - mountPath: /usr/local/bin/kapitan
-        name: kapitan-bin
-        subPath: kapitan
       - mountPath: /home/argocd/
         name: vault-token
     volumes:
-      - emptyDir: {}
-        name: kapitan-bin
       - emptyDir:
           medium: Memory
         name: vault-token
@@ -100,6 +103,9 @@ spec:
       - name: steward-token
         secret:
           secretName: steward
+      - configMap:
+          name: kapitan-plugin-config
+        name: kapitan-plugin-config
   repositoryCredentials: |
     - url: ssh://git@
       sshPrivateKeySecret:
