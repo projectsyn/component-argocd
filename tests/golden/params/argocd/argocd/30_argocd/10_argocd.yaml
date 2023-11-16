@@ -42,7 +42,11 @@ spec:
     logFormat: text
     logLevel: info
     sidecarContainers:
-      - args: []
+      - args:
+          - --loglevel
+          - info
+          - --logformat
+          - text
         command:
           - /var/run/argocd/argocd-cmp-server
         env:

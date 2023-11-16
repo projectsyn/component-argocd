@@ -58,7 +58,11 @@ spec:
         cpu: 10m
         memory: 128Mi
     sidecarContainers:
-      - args: []
+      - args:
+          - --loglevel
+          - info
+          - --logformat
+          - text
         command:
           - /var/run/argocd/argocd-cmp-server
         env:

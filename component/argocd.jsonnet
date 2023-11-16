@@ -135,6 +135,12 @@ local repoServer = {
   sidecarContainers: [
     kube.Container('kapitan') {
       command: [ '/var/run/argocd/argocd-cmp-server' ],
+      args: [
+        '--loglevel',
+        $.logLevel,
+        '--logformat',
+        $.logFormat,
+      ],
       env_: {
         HOME: '/home/argocd',
       },
