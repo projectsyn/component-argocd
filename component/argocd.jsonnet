@@ -65,6 +65,33 @@ local vault_agent_config = kube.ConfigMap('vault-agent-config') {
   },
 };
 
+local kapitan_plugin_config = kube.ConfigMap('kapitan-plugin-config') {
+  data: {
+    'plugin.yaml': std.manifestYamlDoc(
+      {
+        apiVersion: 'argoproj.io/v1alpha1',
+        kind: 'ConfigManagementPlugin',
+        metadata: {
+          name: 'kapitan',
+        },
+        spec: {
+          generate: {
+            command: [
+              'kapitan',
+              'refs',
+              '--reveal',
+              '--refs-path',
+              '../../refs/',
+              '--file',
+              './',
+            ],
+          },
+        },
+      }
+    ),
+  },
+};
+
 local repoServer = {
   logLevel: common.evaluate_log_level('repo_server'),
   logFormat: common.evaluate_log_format('repo_server'),
@@ -75,20 +102,11 @@ local repoServer = {
     std.prune(params.resources.repo_server),
   volumeMounts: [
     {
-      name: 'kapitan-bin',
-      mountPath: '/usr/local/bin/kapitan',
-      subPath: 'kapitan',
-    },
-    {
       name: 'vault-token',
       mountPath: '/home/argocd/',
     },
   ],
   volumes: [
-    {
-      name: 'kapitan-bin',
-      emptyDir: {},
-    },
     {
       name: 'vault-token',
       emptyDir: {
@@ -107,25 +125,45 @@ local repoServer = {
         secretName: 'steward',
       },
     },
-  ],
-  initContainers: [
     {
-      name: 'install-kapitan',
-      image: common.render_image('kapitan', include_tag=true),
-      imagePullPolicy: 'Always',
-      command: [
-        'cp',
-        '-v',
-        '/usr/local/bin/kapitan',
-        '/custom-tools/',
-      ],
-      volumeMounts: [ {
-        name: 'kapitan-bin',
-        mountPath: '/custom-tools',
-      } ],
+      name: 'kapitan-plugin-config',
+      configMap: {
+        name: kapitan_plugin_config.metadata.name,
+      },
     },
   ],
   sidecarContainers: [
+    kube.Container('kapitan') {
+      command: [ '/var/run/argocd/argocd-cmp-server' ],
+      args: [
+        '--loglevel',
+        $.logLevel,
+        '--logformat',
+        $.logFormat,
+      ],
+      env_: {
+        HOME: '/home/argocd',
+      },
+      image: common.render_image('kapitan', include_tag=true),
+      securityContext: {
+        runAsNonRoot: true,
+      },
+      volumeMounts_: {
+        'var-files': {
+          mountPath: '/var/run/argocd',
+        },
+        plugins: {
+          mountPath: '/home/argocd/cmp-server/plugins',
+        },
+        kapitan_plugin_config: {
+          mountPath: '/home/argocd/cmp-server/config/plugin.yaml',
+          subPath: 'plugin.yaml',
+        },
+        'vault-token': {
+          mountPath: '/home/argocd/',
+        },
+      },
+    },
     kube.Container('vault-agent') {
       name: 'vault-agent',
       image: common.render_image('vault_agent', include_tag=true),
@@ -171,11 +209,6 @@ local argocd(name) =
       image: common.render_image('argocd'),
       version: params.images.argocd.tag,
       applicationInstanceLabelKey: 'argocd.argoproj.io/instance',
-      configManagementPlugins: |||
-        - name: kapitan
-          generate:
-            command: [kapitan, refs, --reveal, --refs-path, ../../refs/, --file, ./]
-      |||,
       controller: applicationController,
       initialRepositories: '- url: ' + inv.parameters.cluster.catalog_url,
       repositoryCredentials: |||
@@ -313,6 +346,7 @@ local ssh_secret = kube._Object('v1', 'Secret', 'argo-ssh-key') {
 
 {
   '00_vault_agent_config': vault_agent_config,
+  '00_kapitan_plugin_config': kapitan_plugin_config,
   '00_ssh_secret': ssh_secret,
   '10_argocd': argocd('syn-argocd'),
 }
