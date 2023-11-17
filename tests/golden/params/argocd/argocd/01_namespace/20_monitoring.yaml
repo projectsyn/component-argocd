@@ -3,17 +3,17 @@ kind: ServiceMonitor
 metadata:
   annotations: {}
   labels:
-    app.kubernetes.io/name: syn-argocd-metrics
+    app.kubernetes.io/name: syn-component-argocd-metrics
     app.kubernetes.io/part-of: argocd
-    name: syn-argocd-metrics
-  name: syn-argocd-metrics
+    name: syn-component-argocd-metrics
+  name: syn-component-argocd-metrics
   namespace: syn
 spec:
   endpoints:
     - port: metrics
   selector:
     matchLabels:
-      app.kubernetes.io/name: syn-argocd-metrics
+      app.kubernetes.io/name: syn-component-argocd-metrics
       app.kubernetes.io/part-of: argocd
 ---
 apiVersion: monitoring.coreos.com/v1
@@ -21,17 +21,17 @@ kind: ServiceMonitor
 metadata:
   annotations: {}
   labels:
-    app.kubernetes.io/name: syn-argocd-server-metrics
+    app.kubernetes.io/name: syn-component-argocd-server-metrics
     app.kubernetes.io/part-of: argocd
-    name: syn-argocd-server-metrics
-  name: syn-argocd-server-metrics
+    name: syn-component-argocd-server-metrics
+  name: syn-component-argocd-server-metrics
   namespace: syn
 spec:
   endpoints:
     - port: metrics
   selector:
     matchLabels:
-      app.kubernetes.io/name: syn-argocd-server-metrics
+      app.kubernetes.io/name: syn-component-argocd-server-metrics
       app.kubernetes.io/part-of: argocd
 ---
 apiVersion: monitoring.coreos.com/v1
@@ -39,17 +39,17 @@ kind: ServiceMonitor
 metadata:
   annotations: {}
   labels:
-    app.kubernetes.io/name: syn-argocd-repo-server
+    app.kubernetes.io/name: syn-component-argocd-repo-server
     app.kubernetes.io/part-of: argocd
-    name: syn-argocd-repo-server
-  name: syn-argocd-repo-server
+    name: syn-component-argocd-repo-server
+  name: syn-component-argocd-repo-server
   namespace: syn
 spec:
   endpoints:
     - port: metrics
   selector:
     matchLabels:
-      app.kubernetes.io/name: syn-argocd-repo-server
+      app.kubernetes.io/name: syn-component-argocd-repo-server
       app.kubernetes.io/part-of: argocd
 ---
 apiVersion: monitoring.coreos.com/v1
