@@ -39,7 +39,7 @@ spec:
               fieldPath: metadata.annotations['olm.targetNamespaces']
         - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
           value: syn
-        image: quay.io/argoprojlabs/argocd-operator:v0.6.0
+        image: quay.io/argoprojlabs/argocd-operator:v0.7.0
         livenessProbe:
           httpGet:
             path: /healthz
