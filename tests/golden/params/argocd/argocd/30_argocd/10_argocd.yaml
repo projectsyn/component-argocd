@@ -213,4 +213,4 @@ spec:
     insecure: true
     logFormat: text
     logLevel: info
-  version: v2.9.1
+  version: v2.9.2
