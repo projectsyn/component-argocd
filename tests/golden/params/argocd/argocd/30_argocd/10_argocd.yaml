@@ -58,6 +58,7 @@ spec:
         ports: []
         securityContext:
           runAsNonRoot: true
+          runAsUser: 999
         stdin: false
         tty: false
         volumeMounts:

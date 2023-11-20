@@ -147,6 +147,11 @@ local repoServer = {
       image: common.render_image('kapitan', include_tag=true),
       securityContext: {
         runAsNonRoot: true,
+        // On non-OpenShift we use user 999, since the main repo-server
+        // container also uses user 999 and we need to make sure that the main
+        // repo-server container has write permissions on the cmp-server
+        // socket created by this container.
+        [if !isOpenshift then 'runAsUser']: 999,
       },
       volumeMounts_: {
         'var-files': {
