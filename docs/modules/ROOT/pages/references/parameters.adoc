@@ -41,6 +41,7 @@ SSH known hosts for Git servers.
 type:: dictionary
 
 Dictionary containing the container images used by this component.
+Each entry follows the https://syn.tools/syn/explanations/commodore-components/container-images.html[Commodore component best practices] for specifying container images.
 
 == `log_level`
 

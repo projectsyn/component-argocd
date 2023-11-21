@@ -9,14 +9,15 @@ local evaluate_log_format = function(component)
 
 local render_image(imagename, include_tag=false) =
   local imagespec = params.images[imagename];
+  local img = '%(registry)s/%(repository)s' % imagespec;
   local image =
     if std.objectHas(imagespec, 'image') && imagespec.image != null then
       std.trace(
-        'Field `image` for selecting the container image `%s` has been deprecated in favor of fields `registry` and `repository`, please update your config' % imagename,
-        imagespec.image
+        'Field `image` for selecting the container image `%s` has been removed. Please use fields `registry` and `repository` instead' % imagename,
+        img
       )
     else
-      '%(registry)s/%(repository)s' % imagespec;
+      img;
   if include_tag then
     '%(image)s:%(tag)s' % { image: image, tag: imagespec.tag }
   else
