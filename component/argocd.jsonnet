@@ -141,7 +141,7 @@ local repoServer = {
         '--logformat',
         $.logFormat,
       ],
-      env_: {
+      env_: com.proxyVars {
         HOME: '/home/argocd',
       },
       image: common.render_image('kapitan', include_tag=true),
