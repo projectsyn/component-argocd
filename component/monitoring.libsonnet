@@ -4,8 +4,8 @@ local prometheus = import 'lib/prometheus.libsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.argocd;
 
-local serviceMonitor(name) =
-  kube._Object('monitoring.coreos.com/v1', 'ServiceMonitor', name) {
+local serviceMonitor(objname, name) =
+  kube._Object('monitoring.coreos.com/v1', 'ServiceMonitor', objname) {
     metadata+: {
       namespace: params.namespace,
       labels+: {
@@ -106,8 +106,8 @@ local promEnable = function(obj)
 [
   // We explicitly select names for the service monitors which don't match the
   // operator-generated names for instance syn-argocd
-  promEnable(serviceMonitor('syn-component-argocd-metrics')),
-  promEnable(serviceMonitor('syn-component-argocd-server-metrics')),
-  promEnable(serviceMonitor('syn-component-argocd-repo-server')),
+  promEnable(serviceMonitor('syn-component-argocd-metrics', 'syn-argocd-metrics')),
+  promEnable(serviceMonitor('syn-component-argocd-server-metrics', 'syn-argocd-server-metrics')),
+  promEnable(serviceMonitor('syn-component-argocd-repo-server', 'syn-argocd-repo-server')),
   promEnable(alert_rules),
 ] + if params.monitoring.dashboards then [ grafana_dashboard ] else []
