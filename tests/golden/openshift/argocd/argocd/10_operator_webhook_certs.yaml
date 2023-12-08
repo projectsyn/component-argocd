@@ -1,0 +1,27 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  annotations: {}
+  labels:
+    name: selfsigned-issuer
+  name: selfsigned-issuer
+  namespace: syn-argocd-operator
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  annotations: {}
+  labels:
+    name: serving-cert
+  name: serving-cert
+  namespace: syn-argocd-operator
+spec:
+  dnsNames:
+    - syn-argocd-operator-webhook-service.syn-argocd-operator.svc
+    - syn-argocd-operator-webhook-service.syn-argocd-operator.svc.cluster.local
+  issuerRef:
+    kind: Issuer
+    name: selfsigned-issuer
+  secretName: webhook-server-cert

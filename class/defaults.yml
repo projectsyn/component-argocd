@@ -10,7 +10,7 @@ parameters:
         prometheus: platform
         cluster_id: ${cluster:name}
         tenant_id: ${cluster:tenant}
-    resync_seconds: 180
+    resync_time: 3m0s
     log_format:
       default: text
     log_level:
@@ -44,7 +44,7 @@ parameters:
       argocd_operator:
         registry: quay.io
         repository: argoprojlabs/argocd-operator
-        tag: v0.7.0
+        tag: v0.8.0
       kube_rbac_proxy:
         registry: gcr.io
         repository: kubebuilder/kube-rbac-proxy
@@ -96,6 +96,8 @@ parameters:
       kustomize_input:
         namePrefix: syn-
         namespace: ${argocd:operator:namespace}
+        patchesStrategicMerge:
+          - https://raw.githubusercontent.com/argoproj-labs/argocd-operator/${argocd:images:argocd_operator:tag}/config/default/manager_auth_proxy_patch.yaml
         patches:
           - patch: |-
               - op: add

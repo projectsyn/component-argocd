@@ -39,7 +39,9 @@ spec:
               fieldPath: metadata.annotations['olm.targetNamespaces']
         - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
           value: syn
-        image: quay.io/argoprojlabs/argocd-operator:v0.7.0
+        - name: ENABLE_CONVERSION_WEBHOOK
+          value: "true"
+        image: quay.io/argoprojlabs/argocd-operator:v0.8.0
         livenessProbe:
           httpGet:
             path: /healthz
@@ -47,6 +49,10 @@ spec:
           initialDelaySeconds: 15
           periodSeconds: 20
         name: manager
+        ports:
+        - containerPort: 9443
+          name: webhook-server
+          protocol: TCP
         readinessProbe:
           httpGet:
             path: /readyz
@@ -60,7 +66,16 @@ spec:
             - ALL
           readOnlyRootFilesystem: true
           runAsNonRoot: true
+        volumeMounts:
+        - mountPath: /tmp/k8s-webhook-server/serving-certs
+          name: cert
+          readOnly: true
       securityContext:
         runAsNonRoot: true
       serviceAccountName: syn-argocd-operator-controller-manager
       terminationGracePeriodSeconds: 10
+      volumes:
+      - name: cert
+        secret:
+          defaultMode: 420
+          secretName: webhook-server-cert

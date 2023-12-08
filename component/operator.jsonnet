@@ -22,6 +22,19 @@ local kustomize_input = params.kustomize_input {
         name: 'argocd-operator-controller-manager',
       },
     },
+    {
+      patch: |||
+        - op: add
+          path: "/spec/template/spec/containers/1/env/-"
+          value:
+            name: "ENABLE_CONVERSION_WEBHOOK"
+            value: "true"
+      |||,
+      target: {
+        kind: 'Deployment',
+        name: 'argocd-operator-controller-manager',
+      },
+    },
   ],
 };
 

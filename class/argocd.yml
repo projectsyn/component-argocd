@@ -22,20 +22,23 @@ parameters:
         input_paths:
           - argocd/component/argocd.jsonnet
       # Operator kustomization
-      - output_path: ${_base_directory}/operator_kustomize
+      - output_path: ${_base_directory}/manifests/argocd-operator
         output_type: yaml
         input_type: jsonnet
         input_paths:
-          - argocd/component/operator.jsonnet
+          - ${_base_directory}/component/operator.jsonnet
       - output_path: .
         input_type: external
         input_paths:
           - ${_kustomize_wrapper}
         env_vars:
-          INPUT_DIR: ${_base_directory}/operator_kustomize
+          INPUT_DIR: ${_base_directory}/manifests/argocd-operator
         args:
           - \${compiled_target_dir}/argocd/10_operator
-      - output_path: .
-        input_type: remove
-        input_paths:
-          - ${_base_directory}/operator_kustomize
+
+  commodore:
+    postprocess:
+      filters:
+        - type: jsonnet
+          path: ${_instance}//10_operator/
+          filter: postprocess/fix_crd.jsonnet
