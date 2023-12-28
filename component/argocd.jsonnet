@@ -93,6 +93,8 @@ local kapitan_plugin_config = kube.ConfigMap('kapitan-plugin-config') {
 };
 
 local repoServer = {
+  image: common.render_image('argocd'),
+  version: params.images.argocd.tag,
   logLevel: common.evaluate_log_level('repo_server'),
   logFormat: common.evaluate_log_format('repo_server'),
   env: com.envList(com.proxyVars {
