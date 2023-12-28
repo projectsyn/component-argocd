@@ -39,6 +39,7 @@ spec:
     env:
       - name: HOME
         value: /home/argocd
+    image: quay.io/argoproj/argocd
     logFormat: text
     logLevel: info
     sidecarContainers:
@@ -95,6 +96,7 @@ spec:
             name: vault-config
           - mountPath: /home/vault/
             name: vault-token
+    version: v2.9.2
     volumeMounts:
       - mountPath: /home/argocd/
         name: vault-token
