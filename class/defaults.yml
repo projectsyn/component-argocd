@@ -36,7 +36,7 @@ parameters:
       redis:
         registry: docker.io
         repository: library/redis
-        tag: '7.2.3'
+        tag: '7.2.4'
       argocd_applicationset:
         registry: quay.io
         repository: argoproj/argocd-applicationset
