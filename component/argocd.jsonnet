@@ -1,3 +1,4 @@
+local cm = import 'lib/cert-manager.libsonnet';
 local com = import 'lib/commodore.libjsonnet';
 local kap = import 'lib/kapitan.libjsonnet';
 local kube = import 'lib/kube.libjsonnet';
@@ -7,12 +8,21 @@ local params = inv.parameters.argocd;
 local common = import 'common.libsonnet';
 local isOpenshift = std.startsWith(params.distribution, 'openshift');
 
+local resync_string =
+  if std.get(params, 'resync_seconds', 0) > 0 then
+    std.trace(
+      'Parameter `resync_seconds` is deprecated. Please update your config to use `resync_time`',
+      std.format('%dm0s', std.mod(params.resync, 60)),
+    )
+  else
+    params.resync_time;
+
 local applicationController = {
   processors: {
     operation: 10,
     status: 20,
   },
-  appSync: std.format('%ds', params.resync_seconds),
+  appSync: resync_string,
   logLevel: common.evaluate_log_level('application_controller'),
   logFormat: common.evaluate_log_format('application_controller'),
   [if params.resources.application_controller != null then 'resources']:
@@ -204,7 +214,7 @@ local repoServer = {
 };
 
 local argocd(name) =
-  kube._Object('argoproj.io/v1alpha1', 'ArgoCD', name) {
+  kube._Object('argoproj.io/v1beta1', 'ArgoCD', name) {
     metadata+: {
       name: name,
       namespace: params.namespace,
@@ -295,15 +305,11 @@ local argocd(name) =
             return hs
           |||,
         },
-      ],
-      // `ResourceCustomizations` is getting deprecated, however, the new `ResourceHealthChecks` does not currently expose the `health.lua.useOpenLibs` flag
-      resourceCustomizations: |||
-        operators.coreos.com/Subscription:
-          health.lua.useOpenLibs: true
-          health.lua: |
-            -- Base check copied from upstream
-            -- See https://github.com/argoproj/argo-cd/blob/f3730da01ef05c0b7ae97385aca6642faf9e4c52/resource_customizations/operators.coreos.com/Subscription/health.lua
-            health_status = {}
+        {
+          group: 'operators.coreos.com',
+          kind: 'Subscription',
+          check: |||
+            hs = {}
             if obj.status ~= nil then
               if obj.status.conditions ~= nil then
                 numDegraded = 0
@@ -324,24 +330,26 @@ local argocd(name) =
                   end
                 end
                 if numDegraded == 0 and numPending == 0 then
-                  health_status.status = "Healthy"
-                  health_status.message = msg
-                  return health_status
+                  hs.status = "Healthy"
+                  hs.message = msg
+                  return hs
                 elseif numPending > 0 and numDegraded == 0 then
-                  health_status.status = "Progressing"
-                  health_status.message = "An install plan for a subscription is pending installation"
-                  return health_status
+                  hs.status = "Progressing"
+                  hs.message = "An install plan for a subscription is pending installation"
+                  return hs
                 else
-                  health_status.status = "Degraded"
-                  health_status.message = msg
-                  return health_status
+                  hs.status = "Degraded"
+                  hs.message = msg
+                  return hs
                 end
               end
             end
-            health_status.status = "Progressing"
-            health_status.message = "An install plan for a subscription is pending installation"
-            return health_status
-      |||,
+            hs.status = "Progressing"
+            hs.message = "An install plan for a subscription is pending installation"
+            return hs
+          |||,
+        },
+      ],
       repo: repoServer,
       server: server,
     },
@@ -351,9 +359,44 @@ local ssh_secret = kube._Object('v1', 'Secret', 'argo-ssh-key') {
   type: 'Opaque',
 };
 
+
+// Manually adding certificate for conversion webhook
+// as the upstream kustomize is broken.
+// 2023/02/19 sfe
+local webhook_certs = [
+  cm.issuer('selfsigned-issuer') {
+    metadata+: {
+      namespace: params.operator.namespace,
+    },
+    spec: {
+      selfSigned: {},
+    },
+  },
+  cm.cert('serving-cert') {
+    metadata+: {
+      namespace: params.operator.namespace,
+    },
+    spec: {
+      dnsNames: [
+        'syn-argocd-operator-webhook-service.%s.svc' % params.operator.namespace,
+        'syn-argocd-operator-webhook-service.%s.svc.cluster.local' % params.operator.namespace,
+      ],
+      issuerRef: {
+        kind: 'Issuer',
+        name: 'selfsigned-issuer',
+      },
+      secretName: 'webhook-server-cert',
+    },
+  },
+];
+
 {
   '00_vault_agent_config': vault_agent_config,
   '00_kapitan_plugin_config': kapitan_plugin_config,
   '00_ssh_secret': ssh_secret,
   '10_argocd': argocd('syn-argocd'),
+  // Manually adding certificate for conversion webhook
+  // as the upstream kustomize is broken.
+  // 2023/02/19 sfe
+  [if params.operator.conversion_webhook then '../10_operator_webhook_certs']: webhook_certs,
 }

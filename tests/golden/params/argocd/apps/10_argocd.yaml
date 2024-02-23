@@ -20,3 +20,5 @@ spec:
     automated:
       prune: false
       selfHeal: true
+    syncOptions:
+      - ServerSideApply=true

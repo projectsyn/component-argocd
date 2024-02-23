@@ -7,9 +7,9 @@ local params = inv.parameters.argocd.operator;
 local image = params.images.argocd_operator;
 local rbac = params.images.kube_rbac_proxy;
 
-local kustomize_input = params.kustomize_input {
+local kustomize_patch_scopens = if std.length(params.cluster_scope_namespaces) > 0 then {
   patches+: [
-    if std.length(params.cluster_scope_namespaces) > 0 then {
+    {
       patch: std.format(|||
         - op: add
           path: "/spec/template/spec/containers/1/env/-"
@@ -23,7 +23,27 @@ local kustomize_input = params.kustomize_input {
       },
     },
   ],
-};
+} else {};
+local kustomize_patch_conversion = if params.conversion_webhook then {
+  patches+: [
+    {
+      patch: |||
+        - op: add
+          path: "/spec/template/spec/containers/1/env/-"
+          value:
+            name: "ENABLE_CONVERSION_WEBHOOK"
+            value: "true"
+      |||,
+      target: {
+        kind: 'Deployment',
+        name: 'argocd-operator-controller-manager',
+      },
+    },
+  ],
+} else {};
+local kustomize_input = params.kustomize_input
+                        + kustomize_patch_scopens
+                        + kustomize_patch_conversion;
 
 com.Kustomization(
   params.kustomization_url,
