@@ -18,7 +18,7 @@ local file_deployment = com.yaml_load(std.extVar('output_path') + '/apps_v1_depl
       [if !params.conversion_webhook then 'conversion']: { strategy: 'None' },
     },
   },
-  'apps_v1_deployment_syn-argocd-operator-controller-manager': file_deployment {
+  [if !params.conversion_webhook then 'apps_v1_deployment_syn-argocd-operator-controller-manager']: file_deployment {
     spec+: {
       template+: {
         spec+: {

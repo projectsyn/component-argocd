@@ -1,13 +1,13 @@
 = Upgrade `component-argocd` from `v7.x` to `v8.x`
 
-== Migration to ArgoCD Operator
+== ArgoCD Operator custom resource version migration
 
 As of component version 8, the ArgoCD operator uses a new api version `argoproj.io/v1beta1`.
 If there are other unmanaged ArgoCD deployed, you need to enable the conversion webhook.
 
 === 1. Upgrade component-argocd with conversion webhook flag
 
-The first time you roll out component-argocd v6.x, set the following configuration in your hierarchy:
+The first time you roll out component-argocd v8.x, set the following configuration in your hierarchy:
 
 [source,yaml]
 ----
