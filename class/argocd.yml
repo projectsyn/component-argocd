@@ -41,4 +41,4 @@ parameters:
       filters:
         - type: jsonnet
           path: ${_instance}//10_operator/
-          filter: postprocess/fix_crd.jsonnet
+          filter: postprocess/fix_manifests.jsonnet

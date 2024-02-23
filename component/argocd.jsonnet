@@ -8,7 +8,14 @@ local params = inv.parameters.argocd;
 local common = import 'common.libsonnet';
 local isOpenshift = std.startsWith(params.distribution, 'openshift');
 
-local resync_string = if std.get(params, 'resync_seconds', 0) > 0 then std.format('%dm0s', std.mod(params.resync, 60)) else params.resync_time;
+local resync_string =
+  if std.get(params, 'resync_seconds', 0) > 0 then
+    std.trace(
+      'Parameter `resync_seconds` is deprecated. Please update your config to use `resync_time`',
+      std.format('%dm0s', std.mod(params.resync, 60)),
+    )
+  else
+    params.resync_time;
 
 local applicationController = {
   processors: {
@@ -299,7 +306,6 @@ local argocd(name) =
           |||,
         },
         {
-          // `ResourceCustomizations` is getting deprecated, however, the new `ResourceHealthChecks` does not currently expose the `health.lua.useOpenLibs` flag
           group: 'operators.coreos.com',
           kind: 'Subscription',
           check: |||
@@ -392,5 +398,5 @@ local webhook_certs = [
   // Manually adding certificate for conversion webhook
   // as the upstream kustomize is broken.
   // 2023/02/19 sfe
-  '../10_operator_webhook_certs': webhook_certs,
+  [if params.operator.conversion_webhook then '../10_operator_webhook_certs']: webhook_certs,
 }

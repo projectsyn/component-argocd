@@ -1,0 +1,34 @@
+= Upgrade `component-argocd` from `v7.x` to `v8.x`
+
+== Migration to ArgoCD Operator
+
+As of component version 8, the ArgoCD operator uses a new api version `argoproj.io/v1beta1`.
+If there are other unmanaged ArgoCD deployed, you need to enable the conversion webhook.
+
+=== 1. Upgrade component-argocd with conversion webhook flag
+
+The first time you roll out component-argocd v6.x, set the following configuration in your hierarchy:
+
+[source,yaml]
+----
+parameters:
+  argocd:
+    operator:
+      conversion_webhook: true
+----
+
+Roll out the upgrade with this configuration, and wait until:
+* The ArgoCD operator deployment is rolled out.
+* All unmanaged ArgoCD CR are updated.
+[source,shell]
+----
+kubectl --as cluster-admin get argocds -A -ocustom-columns='NAMESPACE:.metadata.namespace,NAME:.metadata.name,API:.apiVersion'
+NAMESPACE          NAME               API
+openshift-gitops   openshift-gitops   argoproj.io/v1beta1
+syn                syn-argocd         argoproj.io/v1beta1
+----
+
+
+=== 2. Remove the migration flag to complete the migration
+
+After the first rollout of v8.x, the conversion webhook flag can be removed.
