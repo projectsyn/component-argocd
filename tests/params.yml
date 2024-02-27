@@ -34,3 +34,33 @@ parameters:
       server: null
     operator:
       migrate: true
+
+    argocds:
+      some-namespace/some-argocd:
+        spec:
+          sso:
+            provider: dex
+            dex:
+              openShiftOAuth: true
+          rbac:
+            defaultPolicy: role:none
+            scopes: '[groups]'
+            policy: |
+              g, corp-admin, role:admin
+          sourceNamespaces:
+            - corp-argocdapps
+          server:
+            host: argocd.example.com
+            route:
+              enabled: true
+              tls:
+                termination: reencrypt
+          version: v2.10.1
+
+    projects:
+      some-namespace/some-project:
+        spec:
+          clusterResourceWhitelist: []
+          destinations:
+            - namespace: karakun-*
+              server: https://kubernetes.default.svc

@@ -190,3 +190,76 @@ type:: dictionary
 defaults:: https://github.com/projectsyn/component-argocd/blob/master/class/defaults.yml[See `class/defaults.yml`]
 
 Kustomize inputs supplied to the argocd operator kustomization
+
+
+== `argocds`
+
+[horizontal]
+type:: dictionary
+default:: `{}`
+
+Arbitrary `ArgoCD` instances to be deployed on the cluster.
+
+The keys of this parameter are parsed as namespaced names (`<namespace>/<name>`) and used as namespaces and names of the created resources.
+
+See https://argocd-operator.readthedocs.io/en/latest/reference/argocd/[the `ArgoCD` reference of the Argo CD Operator] for available fields.
+
+=== Example
+
+[source,yaml]
+----
+parameters:
+  argocd:
+    argocds:
+      some-namespace/some-argocd:
+        spec:
+          sso:
+            provider: dex
+            dex:
+              openShiftOAuth: true
+        ...
+----
+
+=== `argocds.<namespace>/<name>`
+
+[horizontal]
+type:: dictionary
+default::
++
+[source,yaml]
+----
+spec:
+  applicationInstanceLabelKey: <name>.<namespace>/instance
+----
+
+To avoid common issues, some defaults are configured.
+They can be overwritten via the inventory.
+
+
+== `projects`
+
+[horizontal]
+type:: dictionary
+default:: `{}`
+
+Arbitrary `AppProject` instances to be deployed on the cluster.
+
+The keys of this parameter are parsed as namespaced names (`<namespace>/<name>`) and used as namespaces and names of the created resources.
+
+See https://argo-cd.readthedocs.io/en/stable/user-guide/projects/[the `AppProject` reference of Argo CD] for available fields.
+
+=== Example
+
+[source,yaml]
+----
+parameters:
+  argocd:
+    projects:
+      some-namespace/some-project:
+        spec:
+          clusterResourceWhitelist: []
+          destinations:
+            - namespace: karakun-*
+              server: https://kubernetes.default.svc
+        ...
+----

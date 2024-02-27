@@ -50,6 +50,9 @@ parameters:
         repository: kubebuilder/kube-rbac-proxy
         tag: v0.15.0
 
+    argocds: {}
+    projects: {}
+
     resources:
       application_controller:
         requests:

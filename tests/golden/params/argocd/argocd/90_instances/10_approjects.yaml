@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  annotations: {}
+  labels:
+    name: some-project
+  name: some-project
+  namespace: some-namespace
+spec:
+  clusterResourceWhitelist: []
+  destinations:
+    - namespace: karakun-*
+      server: https://kubernetes.default.svc
