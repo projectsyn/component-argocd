@@ -50,6 +50,9 @@ local ArgoApp(component, namespace, project='syn', secrets=true) = {
         prune: true,
         selfHeal: true,
       },
+      syncOptions: [
+        'ServerSideApply=true',
+      ],
     },
     destination: {
       server: 'https://kubernetes.default.svc',

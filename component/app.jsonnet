@@ -33,9 +33,6 @@ local root_app = argocd.App('root', params.namespace, secrets=false) {
 local app = argocd.App('argocd', params.namespace, secrets=false) {
   spec+: {
     syncPolicy+: {
-      syncOptions+: [
-        'ServerSideApply=true',
-      ],
       automated+: {
         [if params.operator.migrate then 'prune' else null]: false,
       },
