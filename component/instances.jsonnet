@@ -65,9 +65,11 @@ local argocds = std.foldl(
 // Gather AppProject instances
 local projects = std.mapWithKey(function(k, v) std.get(v, 'projects', {}), instances);
 
+local projectDefaults = std.mapWithKey(function(k, v) std.get(v, 'projectDefaults', {}), instances);
+
 // Flatten AppProjects, generating a namespaced name as the key
 local appprojects = {
-  [namespacedName(argocd).namespace + '/' + project]: projects[argocd][project]
+  [namespacedName(argocd).namespace + '/' + project]+: std.mergePatch(projectDefaults[argocd], projects[argocd][project])
   for argocd in std.objectFields(projects)
   for project in std.objectFields(projects[argocd])
   // remove nulled objects

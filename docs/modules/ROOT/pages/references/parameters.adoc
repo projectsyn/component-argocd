@@ -265,3 +265,12 @@ Arbitrary `AppProject` instances to be deployed on the cluster.
 The keys of this parameter are used as the generated resource's `metadata.name`, while the parent `ArgoCD`'s namespace will be inherited.
 
 See https://argo-cd.readthedocs.io/en/stable/user-guide/projects/[the `AppProject` reference of Argo CD] for available fields.
+
+
+=== `instances.<namespace>/<name>.projectDefaults`
+
+[horizontal]
+type:: dictionary
+default:: `{}`
+
+Default values that will be applied for all `AppProjects` created for this instance.

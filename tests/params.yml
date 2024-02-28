@@ -59,17 +59,24 @@ parameters:
                 tls:
                   termination: reencrypt
             version: v2.10.1
+
+        projectDefaults:
+          spec:
+            clusterResourceWhitelist: []
+            destinations:
+              - namespace: corp-*
+                server: https://kubernetes.default.svc
+
         projects:
           nulled-project: null
           some-project:
             spec:
-              clusterResourceWhitelist: []
-              destinations:
-                - namespace: corp-*
-                  server: https://kubernetes.default.svc
+              sourceNamespaces:
+                - one
           other-project:
             spec:
-              clusterResourceWhitelist: []
+              sourceNamespaces:
+                - two
               destinations:
-                - namespace: cust-*
+                - namespace: other-*
                   server: https://kubernetes.default.svc
