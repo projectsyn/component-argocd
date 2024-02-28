@@ -26,3 +26,14 @@ spec:
       openShiftOAuth: true
     provider: dex
   version: v2.10.1
+---
+apiVersion: argoproj.io/v1beta1
+kind: ArgoCD
+metadata:
+  annotations: {}
+  labels:
+    name: foo
+  name: foo
+  namespace: third-ns
+spec:
+  applicationInstanceLabelKey: foo.third-ns/instance

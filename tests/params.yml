@@ -35,32 +35,41 @@ parameters:
     operator:
       migrate: true
 
-    argocds:
+    instances:
+      another-ns/nulled: null
+      third-ns/foo: {}
       some-namespace/some-argocd:
-        spec:
-          sso:
-            provider: dex
-            dex:
-              openShiftOAuth: true
-          rbac:
-            defaultPolicy: role:none
-            scopes: '[groups]'
-            policy: |
-              g, corp-admin, role:admin
-          sourceNamespaces:
-            - corp-argocdapps
-          server:
-            host: argocd.example.com
-            route:
-              enabled: true
-              tls:
-                termination: reencrypt
-          version: v2.10.1
-
-    projects:
-      some-namespace/some-project:
-        spec:
-          clusterResourceWhitelist: []
-          destinations:
-            - namespace: karakun-*
-              server: https://kubernetes.default.svc
+        config:
+          spec:
+            sso:
+              provider: dex
+              dex:
+                openShiftOAuth: true
+            rbac:
+              defaultPolicy: role:none
+              scopes: '[groups]'
+              policy: |
+                g, corp-admin, role:admin
+            sourceNamespaces:
+              - corp-argocdapps
+            server:
+              host: argocd.example.com
+              route:
+                enabled: true
+                tls:
+                  termination: reencrypt
+            version: v2.10.1
+        projects:
+          nulled-project: null
+          some-project:
+            spec:
+              clusterResourceWhitelist: []
+              destinations:
+                - namespace: corp-*
+                  server: https://kubernetes.default.svc
+          other-project:
+            spec:
+              clusterResourceWhitelist: []
+              destinations:
+                - namespace: cust-*
+                  server: https://kubernetes.default.svc

@@ -32,7 +32,49 @@ local AppProject(name) =
     },
   };
 
+// Remove nulled instances
+//
+// Do NOT use `std.prune` as this removes all empty fields (`{}`, `[]`) as well
+local instances = {
+  [k]: params.instances[k]
+  for k in std.objectFields(params.instances)
+  if params.instances[k] != null
+};
+
+// Gather ArgoCD instances
+local argocd_configs = std.mapWithKey(function(k, v) std.get(v, 'config', {}), instances);
+
+// Ensure there are no duplicate namespaces
+local argocds = std.foldl(
+  function(acc, k)
+    local ns = namespacedName(k).namespace;
+    if std.setMember(ns, acc.seen) then
+      error "Component argocd doesn't support deploying multiple ArgoCD instances in a single namespace"
+    else
+      acc { seen+: [ ns ] },
+
+  std.objectFields(instances),
+
+  {
+    seen: [],
+    argocds: argocd_configs,
+  }
+).argocds;
+
+
+// Gather AppProject instances
+local projects = std.mapWithKey(function(k, v) std.get(v, 'projects', {}), instances);
+
+// Flatten AppProjects, generating a namespaced name as the key
+local appprojects = {
+  [namespacedName(argocd).namespace + '/' + project]: projects[argocd][project]
+  for argocd in std.objectFields(projects)
+  for project in std.objectFields(projects[argocd])
+  // remove nulled objects
+  if projects[argocd][project] != null
+};
+
 {
-  '00_argocds': com.generateResources(params.argocds, ArgoCD),
-  '10_approjects': com.generateResources(params.projects, AppProject),
+  '00_argocds': com.generateResources(argocds, ArgoCD),
+  '10_approjects': com.generateResources(appprojects, AppProject),
 }

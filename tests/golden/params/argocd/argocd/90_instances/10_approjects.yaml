@@ -3,11 +3,25 @@ kind: AppProject
 metadata:
   annotations: {}
   labels:
+    name: other-project
+  name: other-project
+  namespace: some-namespace
+spec:
+  clusterResourceWhitelist: []
+  destinations:
+    - namespace: cust-*
+      server: https://kubernetes.default.svc
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  annotations: {}
+  labels:
     name: some-project
   name: some-project
   namespace: some-namespace
 spec:
   clusterResourceWhitelist: []
   destinations:
-    - namespace: karakun-*
+    - namespace: corp-*
       server: https://kubernetes.default.svc
