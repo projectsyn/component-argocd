@@ -9,8 +9,10 @@ metadata:
 spec:
   clusterResourceWhitelist: []
   destinations:
-    - namespace: cust-*
+    - namespace: other-*
       server: https://kubernetes.default.svc
+  sourceNamespaces:
+    - two
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
@@ -25,3 +27,5 @@ spec:
   destinations:
     - namespace: corp-*
       server: https://kubernetes.default.svc
+  sourceNamespaces:
+    - one
