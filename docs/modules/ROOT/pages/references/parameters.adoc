@@ -190,3 +190,78 @@ type:: dictionary
 defaults:: https://github.com/projectsyn/component-argocd/blob/master/class/defaults.yml[See `class/defaults.yml`]
 
 Kustomize inputs supplied to the argocd operator kustomization
+
+
+== `instances`
+
+[horizontal]
+type:: dictionary
+default:: `{}`
+
+This section allows the definition of arbitrary `ArgoCD` instances, and associated `AppProject` resources.
+The keys of this parameter are parsed as namespaced names (`<namespace>/<name>`) and used as namespaces and names of the created resources.
+
+[IMPORTANT]
+.Namespace management
+====
+. Each `ArgoCD` instance must be deployed to its own namespace
+. You MUST create the target namespace _manually_ before deploying ArgoCD using this component
+
+Due to how Argo CD works, namespaces holding Argo CD instances cannot be created by other Argo CD instances.
+====
+
+=== Example
+
+[source,yaml]
+----
+parameters:
+  argocd:
+    instances:
+      some-namespace/some-argocd:
+        config:
+          spec:
+            sso:
+              provider: dex
+              dex:
+                openShiftOAuth: true
+          ...
+        projects:
+          some-project:
+            spec:
+              clusterResourceWhitelist: []
+              destinations:
+                - namespace: corp-*
+                  server: https://kubernetes.default.svc
+----
+
+=== `instances.<namespace>/<name>.config`
+
+[horizontal]
+type:: dictionary
+default::
++
+[source,yaml]
+----
+spec:
+  applicationInstanceLabelKey: <name>.<namespace>/instance
+----
+
+Plain configuration that will be merged verbatim into the created `ArgoCD` resource.
+
+See https://argocd-operator.readthedocs.io/en/latest/reference/argocd/[the `ArgoCD` reference of the Argo CD Operator] for available fields.
+
+To avoid common issues, some defaults are configured.
+They can be overwritten via the inventory.
+
+
+=== `instances.<namespace>/<name>.projects`
+
+[horizontal]
+type:: dictionary
+default:: `{}`
+
+Arbitrary `AppProject` instances to be deployed on the cluster.
+
+The keys of this parameter are used as the generated resource's `metadata.name`, while the parent `ArgoCD`'s namespace will be inherited.
+
+See https://argo-cd.readthedocs.io/en/stable/user-guide/projects/[the `AppProject` reference of Argo CD] for available fields.

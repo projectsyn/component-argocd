@@ -50,6 +50,8 @@ parameters:
         repository: kubebuilder/kube-rbac-proxy
         tag: v0.15.0
 
+    instances: {}
+
     resources:
       application_controller:
         requests:

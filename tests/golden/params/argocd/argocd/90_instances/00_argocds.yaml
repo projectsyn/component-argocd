@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1beta1
+kind: ArgoCD
+metadata:
+  annotations: {}
+  labels:
+    name: some-argocd
+  name: some-argocd
+  namespace: some-namespace
+spec:
+  applicationInstanceLabelKey: some-argocd.some-namespace/instance
+  rbac:
+    defaultPolicy: role:none
+    policy: |
+      g, corp-admin, role:admin
+    scopes: '[groups]'
+  server:
+    host: argocd.example.com
+    route:
+      enabled: true
+      tls:
+        termination: reencrypt
+  sourceNamespaces:
+    - corp-argocdapps
+  sso:
+    dex:
+      openShiftOAuth: true
+    provider: dex
+  version: v2.10.1
+---
+apiVersion: argoproj.io/v1beta1
+kind: ArgoCD
+metadata:
+  annotations: {}
+  labels:
+    name: foo
+  name: foo
+  namespace: third-ns
+spec:
+  applicationInstanceLabelKey: foo.third-ns/instance

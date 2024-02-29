@@ -21,6 +21,10 @@ parameters:
         input_type: jsonnet
         input_paths:
           - argocd/component/argocd.jsonnet
+      - output_path: argocd/90_instances/
+        input_type: jsonnet
+        input_paths:
+          - argocd/component/instances.jsonnet
       # Operator kustomization
       - output_path: ${_base_directory}/manifests/argocd-operator
         output_type: yaml
