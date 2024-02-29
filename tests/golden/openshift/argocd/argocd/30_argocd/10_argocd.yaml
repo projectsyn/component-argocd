@@ -69,7 +69,7 @@ spec:
         env:
           - name: HOME
             value: /home/argocd
-        image: docker.io/kapicorp/kapitan:v0.32.0
+        image: docker.io/kapicorp/kapitan:0.33.1
         imagePullPolicy: IfNotPresent
         name: kapitan
         ports: []
