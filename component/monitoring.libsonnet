@@ -6,9 +6,11 @@ local params = inv.parameters.argocd;
 
 local serviceMonitor(objname, name) =
   kube._Object('monitoring.coreos.com/v1', 'ServiceMonitor', objname) {
-    metadata+: {
+    metadata: {
+      name: objname,
       namespace: params.namespace,
-      labels+: {
+      labels: {
+        name: objname,
         'app.kubernetes.io/name': name,
         'app.kubernetes.io/part-of': 'argocd',
       },
@@ -28,9 +30,11 @@ local serviceMonitor(objname, name) =
 
 local alert_rules =
   kube._Object('monitoring.coreos.com/v1', 'PrometheusRule', 'argocd') {
-    metadata+: {
+    metadata: {
+      name: 'argocd',
       namespace: params.namespace,
-      labels+: {
+      labels: {
+        name: 'argocd',
         role: 'alert-rules',
       } + params.monitoring.prometheus_rule_labels,
     },
@@ -88,8 +92,12 @@ local alert_rules =
 
 local grafana_dashboard =
   kube._Object('integreatly.org/v1alpha1', 'GrafanaDashboard', 'argocd') {
-    metadata+: {
+    metadata: {
+      name: 'argocd',
       namespace: params.namespace,
+      labels: {
+        name: 'argocd',
+      },
     },
     spec: {
       name: 'argocd',

@@ -1,7 +1,6 @@
 apiVersion: argoproj.io/v1beta1
 kind: ArgoCD
 metadata:
-  annotations: {}
   labels:
     name: some-argocd
   name: some-argocd
@@ -30,7 +29,6 @@ spec:
 apiVersion: argoproj.io/v1beta1
 kind: ArgoCD
 metadata:
-  annotations: {}
   labels:
     name: foo
   name: foo

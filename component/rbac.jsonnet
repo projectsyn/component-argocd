@@ -12,8 +12,10 @@ local custom_resources = {
 
 local aggregated_rbac = [
   kube.ClusterRole('syn-argocd-view') {
-    metadata+: {
-      labels+: {
+    metadata: {
+      name: 'syn-argocd-view',
+      labels: {
+        name: 'syn-argocd-view',
         'rbac.authorization.k8s.io/aggregate-to-admin': 'true',
         'rbac.authorization.k8s.io/aggregate-to-edit': 'true',
         'rbac.authorization.k8s.io/aggregate-to-view': 'true',
@@ -30,8 +32,10 @@ local aggregated_rbac = [
     ],
   },
   kube.ClusterRole('syn-argocd-edit') {
-    metadata+: {
-      labels+: {
+    metadata: {
+      name: 'syn-argocd-edit',
+      labels: {
+        name: 'syn-argocd-edit',
         'rbac.authorization.k8s.io/aggregate-to-admin': 'true',
         'rbac.authorization.k8s.io/aggregate-to-edit': 'true',
       },
