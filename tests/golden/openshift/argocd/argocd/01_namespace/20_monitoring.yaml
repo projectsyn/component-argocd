@@ -1,7 +1,6 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  annotations: {}
   labels:
     app.kubernetes.io/name: syn-argocd-metrics
     app.kubernetes.io/part-of: argocd
@@ -20,7 +19,6 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  annotations: {}
   labels:
     app.kubernetes.io/name: syn-argocd-server-metrics
     app.kubernetes.io/part-of: argocd
@@ -39,7 +37,6 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  annotations: {}
   labels:
     app.kubernetes.io/name: syn-argocd-repo-server
     app.kubernetes.io/part-of: argocd
@@ -58,7 +55,6 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  annotations: {}
   labels:
     cluster_id: c-green-test-1234
     monitoring.syn.tools/enabled: 'true'

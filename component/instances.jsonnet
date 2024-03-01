@@ -16,7 +16,11 @@ local namespacedName(name, namespace='') = {
 local ArgoCD(name) =
   local n = namespacedName(name);
   kube._Object('argoproj.io/v1beta1', 'ArgoCD', n.name) {
-    metadata+: {
+    metadata: {
+      labels: {
+        name: n.name,
+      },
+      name: n.name,
       namespace: n.namespace,
     },
     spec+: {
@@ -27,7 +31,11 @@ local ArgoCD(name) =
 local AppProject(name) =
   local n = namespacedName(name);
   kube._Object('argoproj.io/v1alpha1', 'AppProject', n.name) {
-    metadata+: {
+    metadata: {
+      labels: {
+        name: n.name,
+      },
+      name: n.name,
       namespace: n.namespace,
     },
   };
