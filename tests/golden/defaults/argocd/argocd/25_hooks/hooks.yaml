@@ -86,7 +86,7 @@ spec:
           env:
             - name: HOME
               value: /home
-          image: docker.io/bitnami/kubectl:1.28.7@sha256:4bf273f9b5cc511dfb2420b0ca302b3dc93c4368e8ab460a190964d2a14282cf
+          image: docker.io/bitnami/kubectl:1.28.8@sha256:449fe38500fb7eaa801803d0be2f457e58a3b3ce805abb1d828131c439577e04
           imagePullPolicy: IfNotPresent
           name: argocd-post-sync
           ports: []
