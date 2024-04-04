@@ -6,7 +6,7 @@ local kube = import 'lib/kube.libjsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.argocd;
 local common = import 'common.libsonnet';
-local isOpenshift = std.startsWith(params.distribution, 'openshift');
+local isOpenshift = std.member([ 'openshift4', 'oke' ], params.distribution);
 
 local resync_string =
   if std.get(params, 'resync_seconds', 0) > 0 then
