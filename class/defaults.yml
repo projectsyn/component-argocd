@@ -89,6 +89,7 @@ parameters:
       migrate: false
       conversion_webhook: false
       namespace: syn-argocd-operator
+      priority_class: system-cluster-critical
       images:
         argocd_operator: ${argocd:images:argocd_operator}
         kube_rbac_proxy: ${argocd:images:kube_rbac_proxy}

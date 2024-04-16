@@ -24,6 +24,7 @@ local kustomize_patch_scopens = if std.length(params.cluster_scope_namespaces) >
     },
   ],
 } else {};
+
 local kustomize_patch_conversion = if params.conversion_webhook then {
   patches+: [
     {
@@ -41,9 +42,26 @@ local kustomize_patch_conversion = if params.conversion_webhook then {
     },
   ],
 } else {};
+
+local kustomize_patch_priorityclass = {
+  patches+: [
+    {
+      patch: |||
+        - op: add
+          path: "/spec/template/spec/priorityClassName"
+          value: %(priorityclass)s
+      ||| % params.priority_class,
+      target: {
+        kind: 'Deployment',
+        name: 'argocd-operator-controller-manager',
+      },
+    },
+  ],
+};
 local kustomize_input = params.kustomize_input
                         + kustomize_patch_scopens
-                        + kustomize_patch_conversion;
+                        + kustomize_patch_conversion
+                        + kustomize_patch_priorityclass;
 
 com.Kustomization(
   params.kustomization_url,
