@@ -3,6 +3,9 @@ parameters:
   argocd:
     namespace: syn
     distribution: ${facts:distribution}
+    network_policies:
+      enabled: false
+      allow_from_namespaces: []
     monitoring:
       enabled: true
       dashboards: false

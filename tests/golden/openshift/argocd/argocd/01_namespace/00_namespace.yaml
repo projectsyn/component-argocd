@@ -4,6 +4,8 @@ metadata:
   annotations: {}
   labels:
     app.kubernetes.io/part-of: argocd
+    label-no-defaults: 'true'
+    label-purge-defaults: 'true'
     monitoring.syn.tools/infra: 'true'
     name: syn
     openshift.io/cluster-monitoring: 'true'

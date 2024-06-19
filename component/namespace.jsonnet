@@ -7,9 +7,13 @@ local params = inv.parameters.argocd;
 local ns_metadata = {
   metadata+: {
     labels+: {
-      'app.kubernetes.io/part-of': 'argocd',
-      'openshift.io/cluster-monitoring': 'true',
-    },
+               'app.kubernetes.io/part-of': 'argocd',
+               'openshift.io/cluster-monitoring': 'true',
+             } +
+             if std.member(inv.applications, 'networkpolicy') then {
+               [inv.parameters.networkpolicy.labels.noDefaults]: 'true',
+               [inv.parameters.networkpolicy.labels.purgeDefaults]: 'true',
+             } else {},
   },
 };
 

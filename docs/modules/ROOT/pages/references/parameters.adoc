@@ -35,6 +35,21 @@ type:: string
 
 SSH known hosts for Git servers.
 
+== `network_policies.enabled`
+[horizontal]
+type:: boolean
+default:: false
+
+Whether to enable NetworkPolicies that isolate ArgoCD from the rest of the cluster.
+
+== `network_policies.allow_from_namespaces`
+[horizontal]
+type:: List(string)
+default:: []
+
+Additional namespaces which should be able to access ArgoCD.
+
+
 == `images`
 
 [horizontal]
