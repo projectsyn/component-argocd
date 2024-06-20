@@ -10,7 +10,7 @@ local ns_metadata = {
                'app.kubernetes.io/part-of': 'argocd',
                'openshift.io/cluster-monitoring': 'true',
              } +
-             if std.member(inv.applications, 'networkpolicy') then {
+             if params.network_policies.enabled && std.member(inv.applications, 'networkpolicy') then {
                [inv.parameters.networkpolicy.labels.noDefaults]: 'true',
                [inv.parameters.networkpolicy.labels.purgeDefaults]: 'true',
              } else {},
