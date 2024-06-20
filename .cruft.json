@@ -7,7 +7,7 @@
       "name": "Argo CD",
       "slug": "argocd",
       "parameter_key": "argocd",
-      "test_cases": "defaults openshift params",
+      "test_cases": "defaults openshift params prometheus",
       "add_lib": "y",
       "add_pp": "n",
       "add_golden": "y",
