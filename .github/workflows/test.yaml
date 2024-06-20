@@ -35,7 +35,6 @@ jobs:
           - defaults
           - openshift
           - params
-          - prometheus.yml
     defaults:
       run:
         working-directory: ${{ env.COMPONENT_NAME }}
@@ -53,7 +52,6 @@ jobs:
           - defaults
           - openshift
           - params
-          - prometheus.yml
     defaults:
       run:
         working-directory: ${{ env.COMPONENT_NAME }}
