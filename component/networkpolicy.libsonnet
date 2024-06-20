@@ -1,6 +1,7 @@
 local com = import 'lib/commodore.libjsonnet';
 local kap = import 'lib/kapitan.libjsonnet';
 local kube = import 'lib/kube.libjsonnet';
+local prometheus = import 'lib/prometheus.libsonnet';
 
 local inv = kap.inventory();
 local params = inv.parameters.argocd;
@@ -46,6 +47,9 @@ local isOpenshift = std.member([ 'openshift4', 'oke' ], params.distribution);
     },
   },
 ]
++ (if std.member(inv.applications, 'prometheus') then [
+     prometheus.NetworkPolicy(),
+   ] else [])
 + (if isOpenshift then [
      kube.NetworkPolicy('argocd-allow-openshift-monitoring') {
        spec: {

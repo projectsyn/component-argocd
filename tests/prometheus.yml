@@ -1,3 +1,41 @@
-# Overwrite parameters here
+applications:
+  - prometheus
+  - networkpolicy
 
-# parameters: {...}
+parameters:
+  networkpolicy:
+    labels:
+      noDefaults: label-no-defaults
+      purgeDefaults: label-purge-defaults
+
+  kapitan:
+    dependencies:
+      - type: https
+        source: https://raw.githubusercontent.com/projectsyn/component-prometheus/master/lib/prometheus.libsonnet
+        output_path: vendor/lib/prometheus.libsonnet
+      - type: https
+        source: https://raw.githubusercontent.com/projectsyn/component-cert-manager/master/lib/cert-manager.libsonnet
+        output_path: vendor/lib/cert-manager.libsonnet
+
+  patch_operator:
+    namespace: syn-patch-operator
+    patch_serviceaccount:
+      name: patch-sa
+
+  secret_management:
+    vault_role: test
+    vault_addr: test.syn.tools
+
+  prometheus:
+    base:
+      common:
+        namespace: prom-namespace
+      prometheus:
+        enabled: true
+    instances:
+      infra: {}
+    defaultInstance: infra
+
+  argocd:
+    network_policies:
+      enabled: true

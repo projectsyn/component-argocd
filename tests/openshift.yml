@@ -1,5 +1,4 @@
 applications:
-  - prometheus
   - networkpolicy
 
 parameters:
@@ -10,9 +9,6 @@ parameters:
 
   kapitan:
     dependencies:
-      - type: https
-        source: https://raw.githubusercontent.com/projectsyn/component-prometheus/master/lib/prometheus.libsonnet
-        output_path: vendor/lib/prometheus.libsonnet
       - type: https
         source: https://raw.githubusercontent.com/projectsyn/component-cert-manager/master/lib/cert-manager.libsonnet
         output_path: vendor/lib/cert-manager.libsonnet
@@ -28,9 +24,6 @@ parameters:
 
   facts:
     distribution: openshift4
-
-  prometheus:
-    defaultInstance: infra
 
   argocd:
     network_policies:
