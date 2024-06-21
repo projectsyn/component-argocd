@@ -25,6 +25,12 @@ parameters:
         registry: mymirror.io
         tag: v1.1.1
 
+    network_policies:
+      enabled: true
+      allow_from_namespaces:
+        - syn-infra-monitoring
+        - additional-namespace
+
     # Test unsetting resource requests & limits
     resources:
       application_controller: null

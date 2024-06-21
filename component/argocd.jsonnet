@@ -395,6 +395,7 @@ local webhook_certs = [
   '00_kapitan_plugin_config': kapitan_plugin_config,
   '00_ssh_secret': ssh_secret,
   '10_argocd': argocd('syn-argocd'),
+  [if params.network_policies.enabled then '20_networkpolicy']: std.map(function(p) com.namespaced(params.namespace, p), import 'networkpolicy.libsonnet'),
   // Manually adding certificate for conversion webhook
   // as the upstream kustomize is broken.
   // 2023/02/19 sfe

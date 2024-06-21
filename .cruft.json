@@ -1,13 +1,13 @@
 {
   "template": "https://github.com/projectsyn/commodore-component-template.git",
-  "commit": "ea12efff947bce80cf31a3f1ed4412eab40e8b33",
+  "commit": "26ee71e475cca036551c68a6c6b2285fe86139a0",
   "checkout": "main",
   "context": {
     "cookiecutter": {
       "name": "Argo CD",
       "slug": "argocd",
       "parameter_key": "argocd",
-      "test_cases": "defaults openshift params",
+      "test_cases": "defaults openshift params prometheus",
       "add_lib": "y",
       "add_pp": "n",
       "add_golden": "y",
