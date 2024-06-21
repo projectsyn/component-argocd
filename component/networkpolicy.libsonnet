@@ -25,27 +25,6 @@ local isOpenshift = std.member([ 'openshift4', 'oke' ], params.distribution);
       podSelector: {},
     },
   },
-  kube.NetworkPolicy('argocd-allow-operator') {
-    spec: {
-      ingress: [
-        {
-          from: [
-            {
-              namespaceSelector: {
-                matchLabels: {
-                  'kubernetes.io/metadata.name': params.operator.namespace,
-                },
-              },
-            },
-          ],
-        },
-      ],
-      policyTypes: [
-        'Ingress',
-      ],
-      podSelector: {},
-    },
-  },
 ]
 + (if std.member(inv.applications, 'prometheus') then [
      prometheus.NetworkPolicy(),
