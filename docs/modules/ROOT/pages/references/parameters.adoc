@@ -38,7 +38,7 @@ SSH known hosts for Git servers.
 == `network_policies.enabled`
 [horizontal]
 type:: boolean
-default:: false
+default:: true
 
 Whether to enable NetworkPolicies that isolate ArgoCD from the rest of the cluster.
 
