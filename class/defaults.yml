@@ -4,7 +4,7 @@ parameters:
     namespace: syn
     distribution: ${facts:distribution}
     network_policies:
-      enabled: false
+      enabled: true
       allow_from_namespaces: []
     monitoring:
       enabled: true
