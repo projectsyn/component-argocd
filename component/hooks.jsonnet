@@ -10,9 +10,6 @@ local name = 'argocd-hooks';
 local role = kube.Role(name) {
   metadata+: {
     namespace: params.namespace,
-    annotations+: {
-      'argocd.argoproj.io/hook': 'PostSync',
-    },
   },
   rules: [
     {
@@ -31,18 +28,12 @@ local role = kube.Role(name) {
 local serviceAccount = kube.ServiceAccount(name) {
   metadata+: {
     namespace: params.namespace,
-    annotations+: {
-      'argocd.argoproj.io/hook': 'PostSync',
-    },
   },
 };
 
 local roleBinding = kube.RoleBinding(name) {
   metadata+: {
     namespace: params.namespace,
-    annotations+: {
-      'argocd.argoproj.io/hook': 'PostSync',
-    },
   },
   subjects_: [ serviceAccount ],
   roleRef_: role,
