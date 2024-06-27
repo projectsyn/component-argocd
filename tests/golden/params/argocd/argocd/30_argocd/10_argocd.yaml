@@ -81,7 +81,7 @@ spec:
             value: 'true'
           - name: VAULT_ADDR
             value: test.syn.tools
-        image: mymirror.io/vault:1.15.5
+        image: mymirror.io/vault:1.15.6
         imagePullPolicy: IfNotPresent
         name: vault-agent
         ports: []
