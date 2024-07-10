@@ -51,7 +51,7 @@ parameters:
       kube_rbac_proxy:
         registry: gcr.io
         repository: kubebuilder/kube-rbac-proxy
-        tag: v0.15.0
+        tag: v0.16.0
 
     instances: {}
 
