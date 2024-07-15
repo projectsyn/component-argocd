@@ -27,7 +27,7 @@ parameters:
       kapitan:
         registry: docker.io
         repository: kapicorp/kapitan
-        tag: '0.33.1'
+        tag: '0.33.2'
       vault_agent:
         registry: docker.io
         repository: hashicorp/vault
