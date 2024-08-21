@@ -139,6 +139,13 @@ spec:
       sshPrivateKeySecret:
         name: argo-ssh-key
         key: sshPrivateKey
+  resourceExclusions: |-
+    - "apiGroups":
+      - "cilium.io"
+      "clusters":
+      - "*"
+      "kinds":
+      - "CiliumIdentity"
   resourceHealthChecks:
     - check: |
         hs = {}
