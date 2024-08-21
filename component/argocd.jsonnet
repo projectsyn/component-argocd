@@ -246,6 +246,13 @@ local argocd(name) =
         ||| + params.ssh_known_hosts,
       },
       redis: redis,
+      resourceExclusions: std.manifestYamlDoc(
+        std.foldl(
+          function(acc, v) acc + std.flattenArrays([ v ]),
+          std.filter(function(v) v != null, std.objectValues(params.resource_exclusions)),
+          []
+        )
+      ),
       resourceIgnoreDifferences: {
         resourceIdentifiers: [
           {

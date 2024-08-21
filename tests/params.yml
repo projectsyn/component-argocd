@@ -86,3 +86,13 @@ parameters:
               destinations:
                 - namespace: other-*
                   server: https://kubernetes.default.svc
+
+    resource_exclusions:
+      custom:
+        - apiGroups:
+            - custom.io
+          kinds:
+            - ClusterWrecker
+          clusters:
+            - "*"
+      nope: null

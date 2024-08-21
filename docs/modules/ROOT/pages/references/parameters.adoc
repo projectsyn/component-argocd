@@ -19,7 +19,7 @@ default:: ${facts:distribution}
 
 The Kubernetes distribution of the cluster.
 
-=== `resync_time`
+== `resync_time`
 
 [horizontal]
 type:: string
@@ -28,12 +28,54 @@ default:: `3m0s`
 Resync interval.
 Lower values mean quicker sync but higher CPU usage and more Git traffic.
 
-=== `ssh_known_hosts`
+== `ssh_known_hosts`
 
 [horizontal]
 type:: string
 
 SSH known hosts for Git servers.
+
+
+== `resource_exclusions`
+
+[horizontal]
+type:: dictionary(list|dictionary)
+default::
++
+[source,yaml]
+----
+cilium:
+- apiGroups:
+  - cilium.io
+  kinds:
+  - CiliumIdentity
+  clusters:
+  - "*"
+----
+example::
++
+[source,yaml]
+----
+custom:
+- apiGroups:
+  - custom.io
+  kinds:
+  - ClusterWrecker
+  clusters:
+  - "*"
+backup: null
+----
+
+A dictionary of resource exclusions for the ArgoCD instance.
+Those resources will not be managed by ArgoCD.
+
+The keys are the names of the exclusion groups.
+Keys are not used, they are exclusively for hierarchical structuring.
+
+The values are lists of resource definitions that should be excluded from the ArgoCD instance.
+Those lists get concatenated.
+
+Check https://argo-cd.readthedocs.io/en/stable/user-guide/resource_tracking/#additional-tracking-methods-via-an-annotation[ArgoCD documentation] for more information.
 
 == `network_policies.enabled`
 [horizontal]
