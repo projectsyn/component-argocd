@@ -19,7 +19,7 @@ default:: ${facts:distribution}
 
 The Kubernetes distribution of the cluster.
 
-=== `resync_time`
+== `resync_time`
 
 [horizontal]
 type:: string
@@ -28,7 +28,7 @@ default:: `3m0s`
 Resync interval.
 Lower values mean quicker sync but higher CPU usage and more Git traffic.
 
-=== `ssh_known_hosts`
+== `ssh_known_hosts`
 
 [horizontal]
 type:: string
