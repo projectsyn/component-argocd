@@ -22,6 +22,10 @@ spec:
       requests:
         cpu: 100m
         memory: 256Mi
+  extraConfig:
+    resource.customizations: |-
+      "operators.coreos.com/Subscription":
+        "health.lua.useOpenLibs": true
   image: quay.io/argoproj/argocd
   initialRepositories: '- url: ssh://git@git.example.com/org/repo.git'
   initialSSHKnownHosts:
