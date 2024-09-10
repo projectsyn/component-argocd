@@ -278,6 +278,14 @@ local argocd(name) =
           },
         ],
       },
+      extraConfig: {
+        'resource.customizations': std.manifestYamlDoc({
+          'operators.coreos.com/Subscription': {
+            // Required to enable Lua string functions like `string.find`
+            'health.lua.useOpenLibs': true,
+          },
+        }),
+      },
       resourceHealthChecks: [
         {
           group: 'pkg.crossplane.io',
