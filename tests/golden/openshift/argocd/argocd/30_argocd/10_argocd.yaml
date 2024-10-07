@@ -48,7 +48,7 @@ spec:
       requests:
         cpu: 10m
         memory: 16Mi
-    version: 7.2.5
+    version: 7.2.6
   repo:
     env:
       - name: HOME
