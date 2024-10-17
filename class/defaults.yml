@@ -35,7 +35,7 @@ parameters:
       argocd:
         registry: quay.io
         repository: argoproj/argocd
-        tag: v2.11.9
+        tag: v2.11.10
       redis:
         registry: docker.io
         repository: library/redis
