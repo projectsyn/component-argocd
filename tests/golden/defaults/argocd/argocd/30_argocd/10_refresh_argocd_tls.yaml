@@ -20,6 +20,7 @@ rules:
       - ''
     resourceNames:
       - syn-argocd-tls
+      - syn-argocd-ca
     resources:
       - secrets
     verbs:
@@ -69,6 +70,7 @@ spec:
                 - delete
                 - secret
                 - syn-argocd-tls
+                - syn-argocd-ca
               env:
                 - name: HOME
                   value: /home/refresh

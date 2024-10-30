@@ -421,7 +421,10 @@ local tls_role = kube.Role('syn-argocd-tls-refresher') {
     apiGroups: [ '' ],
     resources: [ 'secrets' ],
     verbs: [ 'delete' ],
-    resourceNames: [ 'syn-argocd-tls' ],
+    resourceNames: [
+      'syn-argocd-tls',
+      'syn-argocd-ca',
+    ],
   } ],
 };
 local tls_rolebinding = kube.RoleBinding('syn-argocd-tls-refresher') {
@@ -453,6 +456,7 @@ local tls_cronjob =
                     'delete',
                     'secret',
                     'syn-argocd-tls',
+                    'syn-argocd-ca',
                   ],
                   env_: {
                     HOME: homedir,
