@@ -405,6 +405,81 @@ local webhook_certs = [
   },
 ];
 
+// Manually trigger refresh of ArgoCD TLS certificate. Currently the operator
+// will not do anything if it sees that the secret `syn-argocd-tls` exists
+// even if the certificate stored in the secret expired or is expiring soon.
+local tls_sa = kube.ServiceAccount('syn-argocd-tls-refresher') {
+  metadata+: {
+    namespace: params.namespace,
+  },
+};
+local tls_role = kube.Role('syn-argocd-tls-refresher') {
+  metadata+: {
+    namespace: params.namespace,
+  },
+  rules: [ {
+    apiGroups: [ '' ],
+    resources: [ 'secrets' ],
+    verbs: [ 'delete' ],
+    resourceNames: [ 'syn-argocd-tls' ],
+  } ],
+};
+local tls_rolebinding = kube.RoleBinding('syn-argocd-tls-refresher') {
+  metadata+: {
+    namespace: params.namespace,
+  },
+  subjects_: [ tls_sa ],
+  roleRef_: tls_role,
+};
+local tls_cronjob =
+  local homedir = '/home/refresh';
+  kube.CronJob('syn-argocd-tls-refresher') {
+    metadata+: {
+      namespace: params.namespace,
+    },
+    spec+: {
+      failedJobsHistoryLimit: 3,
+      // At 09:00 on the first day of the month every 4th month.
+      schedule: '0 9 1 */4 *',
+      jobTemplate+: {
+        spec+: {
+          template+: {
+            spec+: {
+              containers_: {
+                refresh: kube.Container('refresh') {
+                  image: common.render_image('kubectl'),
+                  command: [
+                    'kubectl',
+                    'delete',
+                    'secret',
+                    'syn-argocd-tls',
+                  ],
+                  env_: {
+                    HOME: homedir,
+                  },
+                  volumeMounts_+: {
+                    home: { mountPath: homedir },
+                  },
+                },
+              },
+              serviceAccountName: tls_sa.metadata.name,
+              volumes_+: {
+                home: { emptyDir: {} },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+local tls_refresh = [
+  tls_sa,
+  tls_role,
+  tls_rolebinding,
+  tls_cronjob,
+];
+
 {
   '00_vault_agent_config': vault_agent_config,
   '00_kapitan_plugin_config': kapitan_plugin_config,
@@ -415,4 +490,5 @@ local webhook_certs = [
   // as the upstream kustomize is broken.
   // 2023/02/19 sfe
   [if params.operator.conversion_webhook then '../10_operator_webhook_certs']: webhook_certs,
+  '10_refresh_argocd_tls': tls_refresh,
 }
