@@ -77,6 +77,25 @@ Those lists get concatenated.
 
 Check https://argo-cd.readthedocs.io/en/stable/user-guide/resource_tracking/#additional-tracking-methods-via-an-annotation[ArgoCD documentation] for more information.
 
+== `cilium_network_policies`
+[horizontal]
+type:: dictionary
+default:: {}
+example::
++
+[source,yaml]
+----
+cilium_network_policies:
+  argocd-allow-cluster-node:
+    endpointSelector: {}
+    ingress:
+    - fromEntities:
+      - host
+      - remote-node
+----
+
+Create additional CiliumNetworkPolicies for the ProjectSyn ArgoCD.
+
 == `network_policies.enabled`
 [horizontal]
 type:: boolean

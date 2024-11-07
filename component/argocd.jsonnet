@@ -490,6 +490,7 @@ local tls_refresh = [
   '00_ssh_secret': ssh_secret,
   '10_argocd': argocd('syn-argocd'),
   [if params.network_policies.enabled then '20_networkpolicy']: std.map(function(p) com.namespaced(params.namespace, p), import 'networkpolicy.libsonnet'),
+  [if std.length(params.cilium_network_policies) > 0 then '21_ciliumnetworkpolicy']: import 'ciliumnetworkpolicy.libsonnet',
   // Manually adding certificate for conversion webhook
   // as the upstream kustomize is broken.
   // 2023/02/19 sfe

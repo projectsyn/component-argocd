@@ -28,3 +28,10 @@ parameters:
   argocd:
     network_policies:
       enabled: true
+    cilium_network_policies:
+      argocd-allow-cluster-node:
+        endpointSelector: {}
+        ingress:
+          - fromEntities:
+              - host
+              - remote-node
