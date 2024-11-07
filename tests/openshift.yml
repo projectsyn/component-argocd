@@ -28,3 +28,28 @@ parameters:
   argocd:
     network_policies:
       enabled: true
+
+    override:
+      rbac:
+        defaultPolicy: 'role:readonly'
+        policy: |-
+          g, openshiftroot, role:admin
+          g, openshiftrootswissonly, role:admin
+        scopes: '[groups]'
+      sso:
+        provider: dex
+        dex:
+          openShiftOAuth: true
+          groups:
+            - openshiftroot
+            - openshiftrootswissonly
+      server:
+        host: syn-argocd.example.com
+        insecure: false
+        ingress:
+          enabled: false
+        route:
+          enabled: true
+          tls:
+            insecureEdgeTerminationPolicy: Redirect
+            termination: reencrypt
