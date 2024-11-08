@@ -38,7 +38,7 @@ spec:
       gitlab-dev.syn.tools ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKtv4stHQjApa7wkgvgo4dB52qLzI/zN2Us+89cQXXm0
   redis:
     image: docker.io/library/redis
-    version: 7.2.6
+    version: 7.4.1
   repo:
     env:
       - name: HOME
