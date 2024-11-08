@@ -2,10 +2,13 @@
 parameters:
   argocd:
     namespace: syn
+
     distribution: ${facts:distribution}
+
     network_policies:
       enabled: true
       allow_from_namespaces: []
+
     monitoring:
       enabled: true
       dashboards: false
@@ -13,11 +16,15 @@ parameters:
         prometheus: platform
         cluster_id: ${cluster:name}
         tenant_id: ${cluster:tenant}
+
     resync_time: 3m0s
+
     log_format:
       default: text
     log_level:
       default: info
+
+    override: {}
 
     images:
       kubectl:

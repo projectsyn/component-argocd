@@ -91,6 +91,12 @@ default:: []
 
 Additional namespaces which should be able to access ArgoCD.
 
+== `override`
+[horizontal]
+type:: dictionary
+default:: {}
+
+Override specs of the ProjectSyn ArgoCD instance.
 
 == `images`
 

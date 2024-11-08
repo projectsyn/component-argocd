@@ -213,6 +213,8 @@ local repoServer = {
   ],
 };
 
+local argocdOverride = com.makeMergeable({ spec: params.override });
+
 local argocd(name) =
   kube._Object('argoproj.io/v1beta1', 'ArgoCD', name) {
     metadata+: {
@@ -368,7 +370,7 @@ local argocd(name) =
       repo: repoServer,
       server: server,
     },
-  };
+  } + if std.length(params.override) > 0 then argocdOverride else {};
 
 local ssh_secret = kube._Object('v1', 'Secret', 'argo-ssh-key') {
   type: 'Opaque',

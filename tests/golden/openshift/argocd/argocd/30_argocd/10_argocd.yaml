@@ -42,6 +42,12 @@ spec:
       gitlab-dev.syn.tools ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDybOH3scUSfAJFkskpVn1VcL1mPNSiV05asrCCjDTzSJOeJuCE99KkHf7eTA29as9NaqtMtJcCxhptLfNaRzUR3zf29eUuPhkh2B5PUaqLpsbm6330QxvWsZNJyI8Cf7i78O3qe4dv7p2Fe78ayLKX/q3dRj0PZnl7kMj7YpCfY7VCndqoIKEOlIEqNjzAFhHLgHEMJ8f8cM5s4qorgc3TdCqORGVs5vqkeNm977yz2hMxB7iEET4O2jfBUHzzZ68T5h5AtrL5YVBMP0xTgaLskk7/QnoEsfKAgTXo/AaUuXbzM6N0nIjH00Ll0s6P2fWyRVXz05eauZZhBS85GQTD
       gitlab-dev.syn.tools ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCz/gtGxqX+WS6E9/NLYTkRLkM7r7JHU5N7vz2kJjRbjhR91JvP7NaHtuN5aPm5Wv9rtPKSackQ9B78VCkr6GLw=
       gitlab-dev.syn.tools ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKtv4stHQjApa7wkgvgo4dB52qLzI/zN2Us+89cQXXm0
+  rbac:
+    defaultPolicy: role:readonly
+    policy: |-
+      g, openshiftroot, role:admin
+      g, openshiftrootswissonly, role:admin
+    scopes: '[groups]'
   redis:
     image: docker.io/library/redis
     resources:
@@ -238,11 +244,26 @@ spec:
         group: apiextensions.k8s.io
         kind: CustomResourceDefinition
   server:
-    insecure: true
+    host: syn-argocd.example.com
+    ingress:
+      enabled: false
+    insecure: false
     logFormat: text
     logLevel: info
     resources:
       requests:
         cpu: 10m
         memory: 32Mi
+    route:
+      enabled: true
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: reencrypt
+  sso:
+    dex:
+      groups:
+        - openshiftroot
+        - openshiftrootswissonly
+      openShiftOAuth: true
+    provider: dex
   version: v2.11.12
