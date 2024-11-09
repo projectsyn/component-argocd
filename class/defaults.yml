@@ -30,7 +30,7 @@ parameters:
       kubectl:
         registry: docker.io
         repository: bitnami/kubectl
-        tag: '1.30.6@sha256:74ce0f8865ba2f46798491047e4175fa8cc7e410a9d2473950f8fc1573c8c8e6'
+        tag: '1.30.6@sha256:7cada9acdb9729e8566e5efd7e4cb47c1dd1d49faed7e7ecf9f4dc07f14c2427'
       kapitan:
         registry: docker.io
         repository: kapicorp/kapitan
