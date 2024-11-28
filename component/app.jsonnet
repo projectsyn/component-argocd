@@ -31,6 +31,11 @@ local root_app = argocd.App('root', params.namespace, secrets=false) {
 };
 
 local app = argocd.App('argocd', params.namespace, secrets=false) {
+  metadata+: {
+    annotations+: {
+      'argocd.argoproj.io/compare-options': 'ServerSideDiff=true',
+    },
+  },
   spec+: {
     syncPolicy+: {
       syncOptions+: [
