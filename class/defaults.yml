@@ -26,6 +26,8 @@ parameters:
 
     override: {}
 
+    http_credentials_secret_name: catalog-http-credentials
+
     images:
       kubectl:
         registry: docker.io

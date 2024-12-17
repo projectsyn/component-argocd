@@ -215,6 +215,8 @@ local repoServer = {
 
 local argocdOverride = com.makeMergeable({ spec: params.override });
 
+local useHttpsCatalog = std.startsWith(inv.parameters.cluster.catalog_url, 'https://');
+
 local argocd(name) =
   kube._Object('argoproj.io/v1beta1', 'ArgoCD', name) {
     metadata+: {
@@ -230,12 +232,26 @@ local argocd(name) =
       applicationInstanceLabelKey: 'argocd.argoproj.io/instance',
       controller: applicationController,
       initialRepositories: '- url: ' + inv.parameters.cluster.catalog_url,
-      repositoryCredentials: |||
-        - url: ssh://git@
-          sshPrivateKeySecret:
-            name: argo-ssh-key
-            key: sshPrivateKey
-      |||,
+      repositoryCredentials: if useHttpsCatalog then
+        |||
+          - url: %(catalog_url)s
+            usernameSecret:
+              name: %(secret)s
+              key: username
+            passwordSecret:
+              name: %(secret)s
+              key: password
+        ||| % {
+          catalog_url: inv.parameters.cluster.catalog_url,
+          secret: params.http_credentials_secret_name,
+        }
+      else
+        |||
+          - url: ssh://git@
+            sshPrivateKeySecret:
+              name: argo-ssh-key
+              key: sshPrivateKey
+        |||,
       initialSSHKnownHosts: {
         keys: |||
           bitbucket.org ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAubiN81eDcafrgMeLzaFPsw2kNvEcqTKl/VqLat/MaB33pZy0y3rJZtnqwR2qOOvbwKZYKiEO1O6VqNEBxKvJJelCq0dTXWT5pbO2gDXC6h6QDXCaHo6pOHGPUy+YBaGQRGuSusMEASYiWunYN0vCAI8QaXnWMXNMdFP3jHAJH0eDsoiGnLPBlBp4TNm6rYI74nMzgz3B9IikW4WVK+dc8KZJZWYjAuORU3jc1c/NPskD2ASinf8v3xnfXeukU0sJ5N6m5E8VLjObPEO+mN2t/FZTMZLiFqPWc/ALSqnMnnhwrNi2rbfg/rd/IpL8Le3pSBne8+seeFVBoGqzHM9yXw==

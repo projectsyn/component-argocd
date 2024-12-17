@@ -36,6 +36,7 @@ jobs:
           - openshift
           - params
           - prometheus
+          - https-catalog
     defaults:
       run:
         working-directory: ${{ env.COMPONENT_NAME }}
@@ -54,6 +55,7 @@ jobs:
           - openshift
           - params
           - prometheus
+          - https-catalog
     defaults:
       run:
         working-directory: ${{ env.COMPONENT_NAME }}

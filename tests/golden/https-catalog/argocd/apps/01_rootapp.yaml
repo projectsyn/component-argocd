@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root
+  namespace: syn
+spec:
+  destination:
+    namespace: syn
+    server: https://kubernetes.default.svc
+  project: syn
+  source:
+    directory:
+      recurse: true
+    path: manifests/apps/
+    repoURL: https://git.example.com/cluster-catalog.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
