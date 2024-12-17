@@ -115,6 +115,18 @@ default:: `{}`
 
 Override specs of the ProjectSyn ArgoCD instance.
 
+== `http_credentials_secret_name`
+
+[horizontal]
+type:: string
+default:: `catalog-https-credentials`
+
+The name of the externally managed secret which holds the username and password for fetching the catalog repo over HTTPS in fields `username` and `password`.
+
+This parameter is only used when the cluster's catalog repo URL starts with `https://`.
+
+IMPORTANT: Users must ensure that this secret is in place before this component is synced.
+
 == `images`
 
 [horizontal]
