@@ -2,7 +2,6 @@
 
 The parent key for all of the following parameters is `argocd`.
 
-
 == `namespace`
 
 [horizontal]
@@ -19,6 +18,57 @@ default:: ${facts:distribution}
 
 The Kubernetes distribution of the cluster.
 
+== `network_policies`
+
+This parameter configures network policies for ArgoCD.
+
+=== `network_policies.enabled`
+
+[horizontal]
+type:: boolean
+default:: true
+
+Whether to enable NetworkPolicies that isolate ArgoCD from the rest of the cluster.
+
+=== `network_policies.allow_from_namespaces`
+
+[horizontal]
+type:: List(string)
+default:: `[]
+
+Additional namespaces which should be able to access ArgoCD.
+
+== `monitoring`
+
+This section configures monitoring for ArgoCD.
+
+=== `monitoring.enabled`
+
+[horizontal]
+type:: bool
+default:: `true`
+
+If monitoring should be enabled for this component.
+Requires the https://github.com/prometheus-operator/prometheus-operator[Prometheus Operator] to be installed.
+
+=== `monitoring.dashboards`
+
+[horizontal]
+type:: bool
+default:: `true`
+
+If dashboards should be enabled for this component.
+Requires the https://github.com/integr8ly/grafana-operator[Grafana Operator] to be installed.
+
+=== `monitoring.prometheus_rule_labels`
+
+[horizontal]
+type:: dict
+default:: `{"prometheus":"platform"}`
+
+Labels to set on the alert rule configuration.
+Can be used to ensure prometheus-operator picks up the `PrometheusRule` object by setting appropriate labels.
+
 == `resync_time`
 
 [horizontal]
@@ -28,83 +78,20 @@ default:: `3m0s`
 Resync interval.
 Lower values mean quicker sync but higher CPU usage and more Git traffic.
 
-== `ssh_known_hosts`
+== `log_format`
 
 [horizontal]
-type:: string
-
-SSH known hosts for Git servers.
-
-
-== `resource_exclusions`
-
-[horizontal]
-type:: dictionary(list|dictionary)
+type:: object
 default::
 +
 [source,yaml]
 ----
-cilium:
-- apiGroups:
-  - cilium.io
-  kinds:
-  - CiliumIdentity
-  clusters:
-  - "*"
-----
-example::
-+
-[source,yaml]
-----
-custom:
-- apiGroups:
-  - custom.io
-  kinds:
-  - ClusterWrecker
-  clusters:
-  - "*"
-backup: null
+default: text
 ----
 
-A dictionary of resource exclusions for the ArgoCD instance.
-Those resources will not be managed by ArgoCD.
-
-The keys are the names of the exclusion groups.
-Keys are not used, they are exclusively for hierarchical structuring.
-
-The values are lists of resource definitions that should be excluded from the ArgoCD instance.
-Those lists get concatenated.
-
-Check https://argo-cd.readthedocs.io/en/stable/user-guide/resource_tracking/#additional-tracking-methods-via-an-annotation[ArgoCD documentation] for more information.
-
-== `network_policies.enabled`
-[horizontal]
-type:: boolean
-default:: true
-
-Whether to enable NetworkPolicies that isolate ArgoCD from the rest of the cluster.
-
-== `network_policies.allow_from_namespaces`
-[horizontal]
-type:: List(string)
-default:: []
-
-Additional namespaces which should be able to access ArgoCD.
-
-== `override`
-[horizontal]
-type:: dictionary
-default:: {}
-
-Override specs of the ProjectSyn ArgoCD instance.
-
-== `images`
-
-[horizontal]
-type:: dictionary
-
-Dictionary containing the container images used by this component.
-Each entry follows the https://syn.tools/syn/explanations/commodore-components/container-images.html[Commodore component best practices] for specifying container images.
+This parameter exposes the log format for the ArgoCD components.
+By default, all components are configured to use the log format given for key `default`.
+The log format can be customized for individual components by providing the desired log format in keys `server`, `application_controller` or `repo_server`.
 
 == `log_level`
 
@@ -121,139 +108,20 @@ This parameter exposes the log level for the ArgoCD components.
 By default, all components are configured with the log level given in key `default`.
 The log level can be customized for individual components by providing the desired level in keys `server`, `application_controller` or `repo_server`
 
-== `log_format`
-
+== `override`
 [horizontal]
-type:: object
-default::
-+
-[source,yaml]
-----
-default: `text`
-----
+type:: dictionary
+default:: `{}`
 
-This parameter exposes the log format for the ArgoCD components.
-By default, all components are configured to use the log format given for key `default`.
-The log format can be customized for individual components by providing the desired log format in keys `server`, `application_controller` or `repo_server`.
+Override specs of the ProjectSyn ArgoCD instance.
 
-== `resources`
+== `images`
 
 [horizontal]
 type:: dictionary
-defaults:: https://github.com/projectsyn/component-argocd/blob/master/class/defaults.yml[See `class/defaults.yml`]
 
-Dictionary containing the resource requests and limits for the different
-components. Keys correspond to different pods/containers:
-
-* `application_controller`
-* `redis`
-* `repo_server`
-* `repo_server_vault_agent` - for the `vault_agent` container in the `repo-server` pod
-* `server`
-
-Users can remove configured requests and limits by setting any keys or subkeys in the dictionary to `null`.
-
-
-== `monitoring.enabled`
-
-[horizontal]
-type:: bool
-default:: `true`
-
-If monitoring should be enabled for this component.
-Requires the https://github.com/prometheus-operator/prometheus-operator[Prometheus Operator] to be installed.
-
-== `monitoring.dashboards`
-
-[horizontal]
-type:: bool
-default:: `true`
-
-If dashboards should be enabled for this component.
-Requires the https://github.com/integr8ly/grafana-operator[Grafana Operator] to be installed.
-
-== `monitoring.prometheus_rule_labels`
-
-[horizontal]
-type:: dict
-default:: `{"prometheus":"platform"}`
-
-Labels to set on the alert rule configuration.
-Can be used to ensure prometheus-operator picks up the `PrometheusRule` object by setting appropriate labels.
-
-
-== Example
-
-[source,yaml]
-----
-parameters:
-  argocd:
-    resync_seconds: 3
-    ssh_known_hosts: |
-      git.example.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO9EkPcVdsz/oVTI2VJkBlq8Mv/dg3rhcbgzAEKyiwUG
-    monitoring:
-      dashboards: true
-----
-
-== `operator`
-
-[horizontal]
-type:: dict
-defaults:: https://github.com/projectsyn/component-argocd/blob/master/class/defaults.yml[See `class/defaults.yml`]
-
-Configuration for the ArgoCD operator which is deployed as part of this component.
-
-
-=== `operator.namespace`
-type:: string
-default:: `syn-argocd-operator`
-
-The namespace in which to deploy the argocd operator
-
-=== `operator.cluster_scope_namespaces`
-type:: array
-default:: `["${argocd:namespace}"]`
-
-List of namespaces in which argocd is allowed to be installed at the cluster scope.
-
-=== `operator.migrate`
-type:: string
-default:: `false`
-
-Whether to migrate from v5 or earlier. If you are upgrading from v5, set this to `true` on the first catalog compilation.
-
-=== `operator.images`
-
-[horizontal]
-type:: dictionary
-defaults:: https://github.com/projectsyn/component-argocd/blob/master/class/defaults.yml[See `class/defaults.yml`]
-
-Dictionary containing the container images used by the operator
-
-=== `operator.manifests_version`
-
-[horizontal]
-type:: string
-default:: `${argocd:images:argocd_operator:tag}`
-
-Version of the kubernetes manifests for the operator
-
-=== `operator.kustomization_url`
-
-[horizontal]
-type:: string
-default:: `https://github.com/argoproj-labs/argocd-operator//config/default/`
-
-URL of the kustomization to deploy the operator
-
-=== `operator.kustomize_input`
-
-[horizontal]
-type:: dictionary
-defaults:: https://github.com/projectsyn/component-argocd/blob/master/class/defaults.yml[See `class/defaults.yml`]
-
-Kustomize inputs supplied to the argocd operator kustomization
-
+Dictionary containing the container images used by this component.
+Each entry follows the https://syn.tools/syn/explanations/commodore-components/container-images.html[Commodore component best practices] for specifying container images.
 
 == `instances`
 
@@ -337,3 +205,144 @@ type:: dictionary
 default:: `{}`
 
 Default values that will be applied for all `AppProjects` created for this instance.
+
+== `resources`
+
+[horizontal]
+type:: dictionary
+defaults:: https://github.com/projectsyn/component-argocd/blob/master/class/defaults.yml[See `class/defaults.yml`]
+
+Dictionary containing the resource requests and limits for the different
+components. Keys correspond to different pods/containers:
+
+* `application_controller`
+* `redis`
+* `repo_server`
+* `repo_server_vault_agent` - for the `vault_agent` container in the `repo-server` pod
+* `server`
+
+Users can remove configured requests and limits by setting any keys or subkeys in the dictionary to `null`.
+
+== `ssh_known_hosts`
+
+[horizontal]
+type:: string
+default:: https://github.com/projectsyn/component-argocd/blob/master/class/defaults.yml[See `class/defaults.yml`]
+
+SSH known hosts for Git servers.
+
+== `resource_exclusions`
+
+[horizontal]
+type:: dictionary(list|dictionary)
+default::
++
+[source,yaml]
+----
+cilium:
+- apiGroups:
+  - cilium.io
+  kinds:
+  - CiliumIdentity
+  clusters:
+  - "*"
+----
+example::
++
+[source,yaml]
+----
+custom:
+- apiGroups:
+  - custom.io
+  kinds:
+  - ClusterWrecker
+  clusters:
+  - "*"
+backup: null
+----
+
+A dictionary of resource exclusions for the ArgoCD instance.
+Those resources will not be managed by ArgoCD.
+
+The keys are the names of the exclusion groups.
+Keys are not used, they are exclusively for hierarchical structuring.
+
+The values are lists of resource definitions that should be excluded from the ArgoCD instance.
+Those lists get concatenated.
+
+Check https://argo-cd.readthedocs.io/en/stable/user-guide/resource_tracking/#additional-tracking-methods-via-an-annotation[ArgoCD documentation] for more information.
+
+
+== `operator`
+
+[horizontal]
+type:: dict
+defaults:: https://github.com/projectsyn/component-argocd/blob/master/class/defaults.yml[See `class/defaults.yml`]
+
+Configuration for the ArgoCD operator which is deployed as part of this component.
+
+
+=== `operator.namespace`
+type:: string
+default:: `syn-argocd-operator`
+
+The namespace in which to deploy the argocd operator
+
+=== `operator.cluster_scope_namespaces`
+type:: array
+default:: `["${argocd:namespace}"]`
+
+List of namespaces in which argocd is allowed to be installed at the cluster scope.
+
+=== `operator.migrate`
+type:: string
+default:: `false`
+
+Whether to migrate from v5 or earlier. If you are upgrading from v5, set this to `true` on the first catalog compilation.
+
+=== `operator.images`
+
+[horizontal]
+type:: dictionary
+defaults:: https://github.com/projectsyn/component-argocd/blob/master/class/defaults.yml[See `class/defaults.yml`]
+
+Dictionary containing the container images used by the operator
+
+=== `operator.manifests_version`
+
+[horizontal]
+type:: string
+default:: `${argocd:images:argocd_operator:tag}`
+
+Version of the kubernetes manifests for the operator
+
+=== `operator.kustomization_url`
+
+[horizontal]
+type:: string
+default:: `https://github.com/argoproj-labs/argocd-operator//config/default/`
+
+URL of the kustomization to deploy the operator
+
+=== `operator.kustomize_input`
+
+[horizontal]
+type:: dictionary
+defaults:: https://github.com/projectsyn/component-argocd/blob/master/class/defaults.yml[See `class/defaults.yml`]
+
+Kustomize inputs supplied to the argocd operator kustomization
+
+
+== Example
+
+[source,yaml]
+----
+parameters:
+  argocd:
+    resync_seconds: 3
+    ssh_known_hosts: |
+      git.example.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO9EkPcVdsz/oVTI2VJkBlq8Mv/dg3rhcbgzAEKyiwUG
+    monitoring:
+      dashboards: true
+----
+
