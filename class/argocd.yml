@@ -4,7 +4,7 @@ parameters:
       - input_paths:
           - argocd/component/app.jsonnet
         input_type: jsonnet
-        output_path: apps/
+        output_path: .
       - output_path: argocd/01_namespace/
         input_type: jsonnet
         input_paths:
