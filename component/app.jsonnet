@@ -1,8 +1,24 @@
+local com = import 'lib/commodore.libjsonnet';
 local kap = import 'lib/kapitan.libjsonnet';
 local kube = import 'lib/kube.libjsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.argocd;
 local argocd = import 'lib/argocd.libjsonnet';
+
+local param_syn = std.get(inv.parameters, 'syn', {});
+local syn_teams = std.get(param_syn, 'teams', {});
+local syn_owner = std.get(param_syn, 'owner', '');
+
+local renderInstances(team) =
+  com.renderArray(std.get(syn_teams[team], 'instances', []));
+
+local teams = [
+  team
+  for team in std.objectFields(syn_teams)
+  if
+    team != inv.parameters.syn.owner &&
+    std.length(renderInstances(team)) > 0
+];
 
 local syn_project = argocd.Project('syn');
 local default_project = argocd.Project('default') {
@@ -18,22 +34,37 @@ local default_project = argocd.Project('default') {
     sourceRepos: [ '*' ],
   },
 };
-local root_app = argocd.App('root', params.namespace, secrets=false) {
-  metadata: {
-    name: 'root',
-    namespace: params.namespace,
-  },
-  spec+: {
-    source+: {
-      path: 'manifests/apps/',
+
+local root_app(team) =
+  local project = if team == 'root' then
+    'syn'
+  else
+    team;
+
+  local name = if team == 'root' then
+    'root'
+  else
+    'root-%s' % team;
+
+  argocd.App(name, params.namespace, project=project, secrets=false) {
+    metadata: {
+      name: name,
+      namespace: params.namespace,
     },
-    syncPolicy+: {
-      automated+: {
-        prune: false,
+    spec+: {
+      source+: {
+        path: if team == 'root' then
+          'manifests/apps/'
+        else
+          'manifests/apps-%s/' % team,
+      },
+      syncPolicy+: {
+        automated+: {
+          prune: false,
+        },
       },
     },
-  },
-};
+  };
 
 local app = argocd.App('argocd', params.namespace, secrets=false) {
   metadata+: {
@@ -54,8 +85,14 @@ local app = argocd.App('argocd', params.namespace, secrets=false) {
 };
 
 {
-  '00_syn-project': syn_project,
-  '00_default-project': default_project,
-  '01_rootapp': root_app,
-  '10_argocd': app,
+  'apps/00_syn-project': syn_project,
+  'apps/00_default-project': default_project,
+  'apps/01_rootapp': root_app('root'),
+  'apps/10_argocd': app,
+} + {
+  ['apps-%s/01_rootapp' % team]: root_app(team)
+  for team in teams
+} + {
+  ['apps-%s/00_project' % team]: argocd.Project(team)
+  for team in teams
 }
