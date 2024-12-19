@@ -4,21 +4,7 @@ local kube = import 'lib/kube.libjsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.argocd;
 local argocd = import 'lib/argocd.libjsonnet';
-
-local param_syn = std.get(inv.parameters, 'syn', {});
-local syn_teams = std.get(param_syn, 'teams', {});
-local syn_owner = std.get(param_syn, 'owner', '');
-
-local renderInstances(team) =
-  com.renderArray(std.get(syn_teams[team], 'instances', []));
-
-local teams = [
-  team
-  for team in std.objectFields(syn_teams)
-  if
-    team != inv.parameters.syn.owner &&
-    std.length(renderInstances(team)) > 0
-];
+local syn_teams = import 'syn/syn-teams.libsonnet';
 
 local syn_project = argocd.Project('syn');
 local default_project = argocd.Project('default') {
@@ -91,8 +77,8 @@ local app = argocd.App('argocd', params.namespace, secrets=false) {
   'apps/10_argocd': app,
 } + {
   ['apps-%s/01_rootapp' % team]: root_app(team)
-  for team in teams
+  for team in syn_teams.teams()
 } + {
   ['apps-%s/00_project' % team]: argocd.Project(team)
-  for team in teams
+  for team in syn_teams.teams()
 }
