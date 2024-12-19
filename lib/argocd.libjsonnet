@@ -5,6 +5,8 @@
 
 
 local kap = import 'lib/kapitan.libjsonnet';
+local syn_teams = import 'syn/syn-teams.libsonnet';
+
 local inv = kap.inventory();
 local params = inv.parameters.argocd;
 
@@ -20,43 +22,58 @@ local params = inv.parameters.argocd;
  *
  * See the documentation https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#applications
  */
-local ArgoApp(component, namespace, project='syn', secrets=true) = {
-  apiVersion: 'argoproj.io/v1alpha1',
-  kind: 'Application',
-  metadata: {
-    name: component,
-    namespace: params.namespace,
-    finalizers: [
-      'resources-finalizer.argocd.argoproj.io',
-    ],
-  },
-  spec: {
-    project: project,
-    source: {
-      repoURL: inv.parameters.cluster.catalog_url,
-      targetRevision: 'HEAD',
-      path: 'manifests/' + component,
-    } + if secrets then {
-      plugin: {
-        name: 'kapitan',
+local ArgoApp(component, namespace, project=null, secrets=true) =
+  local team = syn_teams.teamForApplication(component);
+  local proj =
+    if project != null then (
+      std.trace('Parameter `project` for `ArgoApp` is deprecated and will be removed in a future version. Set to `%s`' % project, project)
+    ) else if team != syn_teams.owner then (
+      if syn_teams.isMultiTenantAware(component) then
+        team
+      else
+        error
+          "Component instance %s isn't team-aware. " % component +
+          'Please check https://syn.tools/... for details on how to refactor your component to make it team-aware.'
+    ) else
+      'syn';
+
+  {
+    apiVersion: 'argoproj.io/v1alpha1',
+    kind: 'Application',
+    metadata: {
+      name: component,
+      namespace: params.namespace,
+      finalizers: [
+        'resources-finalizer.argocd.argoproj.io',
+      ],
+    },
+    spec: {
+      project: proj,
+      source: {
+        repoURL: inv.parameters.cluster.catalog_url,
+        targetRevision: 'HEAD',
+        path: 'manifests/' + component,
+      } + if secrets then {
+        plugin: {
+          name: 'kapitan',
+        },
+      } else {
+        directory: {
+          recurse: true,
+        },
       },
-    } else {
-      directory: {
-        recurse: true,
+      syncPolicy: {
+        automated: {
+          prune: true,
+          selfHeal: true,
+        },
+      },
+      destination: {
+        server: 'https://kubernetes.default.svc',
+        namespace: namespace,
       },
     },
-    syncPolicy: {
-      automated: {
-        prune: true,
-        selfHeal: true,
-      },
-    },
-    destination: {
-      server: 'https://kubernetes.default.svc',
-      namespace: namespace,
-    },
-  },
-};
+  };
 
 /**
  * \brief `ArgoProject` creates an Argo CD AppProject

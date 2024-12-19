@@ -32,12 +32,13 @@ local root_app(team) =
   else
     'root-%s' % team;
 
-  argocd.App(name, params.namespace, project=project, secrets=false) {
+  argocd.App(name, params.namespace, secrets=false) {
     metadata: {
       name: name,
       namespace: params.namespace,
     },
     spec+: {
+      project: project,
       source+: {
         path: if team == 'root' then
           'manifests/apps/'
