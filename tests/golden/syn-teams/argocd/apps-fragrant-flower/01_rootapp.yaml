@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-fragrant-flower
+  namespace: syn
+spec:
+  destination:
+    namespace: syn
+    server: https://kubernetes.default.svc
+  project: fragrant-flower
+  source:
+    directory:
+      recurse: true
+    path: manifests/apps-fragrant-flower/
+    repoURL: ssh://git@git.example.com/org/repo.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
