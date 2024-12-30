@@ -37,6 +37,7 @@ jobs:
           - params
           - prometheus
           - https-catalog
+          - syn-teams
     defaults:
       run:
         working-directory: ${{ env.COMPONENT_NAME }}
@@ -56,6 +57,7 @@ jobs:
           - params
           - prometheus
           - https-catalog
+          - syn-teams
     defaults:
       run:
         working-directory: ${{ env.COMPONENT_NAME }}
