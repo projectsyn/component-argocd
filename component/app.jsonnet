@@ -27,6 +27,11 @@ local root_app = argocd.App('root', params.namespace, secrets=false) {
     source+: {
       path: 'manifests/apps/',
     },
+    syncPolicy+: {
+      automated+: {
+        prune: false,
+      },
+    },
   },
 };
 
