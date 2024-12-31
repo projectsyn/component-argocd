@@ -56,7 +56,7 @@ parameters:
       argocd_operator:
         registry: quay.io
         repository: argoprojlabs/argocd-operator
-        tag: v0.12.2
+        tag: v0.13.0
       kube_rbac_proxy:
         registry: gcr.io
         repository: kubebuilder/kube-rbac-proxy
