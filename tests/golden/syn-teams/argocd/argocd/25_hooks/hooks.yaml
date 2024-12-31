@@ -1,0 +1,103 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  annotations: {}
+  labels:
+    name: argocd-hooks
+  name: argocd-hooks
+  namespace: syn
+rules:
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+      - statefulsets
+    verbs:
+      - list
+      - get
+      - update
+      - patch
+  - apiGroups:
+      - ''
+    resources:
+      - services
+    verbs:
+      - list
+      - get
+      - update
+      - patch
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations: {}
+  labels:
+    name: argocd-hooks
+  name: argocd-hooks
+  namespace: syn
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  annotations: {}
+  labels:
+    name: argocd-hooks
+  name: argocd-hooks
+  namespace: syn
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: argocd-hooks
+subjects:
+  - kind: ServiceAccount
+    name: argocd-hooks
+    namespace: syn
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+  generateName: argocd-post-sync-
+  labels: {}
+  namespace: syn
+spec:
+  completions: 1
+  parallelism: 1
+  template:
+    metadata:
+      labels: {}
+    spec:
+      containers:
+        - args:
+            - -n
+            - syn
+            - annotate
+            - deployment,statefulset,service
+            - -l
+            - steward.syn.tools/bootstrap=true
+            - argocd.argoproj.io/sync-options-
+          command:
+            - kubectl
+          env:
+            - name: HOME
+              value: /home
+          image: docker.io/bitnami/kubectl:1.30.7@sha256:1249fc292e84a38575ee0cadc3e28dcd7ddf5a3a4e5da401b1a8599e8ac52a1b
+          imagePullPolicy: IfNotPresent
+          name: argocd-post-sync
+          ports: []
+          stdin: false
+          tty: false
+          volumeMounts:
+            - mountPath: /home
+              name: home
+          workingDir: /home
+      imagePullSecrets: []
+      initContainers: []
+      restartPolicy: OnFailure
+      serviceAccountName: argocd-hooks
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - emptyDir: {}
+          name: home

@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    argocd.argoproj.io/compare-options: ServerSideDiff=true
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: argocd
+  namespace: syn
+spec:
+  destination:
+    namespace: syn
+    server: https://kubernetes.default.svc
+  project: syn
+  source:
+    directory:
+      recurse: true
+    path: manifests/argocd
+    repoURL: ssh://git@git.example.com/org/repo.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true

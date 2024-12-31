@@ -1,0 +1,25 @@
+applications:
+  - argocd
+  - cert-manager
+
+parameters:
+  kapitan:
+    dependencies:
+      - type: https
+        source: https://raw.githubusercontent.com/projectsyn/component-cert-manager/master/lib/cert-manager.libsonnet
+        output_path: vendor/lib/cert-manager.libsonnet
+
+  secret_management:
+    vault_role: test
+    vault_auth_mount_path: auth/lieutenant
+    vault_addr: test.syn.tools
+
+  syn:
+    owner: sparkling-sound
+    teams:
+      fragrant-flower:
+        instances:
+          - cert-manager
+      silent-snowflake:
+        instances:
+          - keycloak
