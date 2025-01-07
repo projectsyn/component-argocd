@@ -75,6 +75,8 @@ spec:
           labels:
             severity: warning
             syn: 'true'
+            syn_team: '{{if eq $labels.project "syn"}}{{ "sparkling-sound" }}{{else}}{{
+              $labels.project }}{{end}}'
         - alert: ArgoCDAppUnhealthy
           annotations:
             dashboard: argocd
@@ -86,6 +88,8 @@ spec:
           labels:
             severity: critical
             syn: 'true'
+            syn_team: '{{if eq $labels.project "syn"}}{{ "sparkling-sound" }}{{else}}{{
+              $labels.project }}{{end}}'
         - alert: ArgoCDDown
           annotations:
             dashboard: argocd
@@ -95,3 +99,5 @@ spec:
           labels:
             severity: critical
             syn: 'true'
+            syn_team: '{{if eq $labels.project "syn"}}{{ "sparkling-sound" }}{{else}}{{
+              $labels.project }}{{end}}'

@@ -1,6 +1,8 @@
 local kap = import 'lib/kapitan.libjsonnet';
 local kube = import 'lib/kube.libjsonnet';
 local prometheus = import 'lib/prometheus.libsonnet';
+local syn_teams = import 'syn/syn-teams.libsonnet';
+
 local inv = kap.inventory();
 local params = inv.parameters.argocd;
 
@@ -29,6 +31,12 @@ local serviceMonitor(objname, name) =
   };
 
 local alert_rules =
+  local team_label =
+    if syn_teams.owner != null then
+      '{{if eq $labels.project "syn"}}{{ "%s" }}{{else}}{{ $labels.project }}{{end}}' % syn_teams.owner
+    else
+      null;
+
   kube._Object('monitoring.coreos.com/v1', 'PrometheusRule', 'argocd') {
     metadata: {
       name: 'argocd',
@@ -47,10 +55,11 @@ local alert_rules =
               alert: 'ArgoCDAppUnsynced',
               expr: 'argocd_app_info{exported_namespace="' + params.namespace + '", sync_status!="Synced"} > 0',
               'for': '10m',
-              labels: {
+              labels: std.prune({
                 severity: 'warning',
                 syn: 'true',
-              },
+                syn_team: team_label,
+              }),
               annotations: {
                 message: 'Argo CD app {{ $labels.name }} is not synced',
                 description: 'kubectl -n ' + params.namespace + ' describe app {{ $labels.name }}',
@@ -61,10 +70,11 @@ local alert_rules =
               alert: 'ArgoCDAppUnhealthy',
               expr: 'argocd_app_info{exported_namespace="' + params.namespace + '", health_status!="Healthy"} > 0',
               'for': '10m',
-              labels: {
+              labels: std.prune({
                 severity: 'critical',
                 syn: 'true',
-              },
+                syn_team: team_label,
+              }),
               annotations: {
                 message: 'Argo CD app {{ $labels.name }} is not healthy',
                 description: 'kubectl -n ' + params.namespace + ' describe app {{ $labels.name }}',
@@ -75,10 +85,11 @@ local alert_rules =
               alert: 'ArgoCDDown',
               expr: 'up{namespace="' + params.namespace + '", job=~"^syn-argocd-.+$"} != 1',
               'for': '5m',
-              labels: {
+              labels: std.prune({
                 severity: 'critical',
                 syn: 'true',
-              },
+                syn_team: team_label,
+              }),
               annotations: {
                 message: 'Argo CD job {{ $labels.job }} is down',
                 dashboard: 'argocd',
