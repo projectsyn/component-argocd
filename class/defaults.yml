@@ -1,6 +1,9 @@
 ---
 parameters:
   argocd:
+    =_metadata:
+      # This component can't be assigned to a team
+      multi_tenant: false
     namespace: syn
 
     distribution: ${facts:distribution}
