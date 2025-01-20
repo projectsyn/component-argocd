@@ -75,6 +75,10 @@ com.Kustomization(
       newTag: rbac.tag,
       newName: '%(registry)s/%(repository)s' % rbac,
     },
+    'quay.io/brancz/kube-rbac-proxy': {
+      newTag: rbac.tag,
+      newName: '%(registry)s/%(repository)s' % rbac,
+    },
   },
   kustomize_input,
 )
