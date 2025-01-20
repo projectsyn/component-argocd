@@ -23,7 +23,7 @@ spec:
             - --upstream=http://127.0.0.1:8080/
             - --logtostderr=true
             - --v=0
-          image: mymirror.io/kubebuilder/kube-rbac-proxy:v1.1.1
+          image: mymirror.io/brancz/kube-rbac-proxy:v1.1.1
           name: kube-rbac-proxy
           ports:
             - containerPort: 8443
