@@ -17,18 +17,20 @@ local params = inv.parameters.argocd;
  * \arg `namespace` (required) the namespace where to deploy the app
  * \arg `project` the Argo CD project for this app. Default: 'syn'
  * \arg `secrets` if the Kapitan plugin should be used to reveal secrets from Vault. Default: 'true'
+ * \arg `base` the unaliased name of the component. Required for multi-team and multi-instance aware components. Default: null
  *
  * \returns an Argo CD Application object
  *
  * See the documentation https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#applications
  */
-local ArgoApp(component, namespace, project=null, secrets=true) =
+local ArgoApp(component, namespace, project=null, secrets=true, base=null) =
+  local base_component = if base != null then base else component;
   local team = syn_teams.teamForApplication(component);
   local proj =
     if project != null then (
       std.trace('Parameter `project` for `ArgoApp` is deprecated and will be removed in a future version. Set to `%s`' % project, project)
     ) else if team != syn_teams.owner then (
-      if syn_teams.isMultiTenantAware(component) then
+      if syn_teams.isMultiTenantAware(base_component) then
         team
       else
         error
