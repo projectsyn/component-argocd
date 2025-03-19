@@ -10,6 +10,13 @@ default:: `syn`
 
 The namespace in which to deploy this component.
 
+[TIP]
+====
+The component deploys a configmap called `cluster-info` in this namespace.
+The configmap contains some Project Syn metadata associated with the cluster.
+All authenticated users (group `system:authenticated`) can read this configmap.
+====
+
 == `distribution`
 
 [horizontal]

@@ -9,6 +9,10 @@ parameters:
         input_type: jsonnet
         input_paths:
           - argocd/component/namespace.jsonnet
+      - output_path: argocd/02_cluster_info/
+        input_type: jsonnet
+        input_paths:
+          - argocd/component/cluster-info.jsonnet
       - output_path: argocd/20_rbac/
         input_type: jsonnet
         input_paths:
