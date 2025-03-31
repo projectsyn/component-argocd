@@ -121,6 +121,7 @@ parameters:
       manifests_version: ${argocd:images:argocd_operator:tag}
       cluster_scope_namespaces:
         - "${argocd:namespace}"
+      env: {}
       kustomization_url: https://github.com/argoproj-labs/argocd-operator//config/default/
       kustomize_input:
         namePrefix: syn-

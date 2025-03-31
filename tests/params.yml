@@ -40,6 +40,8 @@ parameters:
       server: null
     operator:
       migrate: true
+      env:
+        FOO: bar
 
     instances:
       another-ns/nulled: null
