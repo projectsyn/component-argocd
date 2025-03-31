@@ -23,9 +23,15 @@ local render_image(imagename, include_tag=false) =
   else
     image;
 
+local custom_cr_name(component) =
+  assert
+    std.member([ 'server', 'application-controller' ], component) :
+    'Custom clusterrole only supported for server and application-controller';
+  'syn:argocd-%s:custom' % component;
 
 {
   render_image: render_image,
   evaluate_log_level: evaluate_log_level,
   evaluate_log_format: evaluate_log_format,
+  custom_cluster_role_name: custom_cr_name,
 }
