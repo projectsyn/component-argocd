@@ -317,6 +317,82 @@ default:: `["${argocd:namespace}"]`
 
 List of namespaces in which argocd is allowed to be installed at the cluster scope.
 
+=== `operator.controller_cluster_role_selectors`
+
+[horizontal]
+type:: dictionary
+default:: `{}`
+
+The component has optional support to configure the operator's https://argocd-operator.readthedocs.io/en/latest/usage/custom_roles/[custom roles] feature.
+When this parameter contains one or more entries, the component deploys a cluster role which uses the value of each parameter entry as an entry for `aggregationRule.clusterRoleSelectors`.
+The cluster role is named `syn:argocd-application-controller:custom`.
+Additionally, the component configures environment variable `CONTROLLER_CUSTOM_ROLE=syn:argocd-application-controller:custom` on the operator container when the parameter isn't empty.
+
+When the aggregating cluster role is deployed, the component also deploys a cluster role called `syn:argocd-application-controller:required` which is aggregated to the `syn:argocd-application-controller:custom` role.
+
+The `syn:argocd-application-controller:required` role grants the ArgoCD application controller a number of permissions that are required for it to work.
+See the definition of the role in https://github.com/projectsyn/component-argocd/blob/master/component/rbac.jsonnet[component/rbac.jsonnet] for the rules that are required.
+
+[TIP]
+====
+We recommend setting `resource.respectRBAC=strict` via `spec.extraConfig` on namespace-scoped ArgoCD instances if you want to use custom roles.
+
+If you don't set `resource.respectRBAC`, you'll need to create a cluster role which grants the application controller read access to all resources in the cluster in order to ensure that the application controller can create the K8s API cache.
+
+[source,yaml]
+----
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: argocd-application-controller-api-cache
+  labels:
+    syn.tools/aggregate-to-argocd-application-controller: "true" <1>
+rules:
+- apiGroups: ['*']
+  resources: ['*']
+  verbs: ['get', 'list', 'watch']
+----
+<1> The example assumes that you've configured `syn.tools/aggregate-to-argocd-application-controller="true"` as the label selector for the application controller aggregating cluster role.
+====
+
+[IMPORTANT]
+====
+ArgoCD may fail to update the argocd-operator deployment if you remove this config parameter after having used it.
+If you get an error like the one shown below, you need to edit the argocd-operator deployment by hand to remove the `CONTROLLER_CLUSTER_ROLE` environment variable after you remove this config parameter.
+
+[source]
+----
+Failed to compare desired state to live state: failed to calculate diff: error calculating server side diff: serverSideDiff error: error removing non config mutations for resource Deployment/syn-argocd-operator-controller-manager: error reverting webhook removed fields in predicted live resource: .spec.template.spec.containers: element 0: associative list with keys has an element that omits key field "name" (and doesn't have default value)
+----
+====
+
+=== `operator.server_cluster_role_selectors`
+
+[horizontal]
+type:: dictionary
+default:: `{}`
+
+The component has optional support to configure the operator's https://argocd-operator.readthedocs.io/en/latest/usage/custom_roles/[custom roles] feature.
+When this parameter contains one or more entries, the component deploys a cluster role which uses the value of each parameter entry as an entry for `aggregationRule.clusterRoleSelectors`.
+The cluster role is named `syn:argocd-server:custom`.
+Additionally, the component configures environment variable `SERVER_CUSTOM_ROLE=syn:argocd-server:custom` on the operator container when the parameter isn't empty.
+
+When the aggregating cluster role is deployed, the component also deploys a cluster role called `syn:argocd-server:required` which is aggregated to the `syn:argocd-server:custom` role.
+
+The `syn:argocd-server:required` role grants the ArgoCD server a number of permissions that are required for it to work.
+See the definition of the role in https://github.com/projectsyn/component-argocd/blob/master/component/rbac.jsonnet[component/rbac.jsonnet] for the rules that are required.
+
+[IMPORTANT]
+====
+ArgoCD may fail to update the argocd-operator deployment if you remove this config parameter after having used it.
+If you get an error like the one shown below, you need to edit the argocd-operator deployment by hand to remove the `SERVER_CLUSTER_ROLE` environment variable after you remove this config parameter.
+
+[source]
+----
+Failed to compare desired state to live state: failed to calculate diff: error calculating server side diff: serverSideDiff error: error removing non config mutations for resource Deployment/syn-argocd-operator-controller-manager: error reverting webhook removed fields in predicted live resource: .spec.template.spec.containers: element 0: associative list with keys has an element that omits key field "name" (and doesn't have default value)
+----
+====
+
 === `operator.env`
 
 [horizontal]
@@ -330,6 +406,16 @@ Entries in this dictionary are configured as environment variables for the argoc
 The environment variable `ARGOCD_CLUSTER_CONFIG_NAMESPACES` can't be set through this parameter.
 
 This variable is configured through component parameter `operator.cluster_scope_namespaces`.
+====
+
+[NOTE]
+====
+When parameter `operator.controller_cluster_role_match_labels` isn't empty, setting `CONTROLLER_CUSTOM_ROLE` through this parameter has no effect.
+====
+
+[NOTE]
+====
+When parameter `operator.server_cluster_role_match_labels` isn't empty, setting `SERVER_CUSTOM_ROLE` through this parameter has no effect.
 ====
 
 [IMPORTANT]
