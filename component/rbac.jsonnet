@@ -55,6 +55,11 @@ local aggregated_rbac = [
   },
 ];
 
+// Create custom cluster roles that are suitable to be used for
+// argocd-operator's `CONTROLLER_CLUSTER_ROLE` and `SERVER_CLUSTER_ROLE`, cf.
+// https://argocd-operator.readthedocs.io/en/latest/usage/custom_roles/
+// NOTE(sg): we only deploy these cluster roles if the respective
+// `cluster_role_match_labels` parameter in `operator` isn't empty.
 local internalControllerAggregationLabel = {
   'rbac.argocd.syn.tools/aggregate-to-controller': 'true',
 };
@@ -102,6 +107,9 @@ local controller_required_cr =
       },
     },
     rules: [
+      // NOTE(sg): I wasn't able to fully determine why this is required, but
+      // the application controller logs errors when it doesn't have
+      // permissions to read secrets in target namespaces.
       {
         apiGroups: [ '' ],
         resources: [ 'secrets' ],
@@ -111,6 +119,8 @@ local controller_required_cr =
           'watch',
         ],
       },
+      // Required to access and update argocd apps which the controller is
+      // managing.
       {
         apiGroups: [ 'argoproj.io' ],
         resources: [
@@ -128,11 +138,13 @@ local controller_required_cr =
           'patch',
         ],
       },
+      // Required to emit events for app state changes and similar
       {
         apiGroups: [ '' ],
         resources: [ 'events' ],
         verbs: [ 'create', 'list' ],
       },
+      // Required for running hook jobs
       {
         apiGroups: [ 'batch' ],
         resources: [
@@ -198,11 +210,18 @@ local server_required_cr =
       },
     },
     rules: [
+      // required to determine status of resources to display in the web
+      // interface. In theory, this could be restricted, but the main really
+      // critical namespaced resource is `secrets` which we need to give full
+      // permissions on anyway.
       {
         apiGroups: [ '*' ],
         resources: [ '*' ],
         verbs: [ 'get' ],
       },
+      // required so users can configure ArgoCD from the server web interface.
+      // The server doesn't work correctly without this even if no
+      // configuration via web interface is required.
       {
         apiGroups: [ '' ],
         resources: [ 'secrets', 'configmaps' ],
@@ -216,6 +235,8 @@ local server_required_cr =
           'delete',
         ],
       },
+      // required so users can create and modify argocd apps and projects from
+      // the web interface.
       {
         apiGroups: [ 'argoproj.io' ],
         resources: [
@@ -233,11 +254,14 @@ local server_required_cr =
           'patch',
         ],
       },
+      // required so the server can emit events
       {
         apiGroups: [ '' ],
         resources: [ 'events' ],
         verbs: [ 'create', 'list' ],
       },
+      // NOTE(sg): I assume this is also required for hook jobs, but haven't
+      // found solid evidence for or against that assumption.
       {
         apiGroups: [ 'batch' ],
         resources: [
