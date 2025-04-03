@@ -59,7 +59,7 @@ local aggregated_rbac = [
 // argocd-operator's `CONTROLLER_CLUSTER_ROLE` and `SERVER_CLUSTER_ROLE`, cf.
 // https://argocd-operator.readthedocs.io/en/latest/usage/custom_roles/
 // NOTE(sg): we only deploy these cluster roles if the respective
-// `cluster_role_match_labels` parameter in `operator` isn't empty.
+// `cluster_role_selectors` parameter in `operator` isn't empty.
 local internalControllerAggregationLabel = {
   'rbac.argocd.syn.tools/aggregate-to-controller': 'true',
 };
