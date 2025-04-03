@@ -7,16 +7,33 @@ local params = inv.parameters.argocd.operator;
 local image = params.images.argocd_operator;
 local rbac = params.images.kube_rbac_proxy;
 
+local skip(var) =
+  var == 'ARGOCD_CLUSTER_CONFIG_NAMESPACES';
+
 local kustomize_patch_scopens = if std.length(params.cluster_scope_namespaces) > 0 then {
   patches+: [
     {
-      patch: std.format(|||
-        - op: add
-          path: "/spec/template/spec/containers/1/env/-"
-          value:
-            name: "ARGOCD_CLUSTER_CONFIG_NAMESPACES"
-            value: "%s"
-      |||, std.join(',', params.cluster_scope_namespaces)),
+      patch: std.manifestYamlDoc([
+        {
+          op: 'add',
+          path: '/spec/template/spec/containers/1/env/-',
+          value: {
+            name: 'ARGOCD_CLUSTER_CONFIG_NAMESPACES',
+            value: std.join(',', params.cluster_scope_namespaces),
+          },
+        },
+      ] + [
+        {
+          op: 'add',
+          path: '/spec/template/spec/containers/1/env/-',
+          value: {
+            name: envvar,
+            value: params.env[envvar],
+          },
+        }
+        for envvar in std.objectFields(params.env)
+        if !skip(envvar)
+      ]),
       target: {
         kind: 'Deployment',
         name: 'argocd-operator-controller-manager',

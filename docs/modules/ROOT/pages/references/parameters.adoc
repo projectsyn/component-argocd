@@ -302,18 +302,50 @@ Configuration for the ArgoCD operator which is deployed as part of this componen
 
 
 === `operator.namespace`
+
+[horizontal]
 type:: string
 default:: `syn-argocd-operator`
 
 The namespace in which to deploy the argocd operator
 
 === `operator.cluster_scope_namespaces`
+
+[horizontal]
 type:: array
 default:: `["${argocd:namespace}"]`
 
 List of namespaces in which argocd is allowed to be installed at the cluster scope.
 
+=== `operator.env`
+
+[horizontal]
+type:: dictionary
+default:: `{}`
+
+Entries in this dictionary are configured as environment variables for the argocd operator container.
+
+[NOTE]
+====
+The environment variable `ARGOCD_CLUSTER_CONFIG_NAMESPACES` can't be set through this parameter.
+
+This variable is configured through component parameter `operator.cluster_scope_namespaces`.
+====
+
+[IMPORTANT]
+====
+ArgoCD may fail to update the argocd-operator deployment after you remove an entry from this config parameter.
+If you get an error like the one shown below, you need to edit the argocd-operator deployment by hand and delete the environment variable(s) which you've removed from this parameter.
+
+[source]
+----
+Failed to compare desired state to live state: failed to calculate diff: error calculating server side diff: serverSideDiff error: error removing non config mutations for resource Deployment/syn-argocd-operator-controller-manager: error reverting webhook removed fields in predicted live resource: .spec.template.spec.containers: element 0: associative list with keys has an element that omits key field "name" (and doesn't have default value)
+----
+====
+
 === `operator.migrate`
+
+[horizontal]
 type:: string
 default:: `false`
 
