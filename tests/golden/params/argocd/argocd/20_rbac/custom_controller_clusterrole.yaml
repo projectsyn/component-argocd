@@ -1,0 +1,81 @@
+aggregationRule:
+  clusterRoleSelectors:
+    - matchLabels:
+        rbac.argocd.syn.tools/aggregate-to-controller: 'true'
+    - matchLabels:
+        rbac.authorization.k8s.io/aggregate-to-admin: 'true'
+    - matchLabels:
+        syn.tools/aggregate-to-argocd-application-controller: 'true'
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    syn.tools/description: |
+      Custom ClusterRole which is used to give the ArgoCD application
+      controller access to managed namespaces. Intended to be configured
+      as `CONTROLLER_CLUSTER_ROLE` on the operator.
+
+      This ClusterRole aggregates the rules of all clusterroles which
+      match one of the selectors in `aggregationRule.clusterRoleSelectors`.
+  labels:
+    name: syn-argocd-application-controller-custom
+  name: syn:argocd-application-controller:custom
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    syn.tools/description: |
+      Custom ClusterRole which is used to aggregate a basic set of
+      permissions to the custom ArgoCD application controller clusterrole
+      `syn:argocd-application-controller:custom`.
+
+      This rule is required to allow the application controller to run
+      normally (emitting events, updating application status, etc)
+  labels:
+    name: syn-argocd-application-controller-required
+    rbac.argocd.syn.tools/aggregate-to-controller: 'true'
+  name: syn:argocd-application-controller:required
+rules:
+  - apiGroups:
+      - ''
+    resources:
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - argoproj.io
+    resources:
+      - applications
+      - applicationsets
+      - appprojects
+    verbs:
+      - create
+      - get
+      - list
+      - watch
+      - update
+      - delete
+      - patch
+  - apiGroups:
+      - ''
+    resources:
+      - events
+    verbs:
+      - create
+      - list
+      - patch
+  - apiGroups:
+      - batch
+    resources:
+      - jobs
+    verbs:
+      - create
+      - get
+      - list
+      - watch
+      - update
+      - delete
+      - patch

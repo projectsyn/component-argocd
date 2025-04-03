@@ -38,10 +38,23 @@ parameters:
       repo_server: null
       repo_server_vault_agent: null
       server: null
+
+    # Test operator params
     operator:
       migrate: true
       env:
         FOO: bar
+      controller_cluster_role_selectors:
+        admin:
+          matchLabels:
+            rbac.authorization.k8s.io/aggregate-to-admin: "true"
+        appcontroller:
+          matchLabels:
+            syn.tools/aggregate-to-argocd-application-controller: "true"
+      server_cluster_role_selectors:
+        server:
+          matchLabels:
+            syn.tools/aggregate-to-argocd-server: "true"
 
     instances:
       another-ns/nulled: null

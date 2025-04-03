@@ -51,6 +51,10 @@ spec:
               value: syn
             - name: FOO
               value: bar
+            - name: CONTROLLER_CLUSTER_ROLE
+              value: syn:argocd-application-controller:custom
+            - name: SERVER_CLUSTER_ROLE
+              value: syn:argocd-server:custom
           image: quay.io/argoprojlabs/argocd-operator:v0.12.2
           livenessProbe:
             httpGet:

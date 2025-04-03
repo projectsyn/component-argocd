@@ -1,0 +1,87 @@
+aggregationRule:
+  clusterRoleSelectors:
+    - matchLabels:
+        rbac.argocd.syn.tools/aggregate-to-server: 'true'
+    - matchLabels:
+        syn.tools/aggregate-to-argocd-server: 'true'
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    syn.tools/description: |
+      Custom ClusterRole which is used to give the ArgoCD server access to
+      managed namespaces. Intended to be configured as
+      `SERVER_CLUSTER_ROLE` on the operator.
+
+      This ClusterRole aggregates the rules of all clusterroles which
+      match one of the selectors in `aggregationRule.clusterRoleSelectors`.
+  labels:
+    name: syn-argocd-server-custom
+  name: syn:argocd-server:custom
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    syn.tools/description: |
+      Custom ClusterRole which is used to aggregate some required rules to
+      the ArgoCD server custom clusterrole `syn:argocd-server:custom`.
+
+      The rules in this role are necessary to allow the ArgoCD server to
+      fetch the information it needs to display its web interface and to
+      perform operations on its managed ArgoCD apps.
+  labels:
+    name: syn-argocd-server-required
+    rbac.argocd.syn.tools/aggregate-to-server: 'true'
+  name: syn:argocd-server:required
+rules:
+  - apiGroups:
+      - '*'
+    resources:
+      - '*'
+    verbs:
+      - get
+  - apiGroups:
+      - ''
+    resources:
+      - secrets
+      - configmaps
+    verbs:
+      - create
+      - get
+      - list
+      - watch
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - argoproj.io
+    resources:
+      - applications
+      - applicationsets
+      - appprojects
+    verbs:
+      - create
+      - get
+      - list
+      - watch
+      - update
+      - delete
+      - patch
+  - apiGroups:
+      - ''
+    resources:
+      - events
+    verbs:
+      - create
+      - list
+      - patch
+  - apiGroups:
+      - batch
+    resources:
+      - jobs
+      - cronjobs
+      - cronjobs/finalizers
+    verbs:
+      - create
+      - update
