@@ -142,7 +142,7 @@ local controller_required_cr =
       {
         apiGroups: [ '' ],
         resources: [ 'events' ],
-        verbs: [ 'create', 'list' ],
+        verbs: [ 'create', 'list', 'patch' ],
       },
       // Required for running hook jobs
       {
@@ -258,7 +258,7 @@ local server_required_cr =
       {
         apiGroups: [ '' ],
         resources: [ 'events' ],
-        verbs: [ 'create', 'list' ],
+        verbs: [ 'create', 'list', 'patch' ],
       },
       // NOTE(sg): I assume this is also required for hook jobs, but haven't
       // found solid evidence for or against that assumption.

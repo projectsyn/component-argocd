@@ -75,6 +75,7 @@ rules:
     verbs:
       - create
       - list
+      - patch
   - apiGroups:
       - batch
     resources:
