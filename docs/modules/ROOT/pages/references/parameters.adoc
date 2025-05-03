@@ -410,12 +410,12 @@ This variable is configured through component parameter `operator.cluster_scope_
 
 [NOTE]
 ====
-When parameter `operator.controller_cluster_role_match_labels` isn't empty, setting `CONTROLLER_CUSTOM_ROLE` through this parameter has no effect.
+When parameter `operator.controller_cluster_role_selectors` isn't empty, setting `CONTROLLER_CUSTOM_ROLE` through this parameter has no effect.
 ====
 
 [NOTE]
 ====
-When parameter `operator.server_cluster_role_match_labels` isn't empty, setting `SERVER_CUSTOM_ROLE` through this parameter has no effect.
+When parameter `operator.server_cluster_role_selectors` isn't empty, setting `SERVER_CUSTOM_ROLE` through this parameter has no effect.
 ====
 
 [IMPORTANT]
