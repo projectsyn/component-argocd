@@ -74,7 +74,7 @@ spec:
               env:
                 - name: HOME
                   value: /home/refresh
-              image: docker.io/bitnami/kubectl
+              image: quay.io/appuio/oc:v4.18
               imagePullPolicy: IfNotPresent
               name: refresh
               ports: []

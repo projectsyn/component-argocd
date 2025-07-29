@@ -83,7 +83,7 @@ spec:
           env:
             - name: HOME
               value: /home
-          image: docker.io/bitnami/kubectl:1.30.7@sha256:1249fc292e84a38575ee0cadc3e28dcd7ddf5a3a4e5da401b1a8599e8ac52a1b
+          image: quay.io/appuio/oc:v4.18
           imagePullPolicy: IfNotPresent
           name: argocd-post-sync
           ports: []
