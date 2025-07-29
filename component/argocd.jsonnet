@@ -468,7 +468,7 @@ local tls_cronjob =
             spec+: {
               containers_: {
                 refresh: kube.Container('refresh') {
-                  image: common.render_image('kubectl'),
+                  image: common.render_image('oc'),
                   command: [
                     'kubectl',
                     'delete',
