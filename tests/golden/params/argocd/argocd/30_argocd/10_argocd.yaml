@@ -176,7 +176,12 @@ spec:
             for i, condition in pairs(obj.status.conditions) do
               msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. "\n"
               if condition.type == "InstallPlanPending" and condition.status == "True" then
-                numPending = numPending + 1
+                -- Custom check to ignore InstallPlanPending when subscription has manual approval on stackgres
+                if obj.spec ~= nil and obj.spec.installPlanApproval == "Manual" and obj.metadata.name == "stackgres" then
+                  msg = msg .. "; Ignoring InstallPlanPending for manual approval subscription"
+                else
+                  numPending = numPending + 1
+                end
               elseif (condition.type == "CatalogSourcesUnhealthy" or condition.type == "InstallPlanMissing" or condition.type == "InstallPlanFailed" or condition.type == "ResolutionFailed") and condition.status == "True" then
                 -- Custom check to ignore ConstraintsNotSatisfiable for
                 -- cilium-enterprise subscription.
