@@ -49,7 +49,7 @@ spec:
                   fieldPath: metadata.annotations['olm.targetNamespaces']
             - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
               value: syn
-          image: quay.io/argoprojlabs/argocd-operator:v0.12.2
+          image: quay.io/argoprojlabs/argocd-operator:v0.15.0
           livenessProbe:
             httpGet:
               path: /healthz
@@ -74,6 +74,8 @@ spec:
                 - ALL
             readOnlyRootFilesystem: true
             runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
           volumeMounts:
             - mountPath: /tmp/k8s-webhook-server/serving-certs
               name: cert
