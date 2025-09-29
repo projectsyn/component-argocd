@@ -35,7 +35,7 @@ parameters:
       oc:
         registry: quay.io
         repository: appuio/oc
-        tag: v4.18
+        tag: v4.19
       kapitan:
         registry: docker.io
         repository: kapicorp/kapitan
