@@ -83,7 +83,7 @@ spec:
           env:
             - name: HOME
               value: /home
-          image: quay.io/appuio/oc:v4.18
+          image: quay.io/appuio/oc:v4.19
           imagePullPolicy: IfNotPresent
           name: argocd-post-sync
           ports: []
