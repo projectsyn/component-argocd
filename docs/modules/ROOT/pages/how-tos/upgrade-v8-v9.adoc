@@ -1,0 +1,23 @@
+= Upgrade `component-argocd` from `v8.x` to `v9.x`
+
+TIP: On clusters which use SSH to fetch the cluster catalogs no manual actions are necessary.
+
+The component version `v9.x` defaults to ArgoCD v3 which only supports https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#repositories[declarative configuration of repositories^].
+
+The switch to declarative repository configuration is a breaking change for clusters which use HTTPS cluster catalogs.
+
+Operators of such clusters must update the HTTPS credentials secret to be picked up as a repo credentials secret by ArgoCD v3:
+
+[source,bash]
+----
+SECRET_NAME=the-credentials-secret <1>
+
+CATALOG_URL=$(kubectl -n syn get cm argocd-cm -oyaml | \
+  yq '.data.repositories|from_yaml|.[0].url')
+
+kubectl -n syn patch secret "$SECRET_NAME" --type=merge \
+  -p '{"stringData":{"url":"'"$CATALOG_URL"'"}}'
+kubectl -n syn label secret "$SECRET_NAME" \
+  argocd.argoproj.io/secret-type=repo-creds
+----
+<1> Replace with the name of the secret

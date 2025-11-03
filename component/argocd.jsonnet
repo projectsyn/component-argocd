@@ -231,27 +231,6 @@ local argocd(name) =
       version: params.images.argocd.tag,
       applicationInstanceLabelKey: 'argocd.argoproj.io/instance',
       controller: applicationController,
-      initialRepositories: '- url: ' + inv.parameters.cluster.catalog_url,
-      repositoryCredentials: if useHttpsCatalog then
-        |||
-          - url: %(catalog_url)s
-            usernameSecret:
-              name: %(secret)s
-              key: username
-            passwordSecret:
-              name: %(secret)s
-              key: password
-        ||| % {
-          catalog_url: inv.parameters.cluster.catalog_url,
-          secret: params.http_credentials_secret_name,
-        }
-      else
-        |||
-          - url: ssh://git@
-            sshPrivateKeySecret:
-              name: argo-ssh-key
-              key: sshPrivateKey
-        |||,
       initialSSHKnownHosts: {
         keys: |||
           bitbucket.org ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAubiN81eDcafrgMeLzaFPsw2kNvEcqTKl/VqLat/MaB33pZy0y3rJZtnqwR2qOOvbwKZYKiEO1O6VqNEBxKvJJelCq0dTXWT5pbO2gDXC6h6QDXCaHo6pOHGPUy+YBaGQRGuSusMEASYiWunYN0vCAI8QaXnWMXNMdFP3jHAJH0eDsoiGnLPBlBp4TNm6rYI74nMzgz3B9IikW4WVK+dc8KZJZWYjAuORU3jc1c/NPskD2ASinf8v3xnfXeukU0sJ5N6m5E8VLjObPEO+mN2t/FZTMZLiFqPWc/ALSqnMnnhwrNi2rbfg/rd/IpL8Le3pSBne8+seeFVBoGqzHM9yXw==
@@ -395,8 +374,35 @@ local argocd(name) =
 
 local ssh_secret = kube._Object('v1', 'Secret', 'argo-ssh-key') {
   type: 'Opaque',
-};
+} + if !useHttpsCatalog then {
+  metadata+: {
+    labels+: {
+      'argocd.argoproj.io/secret-type': 'repo-creds',
+    },
+  },
+  stringData: {
+    // sshPrivateKey set by Steward -- should be safe with SSA for the ArgoCD
+    // app. For full safety we should update Steward to use SSA for this
+    // secret.
+    url: inv.parameters.cluster.catalog_url,
+  },
+} else {};
 
+local repo_secret = kube._Object('v1', 'Secret', 'cluster-catalog') {
+  type: 'Opaque',
+  metadata+: {
+    labels+: {
+      'argocd.argoproj.io/secret-type': 'repository',
+    },
+  },
+  stringData: {
+    type: 'git',
+    url: inv.parameters.cluster.catalog_url,
+    // creds always provided in a `repo-creds` secret. Externally managed
+    // https secrets must be updated to have label
+    // `argocd.argoproj.io/secret-type=repo-creds`
+  },
+};
 
 // Manually adding certificate for conversion webhook
 // as the upstream kustomize is broken.
@@ -511,6 +517,7 @@ local tls_refresh = [
   '00_vault_agent_config': vault_agent_config,
   '00_kapitan_plugin_config': kapitan_plugin_config,
   '00_ssh_secret': ssh_secret,
+  '00_repo_secret': repo_secret,
   '10_argocd': argocd('syn-argocd'),
   [if params.network_policies.enabled then '20_networkpolicy']: std.map(function(p) com.namespaced(params.namespace, p), import 'networkpolicy.libsonnet'),
   // Manually adding certificate for conversion webhook
