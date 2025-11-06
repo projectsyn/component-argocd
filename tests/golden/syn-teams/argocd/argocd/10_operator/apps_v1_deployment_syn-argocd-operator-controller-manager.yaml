@@ -49,6 +49,8 @@ spec:
                   fieldPath: metadata.annotations['olm.targetNamespaces']
             - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
               value: syn
+            - name: ARGOCD_IMAGE
+              value: quay.io/argoproj/argocd:v3.1.9
           image: quay.io/argoprojlabs/argocd-operator:v0.15.0
           livenessProbe:
             httpGet:
