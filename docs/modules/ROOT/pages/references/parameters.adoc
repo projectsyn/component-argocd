@@ -402,7 +402,7 @@ Failed to compare desired state to live state: failed to calculate diff: error c
 
 [horizontal]
 type:: dictionary
-default:: `{}`
+default:: https://github.com/projectsyn/component-argocd/blob/master/class/defaults.yml[See `class/defaults.yml`]
 
 Entries in this dictionary are configured as environment variables for the argocd operator container.
 

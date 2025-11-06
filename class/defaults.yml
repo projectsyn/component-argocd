@@ -123,7 +123,8 @@ parameters:
         - "${argocd:namespace}"
       controller_cluster_role_selectors: {}
       server_cluster_role_selectors: {}
-      env: {}
+      env:
+        ARGOCD_IMAGE: ${argocd:images:argocd:registry}/${argocd:images:argocd:repository}:${argocd:images:argocd:tag}
       kustomization_url: https://github.com/argoproj-labs/argocd-operator//config/default/
       kustomize_input:
         namePrefix: syn-
