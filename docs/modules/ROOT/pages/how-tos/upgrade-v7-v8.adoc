@@ -22,7 +22,7 @@ Roll out the upgrade with this configuration, and wait until:
 * All unmanaged ArgoCD CR are updated.
 [source,shell]
 ----
-kubectl --as cluster-admin get argocds -A -ocustom-columns='NAMESPACE:.metadata.namespace,NAME:.metadata.name,API:.apiVersion'
+kubectl --as=system:admin get argocds -A -ocustom-columns='NAMESPACE:.metadata.namespace,NAME:.metadata.name,API:.apiVersion'
 NAMESPACE          NAME               API
 openshift-gitops   openshift-gitops   argoproj.io/v1beta1
 syn                syn-argocd         argoproj.io/v1beta1
