@@ -99,7 +99,7 @@ spec:
             name: vault-config
           - mountPath: /home/vault/
             name: vault-token
-    version: v3.2.1
+    version: v3.2.3
     volumeMounts:
       - mountPath: /home/argocd/
         name: vault-token
@@ -251,4 +251,4 @@ spec:
     insecure: true
     logFormat: text
     logLevel: info
-  version: v3.2.1
+  version: v3.2.3
