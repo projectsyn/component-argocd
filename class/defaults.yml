@@ -43,7 +43,7 @@ parameters:
       vault_agent:
         registry: docker.io
         repository: hashicorp/vault
-        tag: '1.21.1'
+        tag: '1.21.2'
       argocd:
         registry: quay.io
         repository: argoproj/argocd
