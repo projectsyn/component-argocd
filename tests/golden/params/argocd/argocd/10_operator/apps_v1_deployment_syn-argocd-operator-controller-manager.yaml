@@ -50,7 +50,7 @@ spec:
             - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
               value: syn
             - name: ARGOCD_IMAGE
-              value: quay.io/argoproj/argocd:v3.2.4
+              value: quay.io/argoproj/argocd:v3.2.5
             - name: FOO
               value: bar
             - name: CONTROLLER_CLUSTER_ROLE
