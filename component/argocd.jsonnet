@@ -468,21 +468,17 @@ local tls_sa = kube.ServiceAccount('syn-argocd-tls-refresher') {
     namespace: params.namespace,
   },
 };
-local tls_role = kube.Role('syn-argocd-tls-refresher') {
+local tls_role = kube.ClusterRole('syn-argocd-tls-refresher') {
   metadata+: {
     namespace: params.namespace,
   },
   rules: [ {
     apiGroups: [ '' ],
     resources: [ 'secrets' ],
-    verbs: [ 'delete' ],
-    resourceNames: [
-      'syn-argocd-tls',
-      'syn-argocd-ca',
-    ],
+    verbs: [ 'get', 'list', 'delete' ],
   } ],
 };
-local tls_rolebinding = kube.RoleBinding('syn-argocd-tls-refresher') {
+local tls_rolebinding = kube.ClusterRoleBinding('syn-argocd-tls-refresher') {
   metadata+: {
     namespace: params.namespace,
   },
@@ -506,13 +502,8 @@ local tls_cronjob =
               containers_: {
                 refresh: kube.Container('refresh') {
                   image: common.render_image('oc', include_tag=true),
-                  command: [
-                    'kubectl',
-                    'delete',
-                    'secret',
-                    'syn-argocd-tls',
-                    'syn-argocd-ca',
-                  ],
+                  command: [ '/bin/bash', '-c' ],
+                  args: [ importstr 'scripts/refresh-argocd-tls-secret.sh' ],
                   env_: {
                     HOME: homedir,
                   },

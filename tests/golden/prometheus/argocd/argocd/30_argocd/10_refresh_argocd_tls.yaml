@@ -8,7 +8,7 @@ metadata:
   namespace: syn
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
+kind: ClusterRole
 metadata:
   annotations: {}
   labels:
@@ -18,16 +18,15 @@ metadata:
 rules:
   - apiGroups:
       - ''
-    resourceNames:
-      - syn-argocd-tls
-      - syn-argocd-ca
     resources:
       - secrets
     verbs:
+      - get
+      - list
       - delete
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
+kind: ClusterRoleBinding
 metadata:
   annotations: {}
   labels:
@@ -36,7 +35,7 @@ metadata:
   namespace: syn
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: Role
+  kind: ClusterRole
   name: syn-argocd-tls-refresher
 subjects:
   - kind: ServiceAccount
@@ -64,13 +63,25 @@ spec:
             name: syn-argocd-tls-refresher
         spec:
           containers:
-            - args: []
+            - args:
+                - |
+                  #!/bin/bash
+
+                  # This script refreshes all ArgoCD TLS secrets by deleting them,
+                  # allowing ArgoCD to recreate them with updated certificates.
+                  # It does so by identifying secrets controlled by argoproj.io/v1beta1.ArgoCD resources.
+
+                  set -euo pipefail
+
+                  for nsname in $(kubectl get secrets -A --field-selector=type=kubernetes.io/tls -ojson | jq -r '.items[] | select(.metadata.ownerReferences // [] | any(.apiVersion=="argoproj.io/v1beta1" and .kind=="ArgoCD" and .controller==true)) | .metadata.namespace+"/"+.metadata.name'); do
+                    echo "Refreshing ArgoCD TLS secret: $nsname"
+                    kubectl -n "${nsname%%/*}" delete secret "${nsname##*/}"
+                  done
+
+                  echo "All ArgoCD TLS secrets have been refreshed."
               command:
-                - kubectl
-                - delete
-                - secret
-                - syn-argocd-tls
-                - syn-argocd-ca
+                - /bin/bash
+                - -c
               env:
                 - name: HOME
                   value: /home/refresh
