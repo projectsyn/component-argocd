@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This script refreshes all ArgoCD TLS secrets by deleting them,
-# allowing ArgoCD to recreate them with updated certificates.
+# allowing the ArgoCD operator to recreate them with updated certificates.
 # It does so by identifying secrets controlled by argoproj.io/v1beta1.ArgoCD resources.
 
 set -euo pipefail
