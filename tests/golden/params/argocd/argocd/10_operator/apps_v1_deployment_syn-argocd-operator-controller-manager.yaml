@@ -57,7 +57,7 @@ spec:
               value: syn:argocd-application-controller:custom
             - name: SERVER_CLUSTER_ROLE
               value: syn:argocd-server:custom
-          image: quay.io/argoprojlabs/argocd-operator:v0.16.0
+          image: quay.io/argoprojlabs/argocd-operator:v0.17.0
           livenessProbe:
             httpGet:
               path: /healthz
