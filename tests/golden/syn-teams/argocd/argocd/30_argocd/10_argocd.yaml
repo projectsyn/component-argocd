@@ -120,7 +120,7 @@ spec:
             name: vault-config
           - mountPath: /home/vault/
             name: vault-token
-    version: v3.2.6
+    version: v3.2.7
     volumeMounts:
       - mountPath: /home/argocd/
         name: vault-token
@@ -270,4 +270,4 @@ spec:
       requests:
         cpu: 10m
         memory: 32Mi
-  version: v3.2.6
+  version: v3.2.7
