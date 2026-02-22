@@ -123,7 +123,7 @@ spec:
             name: vault-config
           - mountPath: /home/vault/
             name: vault-token
-    version: v3.2.7
+    version: v3.3.2
     volumeMounts:
       - mountPath: /home/argocd/
         name: vault-token
@@ -288,4 +288,4 @@ spec:
         - openshiftrootswissonly
       openShiftOAuth: true
     provider: dex
-  version: v3.2.7
+  version: v3.3.2
