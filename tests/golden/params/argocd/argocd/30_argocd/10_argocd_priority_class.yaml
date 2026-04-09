@@ -1,0 +1,55 @@
+apiVersion: espejote.io/v1alpha1
+kind: Admission
+metadata:
+  labels:
+    app.kubernetes.io/name: argocd-set-priority-class
+  name: argocd-set-priority-class
+  namespace: syn
+spec:
+  mutating: true
+  template: |
+    local esp = import 'espejote.libsonnet';
+    local admission = esp.ALPHA.admission;
+
+    local pod = admission.admissionRequest().object;
+    local hasPriorityClass = std.get(pod.spec, 'priorityClassName') != null;
+
+    local removePriority =
+      admission.jsonPatchOp(
+        'remove',
+        '/spec/priority',
+      );
+
+    local addPriorityClass = if hasPriorityClass then
+      admission.jsonPatchOp(
+        'replace',
+        '/spec/priorityClassName',
+        'system-cluster-critical',
+      )
+    else
+      admission.jsonPatchOp(
+        'add',
+        '/spec/priorityClassName',
+        'system-cluster-critical',
+      );
+
+    admission.patched('added priorityClassName', admission.assertPatch([ removePriority, addPriorityClass ]))
+  webhookConfiguration:
+    objectSelector:
+      matchExpressions:
+        - key: app.kubernetes.io/name
+          operator: In
+          values:
+            - syn-argocd-server
+            - syn-argocd-repo-server
+            - syn-argocd-application-controller
+            - syn-argocd-redis
+    rules:
+      - apiGroups:
+          - ''
+        apiVersions:
+          - '*'
+        operations:
+          - CREATE
+        resources:
+          - pods
