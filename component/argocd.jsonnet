@@ -229,6 +229,7 @@ local argocd(name) =
     spec: {
       image: common.render_image('argocd'),
       version: params.images.argocd.tag,
+      resourceTrackingMethod: 'label',
       applicationInstanceLabelKey: 'argocd.argoproj.io/instance',
       controller: applicationController,
       initialSSHKnownHosts: {
