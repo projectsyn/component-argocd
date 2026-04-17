@@ -46,6 +46,9 @@ local root_app(team) =
           'manifests/apps-%s/' % team,
       },
       syncPolicy+: {
+        syncOptions+: [
+          'ServerSideApply=true',
+        ],
         automated+: {
           prune: false,
         },
