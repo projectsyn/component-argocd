@@ -1,5 +1,6 @@
 applications:
   - networkpolicy
+  - espejote
 
 parameters:
   networkpolicy:
