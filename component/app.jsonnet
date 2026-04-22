@@ -49,6 +49,9 @@ local root_app(team) =
         automated+: {
           prune: false,
         },
+        syncOptions+: [
+          'ServerSideApply=true',
+        ],
       },
     },
   };
