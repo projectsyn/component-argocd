@@ -72,7 +72,7 @@ local ArgoApp(component, namespace, project=null, secrets=true, base=null) =
       },
       destination: {
         server: 'https://kubernetes.default.svc',
-        namespace: namespace,
+        [if namespace != null then 'namespace']: namespace,
       },
     },
   };
