@@ -56,7 +56,7 @@ spec:
         env:
           - name: HOME
             value: /home/argocd
-        image: mymirror.io/projectsyn/kapitan:0.34.7
+        image: mymirror.io/projectsyn/kapitan:0.35.1
         imagePullPolicy: IfNotPresent
         name: kapitan
         ports: []
