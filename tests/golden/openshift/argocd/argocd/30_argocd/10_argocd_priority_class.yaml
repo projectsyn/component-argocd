@@ -1,6 +1,8 @@
 apiVersion: espejote.io/v1alpha1
 kind: Admission
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: '20'
   labels:
     app.kubernetes.io/name: argocd-set-priority-class
   name: argocd-set-priority-class
