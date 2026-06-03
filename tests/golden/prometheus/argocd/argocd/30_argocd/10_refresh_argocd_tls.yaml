@@ -85,7 +85,7 @@ spec:
               env:
                 - name: HOME
                   value: /home/refresh
-              image: quay.io/appuio/oc:v4.20
+              image: quay.io/appuio/oc:v4.21
               imagePullPolicy: IfNotPresent
               name: refresh
               ports: []
