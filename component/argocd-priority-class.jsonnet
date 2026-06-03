@@ -10,6 +10,13 @@ local hasEspejote = std.member(inv.applications, 'espejote');
 if hasEspejote then
   {
     '10_argocd_priority_class': esp.admission('argocd-set-priority-class', params.namespace) {
+      metadata+: {
+        annotations: {
+          // We set a higher sync-wave than the syn ArgoCD instance to ensure
+          // bootstrap is not blocked my missing espejote CRDs
+          'argocd.argoproj.io/sync-wave': '20',
+        },
+      },
       spec: {
         mutating: true,
         template: importstr 'espejote-templates/argocd-priority-class.jsonnet',

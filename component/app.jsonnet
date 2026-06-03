@@ -61,6 +61,7 @@ local app = argocd.App('argocd', params.namespace, secrets=false) {
     syncPolicy+: {
       syncOptions+: [
         'ServerSideApply=true',
+        'SkipDryRunOnMissingResource=true',
       ],
       automated+: {
         [if params.operator.migrate then 'prune' else null]: false,
