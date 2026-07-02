@@ -11,6 +11,13 @@ local serviceMonitor(objname, name) =
     metadata: {
       name: objname,
       namespace: params.namespace,
+      annotations: {
+        // NOTE(sg): moving servicemonitor sync after argocd custom resource,
+        // same as espejote admission. This should ensure that bootstrap works
+        // on clusters where the ServiceMonitor CRD is installed via
+        // component-prometheus.
+        'argocd.argoproj.io/sync-wave': '20',
+      },
       labels: {
         name: objname,
         'app.kubernetes.io/name': name,
@@ -41,6 +48,13 @@ local alert_rules =
     metadata: {
       name: 'argocd',
       namespace: params.namespace,
+      annotations: {
+        // NOTE(sg): moving servicemonitor sync after argocd custom resource,
+        // same as espejote admission. This should ensure that bootstrap works
+        // on clusters where the ServiceMonitor CRD is installed via
+        // component-prometheus.
+        'argocd.argoproj.io/sync-wave': '20',
+      },
       labels: {
         name: 'argocd',
         role: 'alert-rules',
