@@ -35,7 +35,7 @@ local ArgoApp(component, namespace, project=null, secrets=true, base=null) =
       else
         error
           "Component instance %s isn't team-aware. " % component +
-          'Please check https://syn.tools/... for details on how to refactor your component to make it team-aware.'
+          'Please check https://syn.tools/syn/how-tos/component-multi-tenancy.html for details on how to refactor your component to make it team-aware.'
     ) else
       'syn';
 
