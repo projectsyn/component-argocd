@@ -37,6 +37,7 @@ spec:
 
     admission.patched('added priorityClassName', admission.assertPatch([ removePriority, addPriorityClass ]))
   webhookConfiguration:
+    failurePolicy: Ignore
     objectSelector:
       matchExpressions:
         - key: app.kubernetes.io/name

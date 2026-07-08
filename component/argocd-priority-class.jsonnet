@@ -21,6 +21,9 @@ if hasEspejote then
         mutating: true,
         template: importstr 'espejote-templates/argocd-priority-class.jsonnet',
         webhookConfiguration: {
+          // NOTE(sg): We want ArgoCD pods to be admitted without the mutation
+          // if Espejote is unavailable for any reason.
+          failurePolicy: 'Ignore',
           rules: [
             {
               apiGroups: [ '' ],
