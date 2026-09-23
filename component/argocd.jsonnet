@@ -380,9 +380,9 @@ local argocd(name) =
                     hs.message = condition.message
                     return hs
                   end
-                  if condition.type == "Ignored" and condition.status == "NoMatchingNode" then
+                  if condition.type == "Ignored" and condition.status == "True" then
                     hs.status = "Healthy"
-                    hs.message = condition.message
+                    hs.message = "Policy ignored: " .. condition.message
                     return hs
                   end
                   if condition.type == "Degraded" and condition.status == "True" then
