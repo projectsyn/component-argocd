@@ -76,6 +76,7 @@ spec:
           - mountPath: /home/argocd/
             name: vault-token
       - args:
+          - vault
           - agent
           - -config
           - /etc/vault/vault-agent-config.json

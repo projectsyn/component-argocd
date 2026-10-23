@@ -184,7 +184,15 @@ local repoServer = {
     kube.Container('vault-agent') {
       name: 'vault-agent',
       image: common.render_image('vault_agent', include_tag=true),
-      args: [
+      args: (
+        if std.startsWith(params.images.vault_agent.tag, '1.') then
+          []
+        else
+          // NOTE(sg): We assume that starting from 2.0.0, we can use explicit
+          // `vault agent`, we know that we must do so for 2.2.1, and have
+          // tested that this works on 2.1.0 and 2.2.0.
+          [ 'vault' ]
+      ) + [
         'agent',
         '-config',
         '/etc/vault/vault-agent-config.json',
