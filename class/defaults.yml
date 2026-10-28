@@ -63,7 +63,7 @@ parameters:
       kube_rbac_proxy:
         registry: ghcr.io
         repository: kube-rbac-proxy/kube-rbac-proxy
-        tag: v0.23.0
+        tag: v0.23.1
 
     instances: {}
 
