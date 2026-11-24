@@ -50,7 +50,7 @@ spec:
             - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
               value: syn
             - name: ARGOCD_IMAGE
-              value: quay.io/argoproj/argocd:v3.5.9
+              value: quay.io/argoproj/argocd:v3.6.3
           image: quay.io/argoprojlabs/argocd-operator:v0.18.0
           livenessProbe:
             httpGet:
